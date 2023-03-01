@@ -16,21 +16,36 @@ void	print_redirection(char *line, t_redirect *redirect)
 {
 	t_heredoc *heredoc;
 
-	printf("line: %s$\n", line);
-	printf("infile: %s$\n", redirect->infile);
-	printf("outfile: %s$\n", redirect->outfile);
-	printf("append: %d$\n", redirect->append);
+	printf("line: ");
+	for (size_t i = 0; line[i]; i++)
+	{
+		if (line[i] > 0)
+			printf(RED"%c"ENDCL, line[i]);
+		else if (line[i + 1] > 0)
+			printf(RED" "ENDCL);
+	}
+	printf("\ninfile: "RED"%s"ENDCL"\n", redirect->infile);
+	printf("outfile: "RED"%s"ENDCL"\n", redirect->outfile);
+	printf("append: "RED"%d"ENDCL"\n", redirect->append);
 	printf("Heredocs: ");
 	heredoc = redirect->heredoc;
 	while (heredoc)
 	{
-		printf("%s", heredoc->limiter);
+		printf(RED"%s"ENDCL, heredoc->limiter);
 		if (heredoc->next)
 			printf(" -> ");
-		else
-			printf("\n");
 		heredoc = heredoc->next;
 	}
+	printf("\n");
+}
+
+void	free_redirect(t_redirect *redirect)
+{
+	if (!redirect)
+		return ;
+	free(redirect->infile);
+	free(redirect->outfile);
+	free(redirect);
 }
 
 char	**parse_args(t_env *environment, char **line)
@@ -45,6 +60,7 @@ char	**parse_args(t_env *environment, char **line)
 	if (!redirect)
 		return (NULL);
 	print_redirection(*line, redirect);
+	free_redirect(redirect);
 	args = ft_split(*line, SEPARATOR);
 	if (!args)
 	{

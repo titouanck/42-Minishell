@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/01 18:37:34 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/01 20:06:56 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_heredoc *lstnew_heredoc(t_heredoc *heredoc, char *limiter)
 	t_heredoc	*new;
 	t_heredoc	*current;
 
-	new = malloc(sizeof(heredoc));
+	new = malloc(sizeof(t_heredoc));
 	if (!new)
 		return (ft_putstr_fd(ERRALLOC, 2), NULL);
 	new->limiter = limiter;
@@ -172,62 +172,92 @@ static int _rightchevron(char *line, t_redirect *redirect)
 	return (1);
 }
 
-char	*heredoc_file(void)
+int	heredoc_file(t_redirect *redirect)
 {
 	int				fd;
 	unsigned char	buf[16];
 	char			*filename;
 	size_t			i;
 
-	filename = ft_strdup(".tmpheredocfile_____.minishell");
+	filename = ft_strdup("/tmp/.tmpheredocfile_____.minishell");
 	if (!filename)
-		return (ft_putstr_fd(ERRALLOC, 2), NULL);
+		return (ft_putstr_fd(ERRALLOC, 2), -1);
+	redirect->infile = filename;
 	fd = open("/dev/urandom", O_RDONLY);
-	if (fd == -1 || read(fd, buf, sizeof(buf)) != sizeof(buf))
-		return (filename);
-	close(fd);
-	i = -1;
-	while (++i < 16)
+	if (fd != -1 && read(fd, buf, sizeof(buf)) == sizeof(buf))
 	{
-		if (buf[i] > 127)
-			buf[i] = buf[i] / 2 - 1;
-		if (buf[i] < 33)
-			buf[i] += 33;
-		else if (buf[i] == 127)
-			buf[i] -= 1;
-		filename[i + 4] = buf[i];
+		close(fd);
+		i = -1;
+		while (++i < 16)
+		{
+			while (!ft_isalpha(buf[i]) && !ft_isdigit(buf[i]))
+				buf[i] += 21;
+			filename[i + 9] = buf[i];
+		}
 	}
-	return (filename);
+	fd = open(redirect->infile, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+	if (fd == -1)
+	{
+		perror("open");
+		free(filename);
+		redirect->infile = NULL;
+	}
+	return (fd);
+}
+
+void	free_heredocs(t_heredoc *heredoc)
+{
+	t_heredoc *tmp;
+
+	while (heredoc)
+	{
+		tmp = heredoc->next;
+		free(heredoc->limiter);
+		free(heredoc);
+		heredoc = tmp;
+	}
 }
 
 void	use_heredoc(t_redirect *redirect)
 {
 	t_heredoc	*current;
 	char		*line;
+	int			fd;
 
 	if (!redirect || !redirect->heredoc)
 		return ;
+	fd = -1;
+	if (redirect->infile == NULL && redirect->heredoc)
+		fd = heredoc_file(redirect);
 	current = redirect->heredoc;
 	while (current)
 	{
 		while (1)
 		{
-			line = get_next_line(0);
-			ft_putstr_fd(line, 1);
+			line = readline("> ");
 			if (!line)
+			{
+				ft_putstr_fd("ERREUR\n", 2);
 				break ;
-			if (!(*line))
+			}
+			if (ft_strcmp(current->limiter, line) == 0)
 			{
 				free(line);
 				break ;
 			}
+			if (fd != -1 && current->next == NULL)
+			{
+				write(fd, line, ft_strlen(line));
+				write(fd, "\n", 1);
+			}	
 			free(line);
 		}
-		// if (redirect->infile == NULL && redirect->heredoc)
-		// 	redirect->infile = heredoc_file();
 		current = current->next;
 	}
-	
+	if (fd != -1)
+		close(fd);
+	free_heredocs(redirect->heredoc);
+	redirect->heredoc = NULL;
 }
 
 t_redirect	*redirections(char *line)
