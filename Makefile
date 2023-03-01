@@ -1,7 +1,7 @@
 INC = -I inc/ -I libft/
 LIBS = -L libft -lft -lreadline
 
-CFLAGS =  -Wall -Wextra -Werror 
+# CFLAGS =  -Wall -Wextra -Werror 
 
 NAME = minishell
 

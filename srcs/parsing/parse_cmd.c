@@ -6,16 +6,16 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 14:36:51 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/02/27 16:58:45 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/01 14:58:07 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include <minishell.h>
 
 char	**parse_cmd(t_env *environment, char **line)
 {
 	char	**args;
-	
+
 	args = parse_args(environment, line);
 	if (!args)
 		return (NULL);

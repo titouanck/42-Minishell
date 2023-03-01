@@ -6,11 +6,11 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/02/27 15:13:36 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/01 14:58:07 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include <minishell.h>
 
 void	parsing(t_env *environment, char **line)
 {
@@ -46,7 +46,10 @@ void	parsing(t_env *environment, char **line)
 		}	
 		i++;
 	}
-	if (cmds && *cmds)
-		pipex(environment, cmds);
+	// if (cmds && *cmds)
+	// 	pipex(environment, cmds);
+	char	**args;
+	args = parse_cmd(environment, cmds);
+	// print_tabstr(args);
 	free_tabstr(cmds);
 }

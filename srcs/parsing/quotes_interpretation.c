@@ -6,11 +6,11 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 12:48:16 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/02/27 17:44:01 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/01 16:09:49 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include <minishell.h>
 
 static void	_actions_singlequoteopen(char *line, \
 	int *single_quote_open, size_t *i)
@@ -60,6 +60,10 @@ static void	_actions_default(char *line, \
 	else if (line[(*i)] == '$' && line[(*i) + 1] \
 	&& ft_strinset(line + (*i) + 1, "\"\'", 1))
 		line[(*i)] = SEPARATOR;
+	else if (line[(*i)] == '<')
+		line[(*i)] = LEFTCHEVRON;
+	else if (line[(*i)] == '>')
+		line[(*i)] = RIGHTCHEVRON;
 }
 
 static int	_detect_missing_quote(int single_quote_open, int double_quote_open)

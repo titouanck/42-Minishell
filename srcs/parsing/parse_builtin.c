@@ -6,11 +6,11 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:49:18 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/02/27 17:57:37 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/01 14:58:07 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include <minishell.h>
 
 int	parse_builtin(t_env *environment, char **args, \
 	char **cmds, size_t cmdnbr)

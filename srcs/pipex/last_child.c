@@ -6,11 +6,11 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/02/27 17:31:43 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/01 14:58:07 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include <minishell.h>
 
 void	last_child(t_env *environment, int pipefd[2], char **cmds, size_t size)
 {
@@ -22,14 +22,12 @@ void	last_child(t_env *environment, int pipefd[2], char **cmds, size_t size)
 	args = parse_cmd(environment, cmds + size - 1);
 	if (!args)
 		return ;
-	if (size > 1)
-		dup2(pipefd[0], STDIN_FILENO);
-	if (parse_builtin(environment, args, cmds, size - 1))
-	{
-		if (size > 1)
-			close(pipefd[0]);
-		return ;
-	}
+	// if (parse_builtin(environment, args, cmds, size - 1))
+	// {
+	// 	if (size > 1)
+	// 		close(pipefd[0]);
+	// 	return ;
+	// }
 	pid = fork();
 	if (pid == -1)
 	{
@@ -39,6 +37,8 @@ void	last_child(t_env *environment, int pipefd[2], char **cmds, size_t size)
 	}
 	else if (pid == 0)
 	{
+		if (size > 1)
+			dup2(pipefd[0], STDIN_FILENO);
 		execute_cmd(environment, args);
 		if (size > 1)
 			close(pipefd[0]);

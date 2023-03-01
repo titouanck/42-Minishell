@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/02/27 17:40:30 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/01 17:09:21 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZ\
 # define PIPECHAR -1
 # define VARKEY -2
 # define SEPARATOR -3
+# define LEFTCHEVRON -4
+# define RIGHTCHEVRON -5
+# define HEREDOC -6
 
 # ifndef TRUE
 #  define TRUE 1
@@ -54,15 +57,29 @@ typedef struct s_env
 	char			*pwd;
 }					t_env;
 
+typedef	struct	s_heredoc
+{
+	char				*limiter;
+	struct s_heredoc	*next;
+}						t_heredoc;
+
+typedef struct	s_redirect
+{
+	char		*infile;
+	t_heredoc	*heredoc;
+	char		*outfile;
+	int			append;
+}			t_redirect;
+
 			/* Built-in Functions & Commands */
 
-void	ftbuiltin_echo(char **args);
-void	ftbuiltin_cd(t_env *environment, char **args);
-void	ftbuiltin_pwd(t_env *environment);
-void	ftbuiltin_export(t_env *environment, char **args);
-void	ftbuiltin_unset(t_env *environment, char **args);
-void	ftbuiltin_env(t_env *environment);
-void	ftbuiltin_exit(t_env *environment, char **args, char **cmds);
+void		ftbuiltin_echo(char **args);
+void		ftbuiltin_cd(t_env *environment, char **args);
+void		ftbuiltin_pwd(t_env *environment);
+void		ftbuiltin_export(t_env *environment, char **args);
+void		ftbuiltin_unset(t_env *environment, char **args);
+void		ftbuiltin_env(t_env *environment);
+void		ftbuiltin_exit(t_env *environment, char **args, char **cmds);
 
 // execute_cmd.c
 int		execute_cmd(t_env *environment, char **args);
@@ -71,44 +88,46 @@ int		execute_cmd(t_env *environment, char **args);
 
 // parse_builtin.c
 int	parse_builtin(t_env *environment, char **args, \
-	char **cmds, size_t cmdnbr);
+	char 	**cmds, size_t cmdnbr);
 // split_cmds.c
-char	**split_cmds(char **ptr);
+char		**split_cmds(char **ptr);
 // parsing.c
-void	parsing(t_env *environment, char **line);
+void		parsing(t_env *environment, char **line);
 // parse_cmd.c
-char	**parse_cmd(t_env *environment, char **line);
+char		**parse_cmd(t_env *environment, char **line);
 // parse_args.c
-char	**parse_args(t_env *environment, char **line);
+char		**parse_args(t_env *environment, char **line);
+// redirections.c
+t_redirect	*redirections(char *line);
 // replace_key_by_value.c
-char	*replace_key_by_value(t_env *environment, char *line);
+char		*replace_key_by_value(t_env *environment, char *line);
 // quotes_interpretation.c
-int		quotes_interpretation(t_env *environment, char **line);
+int			quotes_interpretation(t_env *environment, char **line);
 
 				/* One-time actions */
 
 // opening.c
-t_env	*opening(int argc, char **argv, char *envp[]);
+t_env		*opening(int argc, char **argv, char *envp[]);
 // closing.c
-void	closing_the_program(t_env *environment);
+void		closing_the_program(t_env *environment);
 // signal.c
-void	change_signal_behavior(void);
+void		change_signal_behavior(void);
 // get_environment.c
-t_env	*get_environment(char *envp[]);
+t_env		*get_environment(char *envp[]);
 
 					/* Environment */
 
 // ftbuiltin_unset.c
-void	ftbuiltin_unset_element(t_env *environment, char *arg);
+void		ftbuiltin_unset_element(t_env *environment, char *arg);
 // change_local_variables.c
-int	change_local_variables(t_env *environment, char *line, size_t size);
+int			change_local_variables(t_env *environment, char *line, size_t size);
 // environment.c
-char	**format_environment(t_env *environment);
-void	free_environment(t_env *environment);
-char	*get_value_by_key(t_env *environment, char *key);
-int		env_lstaddback(t_env *env, char *key, char *value, int exported);
+char		**format_environment(t_env *environment);
+void		free_environment(t_env *environment);
+char		*get_value_by_key(t_env *environment, char *key);
+int			env_lstaddback(t_env *env, char *key, char *value, int exported);
 // path.c
-char	**get_path(char *envp[]);
+char		**get_path(char *envp[]);
 
 					/* Pipex */
 

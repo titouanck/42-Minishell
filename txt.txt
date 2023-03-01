@@ -1,0 +1,35 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    txt.txt                                            :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/03/01 14:23:24 by tchevrie          #+#    #+#              #
+#    Updated: 2023/03/01 16:54:23 by tchevrie         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+On va regarder si, en dehors de guillemets, on detecte la presence de:
+
+> a > b > c
+-> On vide a
+-> On vide b
+-> On definie outfile = fd(c)
+-> On definie append = 0
+
+>> a >> b
+-> On regarde si on a les permissions sur a (Si non: message d'erreur)
+-> On definie outfile = fd(b)
+-> On definie append = 1
+
+< a < b
+-> On regarde si on a les permissions sur a (Si non: message d'erreur)
+-> On definie infle = fd(b)
+
+<< a << b
+-> On fait un here_doc dans le vide qui attends 'a'
+-> On fait un here_doc qui met son resultat dans une pipe qui sera ecoute par l'exec suivant
+-> On definie infile fd(<cette pipe>)
+
+// cat << limiter 

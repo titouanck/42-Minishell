@@ -6,11 +6,11 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/02/27 18:01:26 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/01 14:58:07 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include <minishell.h>
 
 int	middle_child(t_env *environment, int pipefd[2], char **cmds, size_t cmdnbr)
 {
@@ -24,14 +24,12 @@ int	middle_child(t_env *environment, int pipefd[2], char **cmds, size_t cmdnbr)
 		return (1);
 	if (pipe(new_pipefd) == -1)
 		return (perror("minishell: pipe"), 0);
-	dup2(pipefd[0], STDIN_FILENO);
-	dup2(new_pipefd[1], STDOUT_FILENO);
-	if (parse_builtin(environment, args, cmds, cmdnbr))
-	{
-		close(pipefd[0]);
-		close(new_pipefd[1]);
-		return (1);
-	}
+	// if (parse_builtin(environment, args, cmds, cmdnbr))
+	// {
+	// 	close(pipefd[0]);
+	// 	close(new_pipefd[1]);
+	// 	return (1);
+	// }
 	pid = fork();
 	if (pid == -1)
 	{
@@ -42,6 +40,8 @@ int	middle_child(t_env *environment, int pipefd[2], char **cmds, size_t cmdnbr)
 	}
 	else if (pid == 0)
 	{
+		dup2(pipefd[0], STDIN_FILENO);
+		dup2(new_pipefd[1], STDOUT_FILENO);
 		close(new_pipefd[0]);
 		execute_cmd(environment, args);
 		close(pipefd[0]);
