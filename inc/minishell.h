@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/02 19:21:50 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/02 19:54:50 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void		ftbuiltin_pwd(t_env *environment);
 void		ftbuiltin_export(t_env *environment, char **args);
 void		ftbuiltin_unset(t_env *environment, char **args);
 void		ftbuiltin_env(t_env *environment);
-void		ftbuiltin_exit(t_env *environment, char **args, char **cmds);
+void		ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds);
 
 // execute_cmd.c
 int		execute_cmd(t_env *environment, char **args);
@@ -98,7 +98,7 @@ int		execute_cmd(t_env *environment, char **args);
 
 // parse_builtin.c
 int	parse_builtin(t_env *environment, char **args, \
-	char 	**cmds, size_t cmdnbr);
+	t_cmd **cmds, size_t cmdnbr);
 // split_cmds.c
 char		**split_cmds(char **ptr);
 // parsing.c

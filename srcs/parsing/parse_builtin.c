@@ -6,14 +6,14 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:49:18 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/01 14:58:07 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/02 19:57:22 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
 int	parse_builtin(t_env *environment, char **args, \
-	char **cmds, size_t cmdnbr)
+	t_cmd **cmds, size_t cmdnbr)
 {
 	size_t	size;
 
@@ -54,6 +54,5 @@ int	parse_builtin(t_env *environment, char **args, \
 	}
 	else
 		return (0);
-	free_tabstr(args);
 	return (1);
 }

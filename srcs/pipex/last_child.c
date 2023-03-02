@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/02 18:24:35 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/02 20:06:32 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,21 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 			close(pipefd[0]);
 		return ;
 	}
+	if (ft_strcmp((cmds[cmdnbr]->args)[0], "exit") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "cd") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "unset") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "export") == 0)
+	{
+		if ((cmds[cmdnbr])->redirect->outfile)
+			dup2((cmds[cmdnbr])->redirect->fd_outfile, STDOUT_FILENO);
+		if ((cmds[cmdnbr])->redirect->infile)
+			dup2((cmds[cmdnbr])->redirect->fd_infile, STDIN_FILENO);
+		else if (cmdnbr != 0)
+			dup2(pipefd[0], STDIN_FILENO);
+		parse_builtin(environment, (cmds[cmdnbr])->args, cmds, cmdnbr);
+		if ((cmds[cmdnbr])->redirect->outfile)
+			close((cmds[cmdnbr])->redirect->fd_outfile);
+		if ((cmds[cmdnbr])->redirect->infile)
+			close((cmds[cmdnbr])->redirect->fd_infile);
+		return ;
+	}
 	pid = fork();
 	if (pid == -1)
 	{
@@ -77,7 +92,8 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 			dup2((cmds[cmdnbr])->redirect->fd_infile, STDIN_FILENO);
 		else if (cmdnbr != 0)
 			dup2(pipefd[0], STDIN_FILENO);
-		execute_cmd(environment, (cmds[cmdnbr])->args);
+		if (!parse_builtin(environment, (cmds[cmdnbr])->args, cmds, cmdnbr))
+			execute_cmd(environment, (cmds[cmdnbr])->args);
 		if (cmdnbr != 0)
 			close(pipefd[0]);
 		if ((cmds[cmdnbr])->redirect->outfile)
