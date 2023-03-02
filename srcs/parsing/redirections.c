@@ -12,6 +12,15 @@
 
 #include <minishell.h>
 
+void	free_redirect(t_redirect *redirect)
+{
+	if (!redirect)
+		return ;
+	free(redirect->infile);
+	free(redirect->outfile);
+	free(redirect);
+}
+
 t_heredoc *lstnew_heredoc(t_heredoc *heredoc, char *limiter)
 {
 	t_heredoc	*new;
@@ -264,7 +273,6 @@ t_redirect	*redirections(char *line)
 {
 	t_redirect	*redirect;
 
-	(void) line;
 	redirect = malloc(sizeof(t_redirect));
 	if (!redirect)
 		return (ft_putstr_fd(ERRALLOC, 2), NULL);

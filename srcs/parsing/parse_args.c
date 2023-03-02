@@ -39,36 +39,30 @@ void	print_redirection(char *line, t_redirect *redirect)
 	printf("\n");
 }
 
-void	free_redirect(t_redirect *redirect)
+t_cmd	*parse_args(t_env *environment, char **line)
 {
-	if (!redirect)
-		return ;
-	free(redirect->infile);
-	free(redirect->outfile);
-	free(redirect);
-}
+	t_cmd		*cmd;
 
-char	**parse_args(t_env *environment, char **line)
-{
-	char		**args;
-	t_redirect	*redirect;
-
-	(void) redirect;
+	cmd = malloc(sizeof(t_cmd));
+	if (!cmd)
+		return (ft_putstr_fd(ERRALLOC, 2), NULL);
+	cmd->args = NULL;
+	cmd->redirect = NULL;
 	if (!quotes_interpretation(environment, line))
-		return (NULL);
-	redirect = redirections(*line);
-	if (!redirect)
-		return (NULL);
-	print_redirection(*line, redirect);
-	free_redirect(redirect);
-	args = ft_split(*line, SEPARATOR);
-	if (!args)
+		return (free(cmd), NULL);
+	cmd->redirect = redirections(*line);
+	if (!(cmd->redirect))
+		return (free(cmd), NULL);
+	cmd->args = ft_split(*line, SEPARATOR);
+	if (!(cmd->args))
 	{
 		ft_putstr_fd(ERRALLOC, 2);
 		g_returnval = 12;
 		free(*line);
+		free_redirect(cmd->redirect);
+		free(cmd);
 		closing_the_program(environment);
 		exit(g_returnval);
 	}
-	return (args);
+	return (cmd);
 }

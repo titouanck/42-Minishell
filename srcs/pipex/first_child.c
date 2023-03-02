@@ -16,12 +16,14 @@ int	first_child(t_env *environment, int pipefd[2], char **cmds)
 {
 	pid_t	pid;
 	char	**args;
+	t_cmd	cmd;
 
 	if (pipe(pipefd) == -1)
 		return (perror("minishell: pipe"), 0);
-	args = parse_cmd(environment, cmds);
-	if (!args)
-		return (1);
+	// cmd = parse_cmd(environment, cmds);
+	return (0);
+	// if (!args)
+		// return (1);
 	// if (parse_builtin(environment, args, cmds, 0))
 	// {
 	// 	close(pipefd[1]);

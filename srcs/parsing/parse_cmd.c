@@ -12,20 +12,22 @@
 
 #include <minishell.h>
 
-char	**parse_cmd(t_env *environment, char **line)
+t_cmd	*parse_cmd(t_env *environment, char **line)
 {
-	char	**args;
+	t_cmd	*cmd;
 
-	args = parse_args(environment, line);
-	if (!args)
+	cmd = parse_args(environment, line);
+	if (!(cmd))
 		return (NULL);
-	else if (!args[0])
+	else if (!(cmd->args[0]))
 	{
 		ft_putstr_fd("minishell: : command not found\n", 2);
-		free_tabstr(args);
+		free_tabstr(cmd->args);
+		free_redirect(cmd->redirect);
+		free(cmd);
 		g_returnval = 127;
-		return (NULL);
+		return (cmd);
 	}
 	else
-		return (args);
+		return (cmd);
 }

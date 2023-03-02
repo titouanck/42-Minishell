@@ -66,10 +66,18 @@ typedef	struct	s_heredoc
 typedef struct	s_redirect
 {
 	char		*infile;
+	int			fd_infile;
 	t_heredoc	*heredoc;
 	char		*outfile;
+	int			fd_outfile;
 	int			append;
 }			t_redirect;
+
+typedef struct s_cmd
+{
+	char		**args;
+	t_redirect	*redirect;
+}				t_cmd;
 
 			/* Built-in Functions & Commands */
 
@@ -94,9 +102,9 @@ char		**split_cmds(char **ptr);
 // parsing.c
 void		parsing(t_env *environment, char **line);
 // parse_cmd.c
-char		**parse_cmd(t_env *environment, char **line);
+t_cmd		*parse_cmd(t_env *environment, char **line);
 // parse_args.c
-char		**parse_args(t_env *environment, char **line);
+t_cmd		*parse_args(t_env *environment, char **line);
 // redirections.c
 t_redirect	*redirections(char *line);
 // replace_key_by_value.c
@@ -135,5 +143,8 @@ void	pipex(t_env *environment, char **cmds);
 int		first_child(t_env *environment, int pipefd[2], char **cmds);
 int		middle_child(t_env *environment, int pipefd[2], char **cmds, size_t cmdnbr);
 void	last_child(t_env *environment, int pipefd[2], char **cmds, size_t size);
+
+// PAS CLASSE
+void	free_redirect(t_redirect *redirect);
 
 #endif

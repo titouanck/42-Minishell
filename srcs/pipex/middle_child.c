@@ -19,8 +19,8 @@ int	middle_child(t_env *environment, int pipefd[2], char **cmds, size_t cmdnbr)
 	char	**args;
 
 	close(pipefd[1]);
-	args = parse_cmd(environment, cmds + cmdnbr);
-	if (!args)
+	// args = parse_cmd(environment, cmds + cmdnbr);
+	// if (!args)
 		return (1);
 	if (pipe(new_pipefd) == -1)
 		return (perror("minishell: pipe"), 0);

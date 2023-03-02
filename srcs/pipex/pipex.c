@@ -19,8 +19,6 @@ void	pipex(t_env *environment, char **cmds)
 	size_t	size;
 	size_t	cmdnbr;
 
-	print_tabstr(cmds);
-	return ;
 	size = 0;
 	while (cmds[size])
 		size++;
