@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 13:47:57 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/01 14:58:07 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/02 17:00:32 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static void	_command_not_found(char **args)
 {
-	free_tabstr(args);
 	g_returnval = 127;
 }
 
@@ -26,8 +25,13 @@ char	*_locate_file(char **path, char *arg)
 	filepath = ft_strdup(arg);
 	if (!filepath)
 		return (ft_putstr_fd(ERRALLOC, 2), NULL);
-	if (access(filepath, X_OK) == 0)
-		return (filepath);
+	if (access(filepath, F_OK) == 0)
+	{
+		if (access(filepath, X_OK) == 0)
+			return (filepath);
+		else
+			return (ft_putstr_fd("minishell: ", 2), perror(arg), free(filepath), NULL);
+	}
 	free(filepath);
 	if (!path)
 		return (NULL);
@@ -37,12 +41,17 @@ char	*_locate_file(char **path, char *arg)
 		filepath = ft_strrjoin(path[i], "/", arg);
 		if (!filepath)
 			return (ft_putstr_fd(ERRALLOC, 2), NULL);
-		if (access(filepath, X_OK) == 0)
-			return (filepath);
+		if (access(filepath, F_OK) == 0)
+		{
+			if (access(filepath, X_OK) == 0)
+				return (filepath);
+			else
+				return (ft_putstr_fd("minishell: ", 2), perror(arg), free(filepath), NULL);
+		}
 		free(filepath);
 		i++;
 	}
-	return (NULL);
+	return (ft_putstr_fd("minishell: ", 2), perror(arg), NULL);
 }
 
 int	execute_cmd(t_env *environment, char **args)
@@ -62,14 +71,7 @@ int	execute_cmd(t_env *environment, char **args)
 	envp = format_environment(environment);
 	path = get_path(envp);
 	filepath = _locate_file(path, args[0]);
-	if (!filepath)
-	{
-		errmsg = ft_strrjoin("minishell: ", args[0], ": command not found\n");
-		ft_putstr_fd(errmsg, 2);
-		if (errmsg)
-			free(errmsg);
-	}
-	else
+	if (filepath)
 	{
 		execve(filepath, args, envp);
 		free(filepath);

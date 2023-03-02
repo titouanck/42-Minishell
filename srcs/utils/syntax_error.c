@@ -1,33 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_cmd.c                                        :+:      :+:    :+:   */
+/*   syntax_error.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/27 14:36:51 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/02 19:26:55 by tchevrie         ###   ########.fr       */
+/*   Created: 2023/03/02 18:16:28 by tchevrie          #+#    #+#             */
+/*   Updated: 2023/03/02 18:18:30 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-t_cmd	*parse_cmd(t_env *environment, char **line)
+void	syntax_error_near(char c)
 {
-	t_cmd	*cmd;
+	char	token[2];
+	char	*errmsg;
 
-	cmd = parse_args(environment, line);
-	if (!(cmd))
-		return (NULL);
-	else if (cmd->args && !(cmd->args[0]))
-	{
-		ft_putstr_fd("minishell: : command not found\n", 2);
-		free_tabstr(cmd->args);
-		free_redirect(cmd->redirect);
-		free(cmd);
-		g_returnval = 127;
-		return (cmd);
-	}
-	else
-		return (cmd);
+	token[0] = c;
+	token[1] = '\0';
+	errmsg = ft_strrjoin("minishell: syntax error near unexpected `", token, "\'\n");
+	if (!errmsg)
+		return ;
+	ft_putstr_fd(errmsg, 2);
+	free(errmsg);
 }

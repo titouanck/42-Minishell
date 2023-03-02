@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/01 19:27:02 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/02 19:25:55 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,5 +52,6 @@ void	parsing(t_env *environment, char **line)
 	// args = parse_cmd(environment, cmds);
 	// free_tabstr(args);
 	// print_tabstr(args);
-	free_tabstr(cmds);
+	else
+		free_tabstr(cmds);
 }

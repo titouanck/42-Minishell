@@ -6,16 +6,31 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/01 20:06:56 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/02 19:35:14 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
+void	free_heredocs(t_heredoc *heredoc)
+{
+	t_heredoc *tmp;
+
+	while (heredoc)
+	{
+		tmp = heredoc->next;
+		free(heredoc->limiter);
+		free(heredoc);
+		heredoc = tmp;
+	}
+}
+
 void	free_redirect(t_redirect *redirect)
 {
 	if (!redirect)
 		return ;
+	if (redirect->heredoc)
+		free_heredocs(redirect->heredoc);
 	free(redirect->infile);
 	free(redirect->outfile);
 	free(redirect);
@@ -64,7 +79,7 @@ static int _leftchevron(char *line, t_redirect *redirect)
 				while (line[i] == SEPARATOR)
 					i++;
 				if (!line[i] || line[i] == LEFTCHEVRON || line[i] == RIGHTCHEVRON)
-					return (ft_putstr_fd("minishell: syntax error near unexpected token `\? < \?\'\n", 2), 0);
+					return (ft_putstr_fd("minishell: syntax error: expected limiter near `<<\'\n", 2), -1);
 				start = line + i;
 				while (line[i] > 0)
 					i++;
@@ -94,7 +109,7 @@ static int _leftchevron(char *line, t_redirect *redirect)
 				while (line[i] == SEPARATOR)
 					i++;
 				if (!line[i] || line[i] == LEFTCHEVRON || line[i] == RIGHTCHEVRON)
-					return (ft_putstr_fd("minishell: syntax error near unexpected token `\? < \?\'\n", 2), 0);
+					return (ft_putstr_fd("minishell: syntax error: expected infile near `<\'\n", 2), -1);
 				start = line + i;
 				while (line[i] > 0)
 					i++;
@@ -151,10 +166,16 @@ static int _rightchevron(char *line, t_redirect *redirect)
 			while (line[i] == SEPARATOR)
 				i++;
 			if (!line[i] || line[i] == LEFTCHEVRON || line[i] == RIGHTCHEVRON)
-				return (ft_putstr_fd("minishell: syntax error near unexpected token `\? > \?\'\n", 2), 0);
+				return (ft_putstr_fd("minishell: syntax error: expected outfile near `>\'\n", 2), -1);
 			start = line + i;
 			while (line[i] > 0)
 				i++;
+			if (line[i] == EMPTYQUOTE)
+			{
+				printf("situation\n");
+				ft_memmove(line + i, line + i + 1, ft_strlen(line + i) + 1);
+				i--;
+			}
 			end = line + i;
 			if (redirect->outfile)
 			{
@@ -214,19 +235,6 @@ int	heredoc_file(t_redirect *redirect)
 	return (fd);
 }
 
-void	free_heredocs(t_heredoc *heredoc)
-{
-	t_heredoc *tmp;
-
-	while (heredoc)
-	{
-		tmp = heredoc->next;
-		free(heredoc->limiter);
-		free(heredoc);
-		heredoc = tmp;
-	}
-}
-
 void	use_heredoc(t_redirect *redirect)
 {
 	t_heredoc	*current;
@@ -246,7 +254,9 @@ void	use_heredoc(t_redirect *redirect)
 			line = readline("> ");
 			if (!line)
 			{
-				ft_putstr_fd("ERREUR\n", 2);
+				ft_putstr_fd("minishell: warning: here-document delimited by end-of-file (wanted `", 2);
+				ft_putstr_fd(current->limiter, 2);
+				ft_putstr_fd("\')\n", 2);
 				break ;
 			}
 			if (ft_strcmp(current->limiter, line) == 0)
@@ -258,7 +268,7 @@ void	use_heredoc(t_redirect *redirect)
 			{
 				write(fd, line, ft_strlen(line));
 				write(fd, "\n", 1);
-			}	
+			}
 			free(line);
 		}
 		current = current->next;
@@ -269,9 +279,11 @@ void	use_heredoc(t_redirect *redirect)
 	redirect->heredoc = NULL;
 }
 
-t_redirect	*redirections(char *line)
+t_redirect	*redirections(char *line, int empty)
 {
 	t_redirect	*redirect;
+	int			leftreturn;
+	int			rightreturn;
 
 	redirect = malloc(sizeof(t_redirect));
 	if (!redirect)
@@ -280,8 +292,29 @@ t_redirect	*redirections(char *line)
 	redirect->heredoc = NULL;
 	redirect->outfile = NULL;
 	redirect->append = 0;
-	if (!_leftchevron(line, redirect) || !_rightchevron(line, redirect))
-		return (free(redirect->infile), free(redirect->outfile), free(redirect->heredoc), free(redirect), NULL);
-	use_heredoc(redirect);
+	if (!empty)
+	{
+		redirect->to_execute = TRUE;
+		leftreturn = _leftchevron(line, redirect);
+		if (leftreturn == -1)
+			return (free_redirect(redirect), NULL);
+		else if (leftreturn == 0)
+		{
+			redirect->to_execute = FALSE;
+			free_heredocs(redirect->heredoc);
+			redirect->heredoc = NULL;
+		}
+		rightreturn = _rightchevron(line, redirect);
+		if (rightreturn == -1)
+			return (free_redirect(redirect), NULL);
+		else if (leftreturn == 0)
+			redirect->to_execute = FALSE;
+		use_heredoc(redirect);
+	}
+	else
+	{
+		redirect->to_execute = FALSE;
+		line[0] = '\0';
+	}
 	return (redirect);
 }

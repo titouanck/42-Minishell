@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 12:48:16 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/01 16:09:49 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/02 19:31:42 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,32 @@ static int	_detect_missing_quote(int single_quote_open, int double_quote_open)
 		return (1);
 }
 
+static int _detect_empty_redirections(char *line)
+{
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] == '>' || (line[i] == '<' && (i == 0 || line[i - 1] != '<')))
+		{
+			j = i + 1;
+			while (ft_iswhitespace(line[j]))
+				j++;
+			if  ((line[j] == '\"' && line[j + 1] == '\"') || (line[j] == '\'' && line[j + 1] == '\''))
+			{
+				while ((line[j] == '\"' && line[j + 1] == '\"') || (line[j] == '\'' && line[j + 1] == '\''))
+					j += 2;
+				if (!line[j] || ft_iswhitespace(line[j]))
+					return (ft_putstr_fd("minishell: : No such file or directory\n", 2), 0);
+			}
+		}
+		i++;
+	}
+	return (1);
+}
+
 int	quotes_interpretation(t_env *environment, char **line)
 {
 	char	*ptr;
@@ -91,6 +117,8 @@ int	quotes_interpretation(t_env *environment, char **line)
 	i = 0;
 	single_quote_open = FALSE;
 	double_quote_open = FALSE;
+	if (_detect_empty_redirections(*line) == 0)
+		return (0);
 	while ((*line)[i])
 	{
 		if (single_quote_open)

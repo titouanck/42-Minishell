@@ -6,33 +6,83 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 15:07:04 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/01 14:58:07 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/02 19:26:19 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-void	pipex(t_env *environment, char **cmds)
+void	free_cmds_parsed(t_cmd **tab)
 {
-	int		pipefd[2];
-	int		middle_cmds;
+	size_t	i;
+
+	if (!tab)
+		return ;
+	i = 0;
+	while (tab[i])
+	{
+		if (tab[i]->args)
+			free_tabstr(tab[i]->args);
+		if (tab[i]->redirect)
+			free_redirect(tab[i]->redirect);
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
+}
+
+static t_cmd	**_get_cmds_parsed(t_env *environment, char **cmds)
+{
+	t_cmd	**cmds_parsed;
 	size_t	size;
-	size_t	cmdnbr;
+	size_t	i;
 
 	size = 0;
 	while (cmds[size])
 		size++;
-	if (size > 1)
+	cmds_parsed = malloc(sizeof(t_cmd *) * (size + 1));
+	if (!cmds_parsed)
+		return (ft_putstr_fd(ERRALLOC, 2), free_tabstr(cmds), NULL);
+	i = 0;
+	while (i < size)
 	{
-		if (!first_child(environment, pipefd, cmds))
-			return ;
-		middle_cmds = size - 2;
-		cmdnbr = 1;
-		while (middle_cmds-- > 0)
-			middle_child(environment, pipefd, cmds, cmdnbr++);
+		cmds_parsed[i] = parse_cmd(environment, cmds + i);
+		if (!cmds_parsed[i])
+			return (free_cmds_parsed(cmds_parsed), free_tabstr(cmds), NULL);
+		i++;
 	}
-	last_child(environment, pipefd, cmds, size);
+	cmds_parsed[i] = NULL;
+	return (cmds_parsed);
+}
+
+int	pipex(t_env *environment, char **cmds)
+{
+	int		pipefd[2];
+	size_t	cmdnbr;
+	t_cmd	**cmds_parsed;
+
+	cmds_parsed = _get_cmds_parsed(environment, cmds);
+	if (!cmds_parsed)
+		return (0);
+	free_tabstr(cmds);
+	cmdnbr = 0;
+	// if (cmds_parsed[1])
+	// {
+		// if (!first_child(environment, pipefd, cmds))
+			// return ;
+		// cmdnbr++;
+	// }
+	while (cmds_parsed[cmdnbr + 1])
+	{
+		// middle_child(environment, pipefd, cmds, cmdnbr);
+		cmdnbr++;
+	}
+	// if (cmdnbr > 0)
+		// close(pipefd[1]);
+	last_child(environment, pipefd, cmds_parsed, cmdnbr);
 	while (1)
 		if (wait(NULL) <= 0)
 			break ;
+	free_cmds_parsed(cmds_parsed);
+	return (1);
 }

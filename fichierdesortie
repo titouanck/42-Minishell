@@ -1,0 +1,15 @@
+total 164
+drwxr-xr-x 8 tchevrie 2022_paris  4096 Mar  2 19:27 .
+drwxr-xr-x 7 tchevrie 2022_paris  4096 Mar  1 18:44 ..
+drwxr-xr-x 2 tchevrie 2022_paris  4096 Mar  1 13:54 assets
+---------- 1 tchevrie 2022_paris 35280 Mar  2 15:21 cat2
+-rw-r--r-- 1 tchevrie 2022_paris     0 Mar  2 19:27 fichierdesortie
+drwxr-xr-x 8 tchevrie 2022_paris  4096 Mar  2 14:49 .git
+drwxr-xr-x 2 tchevrie 2022_paris  4096 Mar  2 14:49 inc
+drwxr-xr-x 5 tchevrie 2022_paris  4096 Mar  1 20:11 libft
+-rw-r--r-- 1 tchevrie 2022_paris   625 Mar  1 15:42 Makefile
+-rwxr-xr-x 1 tchevrie 2022_paris 86168 Mar  2 19:27 minishell
+-rw-r--r-- 1 tchevrie 2022_paris    64 Mar  2 18:18 out
+-rw-r--r-- 1 tchevrie 2022_paris     0 Mar  2 19:16 outeuh
+drwxr-xr-x 8 tchevrie 2022_paris  4096 Mar  2 18:16 srcs
+drwxr-xr-x 2 tchevrie 2022_paris  4096 Mar  2 16:55 .vscode

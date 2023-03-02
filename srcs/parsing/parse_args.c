@@ -49,8 +49,14 @@ t_cmd	*parse_args(t_env *environment, char **line)
 	cmd->args = NULL;
 	cmd->redirect = NULL;
 	if (!quotes_interpretation(environment, line))
-		return (free(cmd), NULL);
-	cmd->redirect = redirections(*line);
+	{
+		cmd->redirect = redirections(*line, TRUE);
+		if (!(cmd->redirect))
+			return (free(cmd), NULL);
+		return (cmd);
+	}
+	else
+		cmd->redirect = redirections(*line, FALSE);
 	if (!(cmd->redirect))
 		return (free(cmd), NULL);
 	cmd->args = ft_split(*line, SEPARATOR);

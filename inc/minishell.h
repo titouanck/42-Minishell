@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/01 17:09:21 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/02 19:21:50 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZ\
 # define LEFTCHEVRON -4
 # define RIGHTCHEVRON -5
 # define HEREDOC -6
+# define EMPTYQUOTE -7
 
 # ifndef TRUE
 #  define TRUE 1
@@ -71,6 +72,7 @@ typedef struct	s_redirect
 	char		*outfile;
 	int			fd_outfile;
 	int			append;
+	int			to_execute;
 }			t_redirect;
 
 typedef struct s_cmd
@@ -106,7 +108,7 @@ t_cmd		*parse_cmd(t_env *environment, char **line);
 // parse_args.c
 t_cmd		*parse_args(t_env *environment, char **line);
 // redirections.c
-t_redirect	*redirections(char *line);
+t_redirect	*redirections(char *line, int empty);
 // replace_key_by_value.c
 char		*replace_key_by_value(t_env *environment, char *line);
 // quotes_interpretation.c
@@ -139,12 +141,19 @@ char		**get_path(char *envp[]);
 
 					/* Pipex */
 
-void	pipex(t_env *environment, char **cmds);
+int		pipex(t_env *environment, char **cmds);
 int		first_child(t_env *environment, int pipefd[2], char **cmds);
 int		middle_child(t_env *environment, int pipefd[2], char **cmds, size_t cmdnbr);
-void	last_child(t_env *environment, int pipefd[2], char **cmds, size_t size);
+void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr);
+// void	last_child(t_env *environment, int pipefd[2], t_cmd *cmd, size_t size);
+// void	last_child(t_env *environment, int pipefd[2], char **cmds, size_t size);
 
 // PAS CLASSE
 void	free_redirect(t_redirect *redirect);
+void	free_cmds_parsed(t_cmd **tab);
+
+					/* Utils */
+// syntax_error.c
+void	syntax_error_near(char c);
 
 #endif
