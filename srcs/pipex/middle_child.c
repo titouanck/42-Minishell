@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "minishell.h"
 
 int	middle_child(t_env *environment, int pipefd[2], char **cmds, size_t cmdnbr)
 {

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "minishell.h"
 
 int	_open_fds(t_redirect *redirect)
 {
@@ -55,6 +55,8 @@ int	_open_fds(t_redirect *redirect)
 void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 {
 	pid_t	pid;
+	int		saved_stdin;
+	int		saved_stdout;
 
 	if(cmds[cmdnbr]->redirect->to_execute == FALSE || !_open_fds((cmds[cmdnbr])->redirect))
 	{
@@ -65,16 +67,30 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 	if (ft_strcmp((cmds[cmdnbr]->args)[0], "exit") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "cd") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "unset") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "export") == 0)
 	{
 		if ((cmds[cmdnbr])->redirect->outfile)
+		{
+			saved_stdout = dup(1);
 			dup2((cmds[cmdnbr])->redirect->fd_outfile, STDOUT_FILENO);
+		}
 		if ((cmds[cmdnbr])->redirect->infile)
+		{
+			saved_stdin = dup(0);
 			dup2((cmds[cmdnbr])->redirect->fd_infile, STDIN_FILENO);
+		}
 		else if (cmdnbr != 0)
 			dup2(pipefd[0], STDIN_FILENO);
 		parse_builtin(environment, (cmds[cmdnbr])->args, cmds, cmdnbr);
 		if ((cmds[cmdnbr])->redirect->outfile)
+		{
 			close((cmds[cmdnbr])->redirect->fd_outfile);
+			dup2(saved_stdout, STDOUT_FILENO);
+			close(saved_stdout);
+		}
 		if ((cmds[cmdnbr])->redirect->infile)
+		{
 			close((cmds[cmdnbr])->redirect->fd_infile);
+			dup2(saved_stdin, STDIN_FILENO);
+			close(saved_stdin);
+		}
 		return ;
 	}
 	pid = fork();

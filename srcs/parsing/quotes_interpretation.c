@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "minishell.h"
 
 static void	_actions_singlequoteopen(char *line, \
 	int *single_quote_open, size_t *i)

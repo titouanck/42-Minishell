@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "minishell.h"
 
 static void	_i_want_to_exit(t_env *environment, char **args, \
 	t_cmd **cmds, unsigned char code)
