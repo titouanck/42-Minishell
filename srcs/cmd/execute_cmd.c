@@ -61,13 +61,9 @@ int	execute_cmd(t_env *environment, char **args)
 	char	*filepath;
 	char	*errmsg;
 
-	if (!args)
-		return (_command_not_found(args), 0);
-	if (!args[0])
-	{
-		ft_putstr_fd("minishell: : command not found\n", 2);
-		return (_command_not_found(args), 0);
-	}
+	if (!args || !args[0])
+		return (ft_putstr_fd("minishell: : command not found\n", 2), \
+		_command_not_found(args), 0);
 	envp = format_environment(environment);
 	path = get_path(envp);
 	filepath = _locate_file(path, args[0]);

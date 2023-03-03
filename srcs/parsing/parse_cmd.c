@@ -22,9 +22,7 @@ t_cmd	*parse_cmd(t_env *environment, char **line)
 	else if (cmd->args && !(cmd->args[0]))
 	{
 		ft_putstr_fd("minishell: : command not found\n", 2);
-		free_tabstr(cmd->args);
-		free_redirect(cmd->redirect);
-		free(cmd);
+		cmd->redirect->to_execute = FALSE;
 		g_returnval = 127;
 		return (cmd);
 	}

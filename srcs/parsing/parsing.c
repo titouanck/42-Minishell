@@ -43,7 +43,7 @@ void	parsing(t_env *environment, char **line)
 			free_tabstr(cmds + i);
 			cmds[i] = NULL;
 			break ;
-		}	
+		}
 		i++;
 	}
 	if (cmds && *cmds)

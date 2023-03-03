@@ -95,7 +95,7 @@ void	ftbuiltin_cd(t_env *environment, char **args)
 	else if (args && args[0] && args[1])
 	{
 		r = chdir(args[1]);
-		if (r == 1)
+		if (r == -1)
 		{
 			err_str = ft_strjoin("minishell: cd: ", args[1]);
 			if (!err_str)

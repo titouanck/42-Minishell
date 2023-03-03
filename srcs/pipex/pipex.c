@@ -49,6 +49,8 @@ static t_cmd	**_get_cmds_parsed(t_env *environment, char **cmds)
 		cmds_parsed[i] = parse_cmd(environment, cmds + i);
 		if (!cmds_parsed[i])
 			return (free_cmds_parsed(cmds_parsed), free_tabstr(cmds), NULL);
+		if (!cmds_parsed[i]->args || !(cmds_parsed[i]->args[0]) || !(cmds_parsed[i]->args[0][0]))
+			cmds_parsed[i]->redirect->to_execute = FALSE;
 		i++;
 	}
 	cmds_parsed[i] = NULL;
