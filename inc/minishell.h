@@ -123,7 +123,8 @@ t_env		*opening(int argc, char **argv, char *envp[]);
 // closing.c
 void		closing_the_program(t_env *environment);
 // signal.c
-void		change_signal_behavior(void);
+void		default_signal_behavior(void);
+void		cmd_signal_behavior(void);
 // get_environment.c
 t_env		*get_environment(char *envp[]);
 

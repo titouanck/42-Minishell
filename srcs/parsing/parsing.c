@@ -47,7 +47,11 @@ void	parsing(t_env *environment, char **line)
 		i++;
 	}
 	if (cmds && *cmds)
+	{
+		cmd_signal_behavior();
 		pipex(environment, cmds);
+		default_signal_behavior();
+	}
 	else
 		free_tabstr(cmds);
 }
