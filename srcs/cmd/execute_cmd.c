@@ -22,19 +22,22 @@ char	*_locate_file(char **path, char *arg)
 	char	*filepath;
 	size_t	i;
 
-	filepath = ft_strdup(arg);
-	if (!filepath)
-		return (ft_putstr_fd(ERRALLOC, 2), NULL);
-	if (access(filepath, F_OK) == 0)
+	if (ft_strncmp(arg, "/", 1) == 0 || ft_strncmp(arg, "./", 2) == 0)
 	{
-		if (access(filepath, X_OK) == 0)
-			return (filepath);
-		else
-			return (ft_putstr_fd("minishell: ", 2), perror(arg), free(filepath), NULL);
+		filepath = ft_strdup(arg);
+		if (!filepath)
+			return (ft_putstr_fd(ERRALLOC, 2), NULL);
+		if (access(filepath, F_OK) == 0)
+		{
+			if (access(filepath, X_OK) == 0)
+				return (filepath);
+			else
+				return (ft_putstr_fd("minishell: ", 2), perror(arg), free(filepath), NULL);
+		}
+		free(filepath);
 	}
-	free(filepath);
 	if (!path)
-		return (NULL);
+		return (ft_putstr_fd("minishell: ", 2), ft_putstr_fd(arg, 2), ft_putstr_fd(": command not found\n", 2), NULL);
 	i = 0;
 	while (path[i])
 	{
