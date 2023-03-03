@@ -27,10 +27,18 @@ void	free_heredocs(t_heredoc *heredoc)
 
 void	free_redirect(t_redirect *redirect)
 {
+	int	fd;
+
 	if (!redirect)
 		return ;
 	if (redirect->heredoc)
 		free_heredocs(redirect->heredoc);
+	if (redirect->heredocfile)
+	{
+		fd = open(redirect->heredocfile, O_WRONLY | O_TRUNC);
+		if (fd != -1)
+			close(fd);
+	}
 	free(redirect->infile);
 	free(redirect->outfile);
 	free(redirect);
@@ -233,7 +241,7 @@ int	heredoc_file(t_redirect *redirect)
 		redirect->infile = NULL;
 	}
 	else
-	
+		redirect->heredocfile = filename;
 	return (fd);
 }
 
@@ -292,6 +300,7 @@ t_redirect	*redirections(char *line, int empty)
 		return (ft_putstr_fd(ERRALLOC, 2), NULL);
 	redirect->infile = NULL;
 	redirect->heredoc = NULL;
+	redirect->heredocfile = NULL;
 	redirect->outfile = NULL;
 	redirect->append = 0;
 	if (!empty)

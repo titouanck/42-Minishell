@@ -68,6 +68,7 @@ typedef struct	s_redirect
 	char		*infile;
 	int			fd_infile;
 	t_heredoc	*heredoc;
+	char		*heredocfile;
 	char		*outfile;
 	int			fd_outfile;
 	int			append;
@@ -146,9 +147,6 @@ int		pipex(t_env *environment, char **cmds);
 int		first_child(t_env *environment, int pipefd[2], t_cmd **cmds);
 int		middle_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr);
 void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr);
-// void	last_child(t_env *environment, int pipefd[2], t_cmd *cmd, size_t size);
-// void	last_child(t_env *environment, int pipefd[2], char **cmds, size_t size);
-
 // io_open_fds.c
 int		io_open_fds(t_redirect *redirect);
 
