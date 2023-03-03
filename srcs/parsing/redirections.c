@@ -232,6 +232,8 @@ int	heredoc_file(t_redirect *redirect)
 		free(filename);
 		redirect->infile = NULL;
 	}
+	else
+	
 	return (fd);
 }
 

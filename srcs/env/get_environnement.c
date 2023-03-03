@@ -64,6 +64,5 @@ t_env	*get_environment(char *envp[])
 		}
 		i++;
 	}
-	environment->pwd = getcwd(NULL, 0);
 	return (environment);
 }

@@ -14,9 +14,15 @@
 
 void	ftbuiltin_pwd(t_env *environment)
 {
-	if (environment && environment->pwd)
-		free(environment->pwd);
-	environment->pwd = getcwd(NULL, 0);
-	ft_putstr(environment->pwd);
-	ft_putchar('\n');
+	char	*pwd;
+
+	pwd = getcwd(NULL, 0);
+	if (!pwd)
+		perror("minishell: pwd");
+	else
+	{
+		ft_putstr(pwd);
+		ft_putchar('\n');
+		free(pwd);
+	}
 }

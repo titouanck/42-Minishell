@@ -12,16 +12,28 @@
 
 #include "minishell.h"
 
-static void	_i_want_to_exit(t_env *environment, char **args, \
-	t_cmd **cmds, unsigned char code)
+static void	_i_want_to_exit(t_env *environment, t_cmd **cmds, \
+unsigned char code, size_t cmdnbr)
 {
+	if (cmds && cmds[cmdnbr] && (cmds[cmdnbr])->redirect->infile)
+	{
+		close((cmds[cmdnbr])->redirect->fd_infile);
+		dup2(cmds[cmdnbr]->saved_stdin, STDIN_FILENO);
+		close(cmds[cmdnbr]->saved_stdin);
+	}
+	if (cmds && cmds[cmdnbr] && (cmds[cmdnbr])->redirect->outfile)
+	{
+		close((cmds[cmdnbr])->redirect->fd_outfile);
+		dup2(cmds[cmdnbr]->saved_stdout, STDOUT_FILENO);
+		close(cmds[cmdnbr]->saved_stdout);
+	}
 	free_cmds_parsed(cmds);
 	closing_the_program(environment);
 	ft_putstr_fd("exit\n", 2);
 	exit(code);
 }
 
-void	ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds)
+void	ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr)
 {
 	unsigned char	code;
 	char			*errmsg;
@@ -39,7 +51,7 @@ void	ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds)
 			else
 				ft_putstr_fd(errmsg, 2);
 			free(errmsg);
-			_i_want_to_exit(environment, args, cmds, 2);
+			_i_want_to_exit(environment, cmds, 2, cmdnbr);
 			return ;
 		}
 		else
@@ -54,7 +66,7 @@ void	ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds)
 					else
 						ft_putstr_fd(errmsg, 2);
 					free(errmsg);
-					_i_want_to_exit(environment, args, cmds, 2);
+					_i_want_to_exit(environment, cmds, 2, cmdnbr);
 					return ;
 				}
 			}
@@ -67,5 +79,5 @@ void	ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds)
 		}
 		code = (unsigned char) ft_atoi(args[1]);
 	}
-	_i_want_to_exit(environment, args, cmds, code);	
+	_i_want_to_exit(environment, cmds, code, cmdnbr);	
 }

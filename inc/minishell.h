@@ -55,7 +55,6 @@ typedef struct s_env
 	char			*value;
 	int				exported;
 	struct s_env	*next;
-	char			*pwd;
 }					t_env;
 
 typedef	struct	s_heredoc
@@ -79,6 +78,8 @@ typedef struct s_cmd
 {
 	char		**args;
 	t_redirect	*redirect;
+	int			saved_stdout;
+	int			saved_stdin;
 }				t_cmd;
 
 			/* Built-in Functions & Commands */
@@ -89,7 +90,7 @@ void		ftbuiltin_pwd(t_env *environment);
 void		ftbuiltin_export(t_env *environment, char **args);
 void		ftbuiltin_unset(t_env *environment, char **args);
 void		ftbuiltin_env(t_env *environment);
-void		ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds);
+void		ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr);
 
 // execute_cmd.c
 int		execute_cmd(t_env *environment, char **args);
@@ -142,11 +143,14 @@ char		**get_path(char *envp[]);
 					/* Pipex */
 
 int		pipex(t_env *environment, char **cmds);
-int		first_child(t_env *environment, int pipefd[2], char **cmds);
-int		middle_child(t_env *environment, int pipefd[2], char **cmds, size_t cmdnbr);
+int		first_child(t_env *environment, int pipefd[2], t_cmd **cmds);
+int		middle_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr);
 void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr);
 // void	last_child(t_env *environment, int pipefd[2], t_cmd *cmd, size_t size);
 // void	last_child(t_env *environment, int pipefd[2], char **cmds, size_t size);
+
+// io_open_fds.c
+int		io_open_fds(t_redirect *redirect);
 
 // PAS CLASSE
 void	free_redirect(t_redirect *redirect);

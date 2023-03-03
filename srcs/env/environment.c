@@ -16,8 +16,6 @@ void	free_environment(t_env *environment)
 {
 	t_env	*tmp;
 
-	if (environment && environment->pwd)
-		free(environment->pwd);
 	while (environment)
 	{
 		tmp = environment;

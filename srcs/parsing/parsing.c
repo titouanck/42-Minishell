@@ -48,10 +48,6 @@ void	parsing(t_env *environment, char **line)
 	}
 	if (cmds && *cmds)
 		pipex(environment, cmds);
-	// char	**args;
-	// args = parse_cmd(environment, cmds);
-	// free_tabstr(args);
-	// print_tabstr(args);
 	else
 		free_tabstr(cmds);
 }

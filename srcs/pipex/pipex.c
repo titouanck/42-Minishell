@@ -66,23 +66,26 @@ int	pipex(t_env *environment, char **cmds)
 		return (0);
 	free_tabstr(cmds);
 	cmdnbr = 0;
-	// if (cmds_parsed[1])
-	// {
-		// if (!first_child(environment, pipefd, cmds))
-			// return ;
-		// cmdnbr++;
-	// }
-	while (cmds_parsed[cmdnbr + 1])
+	if (cmds_parsed[1])
 	{
-		// middle_child(environment, pipefd, cmds, cmdnbr);
+		if (!first_child(environment, pipefd, cmds_parsed))
+			return (0);
 		cmdnbr++;
 	}
-	// if (cmdnbr > 0)
-		// close(pipefd[1]);
+	while (cmds_parsed[cmdnbr + 1])
+	{
+		if (!middle_child(environment, pipefd, cmds_parsed, cmdnbr))
+		{
+			while (1)
+				if (wait(NULL) <= 0)
+					break ;
+			return (free_cmds_parsed(cmds_parsed), 0);
+		}	
+		cmdnbr++;
+	}
 	last_child(environment, pipefd, cmds_parsed, cmdnbr);
 	while (1)
 		if (wait(NULL) <= 0)
 			break ;
-	free_cmds_parsed(cmds_parsed);
-	return (1);
+	return (free_cmds_parsed(cmds_parsed), 1);
 }
