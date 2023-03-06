@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 14:29:05 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/06 16:33:34 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/06 17:36:45 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,15 @@ char		*ft_strrjoin(char const *s1, char const *s2, char const *s3);
 
 void		ft_printtab(char **tab);
 
-void		ft_freetab(void **ptr);
+void		ft_freetab(char **tab);
+
+int			ft_inset(char c, char *set);
+
+int			ft_strinset(const char *str, const char *set, size_t len);
+
+int			ft_iswhitespace(char c);
+
+char		*ft_strip(char *str);
+
 
 #endif

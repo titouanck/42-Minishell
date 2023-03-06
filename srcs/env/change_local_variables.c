@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/06 10:16:54 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/06 17:35:02 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	_parse_key(char **line, char **key)
 	if (!((*line)[i] == '=' || ((*line)[i] == '+' && (*line)[i + 1] == '=')))
 		return (0);
 	append = 0;
-	*key = ft_strdupn(key_start, key_end - key_start);
+	*key = ft_strndup(key_start, key_end - key_start);
 	if (!(*key))
 		ft_putstr_fd(ERRALLOC, 2);
 	if ((*line)[i] == '+' && (*line)[i + 1] == '=')
@@ -91,7 +91,7 @@ static int	_parse_value(t_env *environment, char **line, char **value)
 	if (value_start == value_end)
 		return (1);
 	*line = value_end;
-	*value = ft_strdupn(value_start, value_end - value_start);
+	*value = ft_strndup(value_start, value_end - value_start);
 	if (!(*value))
 		ft_putstr_fd(ERRALLOC, 2);
 	if (!quotes_interpretation(environment, value))

@@ -37,7 +37,7 @@ SRCS += pipex.c
 
 SRCS += minishell.c
 
-INC = -I inc/ -I libft/
+INC = -I inc/ -I libft/inc
 LIBS = -L libft -lft -lreadline
 
 SRCS_PATH += ./srcs/
@@ -73,9 +73,7 @@ ${OBJS}: ${OBJS_PATH}/%.o: %.c Makefile
 
 ${NAME}:  ${OBJS}
 	@	${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${LIBS} ${INC}	
-
-
-
+	@	echo -ne "\r\033[2K" $(LIGHTGREEN) "→ $(NAME) OK!\n"$(NC)
 
 run:	all
 		clear
@@ -86,8 +84,8 @@ valgrind:	all
 			valgrind --track-fds=yes --suppressions=assets/ignore_readline_leaks.supp --leak-check=full --show-leak-kinds=all ./${NAME}
 
 clean:	
-	@	echo -ne "\r\033[2K" $(GREEN) "\t$(NAME) cleaned\n"$(NC)
 	@	+$(MAKE) --no-print-directory -s -C libft clean
+	@	echo -ne "\r\033[2K" $(GREEN) "\t$(NAME) cleaned\n"$(NC)
 	@	rm -rf ${OBJS_PATH}
 
 

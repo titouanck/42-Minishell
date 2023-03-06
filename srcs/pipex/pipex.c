@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 15:07:04 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/06 11:15:14 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/06 17:26:28 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	free_cmds_parsed(t_cmd **tab)
 	while (tab[i])
 	{
 		if (tab[i]->args)
-			free_tabstr(tab[i]->args);
+			ft_freetab(tab[i]->args);
 		if (tab[i]->redirect)
 			free_redirect(tab[i]->redirect);
 		free(tab[i]);
@@ -42,13 +42,13 @@ static t_cmd	**_get_cmds_parsed(t_env *environment, char **cmds)
 		size++;
 	cmds_parsed = malloc(sizeof(t_cmd *) * (size + 1));
 	if (!cmds_parsed)
-		return (ft_putstr_fd(ERRALLOC, 2), free_tabstr(cmds), NULL);
+		return (ft_putstr_fd(ERRALLOC, 2), ft_freetab(cmds), NULL);
 	i = 0;
 	while (i < size)
 	{
 		cmds_parsed[i] = parse_cmd(environment, cmds + i);
 		if (!cmds_parsed[i])
-			return (free_cmds_parsed(cmds_parsed), free_tabstr(cmds), NULL);
+			return (free_cmds_parsed(cmds_parsed), ft_freetab(cmds), NULL);
 		if (!cmds_parsed[i]->args || !(cmds_parsed[i]->args[0]) || !(cmds_parsed[i]->args[0][0]))
 			cmds_parsed[i]->redirect->to_execute = FALSE;
 		i++;
@@ -66,7 +66,7 @@ int	pipex(t_env *environment, char **cmds)
 	cmds_parsed = _get_cmds_parsed(environment, cmds);
 	if (!cmds_parsed)
 		return (0);
-	free_tabstr(cmds);
+	ft_freetab(cmds);
 	cmd_signal_behavior();
 	cmdnbr = 0;
 	if (cmds_parsed[1])

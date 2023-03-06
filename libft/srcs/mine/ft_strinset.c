@@ -1,28 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_freetab.c                                       :+:      :+:    :+:   */
+/*   ft_strinset.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/06 16:31:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/06 17:32:48 by tchevrie         ###   ########.fr       */
+/*   Created: 2023/02/23 10:45:27 by tchevrie          #+#    #+#             */
+/*   Updated: 2023/02/23 11:04:17 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_freetab(char **tab)
+int	ft_strinset(const char *str, const char *set, size_t len)
 {
 	size_t	i;
+	size_t	j;
+	size_t	notfound;
 
-	if (!tab)
-		return ;
+	if (!str || !set || !(*set))
+		return (1);
+	if (len == 0)
+		len = ft_strlen(str);
+	notfound = ft_strlen(set);
 	i = 0;
-	while (tab[i])
+	while (str[i] && i < len)
 	{
-		free(tab[i]);
+		j = 0;
+		while (set[j])
+		{
+			if (str[i] == set[j])
+				break ;
+			j++;
+		}
+		if (j == notfound)
+			return (0);
 		i++;
 	}
-	free(tab);
+	return (1);
 }

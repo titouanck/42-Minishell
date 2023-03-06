@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/06 10:52:06 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/06 17:26:28 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	parsing(t_env *environment, char **line)
 			ft_strip(cmds[i]);
 		else
 		{
-			free_tabstr(cmds + i);
+			ft_freetab(cmds + i);
 			cmds[i] = NULL;
 			break ;
 		}
@@ -52,5 +52,5 @@ void	parsing(t_env *environment, char **line)
 		default_signal_behavior();
 	}
 	else
-		free_tabstr(cmds);
+		ft_freetab(cmds);
 }

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/06 12:01:35 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/06 17:26:28 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	check_for_stdout(char *output)
 		r = 1;
 	else
 		r = 0;
-	free_tabstr(tab);
+	ft_freetab(tab);
 	return (r);
 }
 

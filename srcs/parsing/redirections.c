@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/06 11:07:05 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/06 17:35:02 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ static int _leftchevron(char *line, t_redirect *redirect)
 						close(fd);
 					free(redirect->infile);
 				}
-				limiter = ft_strdupn(start, end - start);
+				limiter = ft_strndup(start, end - start);
 				if (!limiter)
 					return (0);
 				redirect->heredoc = lstnew_heredoc(redirect->heredoc, limiter);
@@ -135,7 +135,7 @@ static int _leftchevron(char *line, t_redirect *redirect)
 						close(fd);
 					free(redirect->infile);
 				}
-				redirect->infile = ft_strdupn(start, end - start);
+				redirect->infile = ft_strndup(start, end - start);
 				ft_memmove(line + old_i, line + i, ft_strlen(line + i) + 1);
 			}
 			i = old_i - 1;
@@ -201,7 +201,7 @@ static int _rightchevron(char *line, t_redirect *redirect)
 					close(fd);
 				free(redirect->outfile);
 			}
-			redirect->outfile = ft_strdupn(start, end - start);
+			redirect->outfile = ft_strndup(start, end - start);
 			ft_memmove(line + old_i, line + i, ft_strlen(line + i) + 1);
 			i = old_i - 1;
 		}

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 13:47:57 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/06 15:50:07 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/06 17:26:28 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,8 @@ int	execute_cmd(t_env *environment, char **args)
 		}
 	}
 	if (envp)
-		free_tabstr(envp);
+		ft_freetab(envp);
 	if (path)
-		free_tabstr(path);
+		ft_freetab(path);
 	return (_command_not_found(args), 0);
 }

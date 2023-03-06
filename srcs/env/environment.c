@@ -53,7 +53,7 @@ char	**format_environment(t_env *environment)
 	{
 		env[i] = ft_strrjoin(elem->key, "=", elem->value);
 		if (!env[i])
-			return (free_tabstr(env), ft_putstr_fd(ERRALLOC, 2), NULL);
+			return (ft_freetab(env), ft_putstr_fd(ERRALLOC, 2), NULL);
 		elem = elem->next;
 		i++;
 	}

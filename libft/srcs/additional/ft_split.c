@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 16:56:46 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/06 16:31:22 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/06 17:32:28 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,21 +41,6 @@ static void	fill_tab(char *new, char const *s, char c)
 	new[i] = '\0';
 }
 
-static void	free_tabstr(char **tab)
-{
-	size_t	i;
-
-	if (!tab)
-		return ;
-	i = 0;
-	while (tab[i])
-	{
-		free(tab[i]);
-		i++;
-	}
-	free(tab);
-}
-
 static int	set_mem(char **tab, char const *s, char c)
 {
 	size_t	count;
@@ -73,7 +58,7 @@ static int	set_mem(char **tab, char const *s, char c)
 		{
 			tab[i] = malloc(sizeof(char) * (count + 1));
 			if (!tab[i])
-				return (free_tabstr(tab), 0);
+				return (ft_freetab(tab), 0);
 			fill_tab(tab[i], (s + index), c);
 			i++;
 			index = index + count;

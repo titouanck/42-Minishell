@@ -65,6 +65,10 @@ SRCS += ft_freetab.c
 SRCS += ft_printtab.c
 SRCS += ft_strchrset.c
 SRCS += ft_strrjoin.c
+SRCS += ft_inset.c
+SRCS += ft_strinset.c
+SRCS += ft_iswhitespace.c
+SRCS += ft_strip.c
 
 INC = -I inc
 

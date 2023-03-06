@@ -1,28 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_freetab.c                                       :+:      :+:    :+:   */
+/*   ft_inset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/06 16:31:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/06 17:32:48 by tchevrie         ###   ########.fr       */
+/*   Created: 2023/02/24 16:30:37 by tchevrie          #+#    #+#             */
+/*   Updated: 2023/02/24 16:30:44 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_freetab(char **tab)
+int	ft_inset(char c, char *set)
 {
 	size_t	i;
 
-	if (!tab)
-		return ;
+	if (!set)
+		return (0);
 	i = 0;
-	while (tab[i])
+	while (set[i])
 	{
-		free(tab[i]);
+		if (c == set[i])
+			return (1);
 		i++;
 	}
-	free(tab);
+	return (0);
 }
