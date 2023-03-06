@@ -24,9 +24,16 @@ SRCSPRINTF =	ft_printf/ft_printf.c ft_printf/ft_putadress.c ft_printf/ft_putchar
 SRCSGETNEXTLINE = get_next_line/get_next_line.c get_next_line/get_next_line_utils.c
 
 # Makefile
-SRCSALL = ${SRCSLIBFT} ${SRCSPRINTF} ${SRCSGETNEXTLINE}
-OBJS = ${SRCSALL:.c=.o}
-DEPS = ${SRCSALL:.c=.d}
+
+SRCS = ${SRCSLIBFT} ${SRCSPRINTF} ${SRCSGETNEXTLINE}
+
+OBJS_PATH = ./obj
+OBJS = ${patsubst %.c, ${OBJS_PATH}/%.o, ${SRCS}}
+
+INCLUDE = -I ./inc
+
+
+
 
 LIB = libft.a
 
@@ -34,13 +41,16 @@ CC = cc
 
 CFLAGS = -Wall -Wextra -Werror -I ./
 
-.c.o:
-		${CC} ${CFLAGS} -MMD -c $< -o ${<:.c=.o}
+all: 	${LIB}
+
+${OBJS}: ${OBJS_PATH}/%.o: %.c Makefile
+	@	mkdir -p ${OBJS_PATH}
+# @	$(COLORCOMPIL)
+	@	${CC} ${CFLAGS} -c $< -o $@ ${INCLUDE}
 
 ${LIB}:	${OBJS}
-		ar -rsc ${LIB} ${OBJS}
-
-all: 	${LIB}
+	@	ar -rsc ${LIB} ${OBJS}
+	@	echo -ne "\r\033[2K" $(LIGHTGREEN) "\t$(LIB) OK"$(NC)"\n""\n"
 
 clean:	
 	@	rm -f ${OBJS} ${DEPS}
@@ -50,6 +60,42 @@ fclean:	clean;
 
 re:	fclean all
 
--include ${DEPS}
 
 .PHONY: all clean fclean re bonus
+
+
+NC='\033[0m'
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+LIGHTGRAY='\033[0;37m'
+
+DARKGRAY='\033[1;30m'
+LIGHTRED='\033[1;31m'
+LIGHTGREEN='\033[1;32m'
+LIGHTBLUE='\033[1;34m'
+LIGHTPURPLE='\033[1;35m'
+LIGHTCYAN='\033[1;36m'
+YELLOW='\033[1;33m'
+WHITE='\033[1;37m'
+
+
+ifndef COLORCOMPIL
+COLORCOMPIL = \
+	if [ "$(shell test $P -lt 33; echo $$?)" = "0" ]; then \
+    	echo -ne "\r\033[2K" $(LIGHTRED) "[$(P)%] "$(DARKGRAY) "Compiling Libft" $(WHITE) "$<"; \
+	else \
+		if [ "$(shell test $P -lt 66; echo $$?)" = "0" ]; then \
+    		echo -ne "\r\033[2K" $(YELLOW) "[$(P)%]" $(DARKGRAY) "Compiling Libft" $(WHITE) "$<"; \
+		else \
+       		echo -ne "\r\033[2K" $(LIGHTGREEN) "[$(P)%]" $(DARKGRAY) "Compiling Libft" $(WHITE) "$<"; \
+		fi \
+	fi
+T := $(words $(SRCS))
+N := x
+C = $(words $N)$(eval N := x $N)
+P = `expr $C '*' 100 / $T / 5`
+endif
