@@ -50,7 +50,7 @@ t_cmd	*parse_args(t_env *environment, char **line)
 	cmd->redirect = NULL;
 	if (!quotes_interpretation(environment, line))
 	{
-		cmd->redirect = redirections(*line, TRUE);
+		cmd->redirect = redire	ctions(*line, TRUE);
 		if (!(cmd->redirect))
 			return (free(cmd), NULL);
 		return (cmd);

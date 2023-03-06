@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/02 19:54:50 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/06 11:14:59 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 
 # define PROMPT "minishell →"
 # define ERRALLOC "minishell: Could not allocate memory.\n"
-# define ERRPIPE "minishell: syntax error near unexpected token `|\'\n"
+# define ERRPIPE "minishell: syntax error near unexpected `|\'\n"
 # define VARNAMESET "abcdefghijklmnopqrstuvwxyz\
 ABCDEFGHIJKLMNOPQRSTUVWXYZ\
 0123456789_"
@@ -124,6 +124,7 @@ t_env		*opening(int argc, char **argv, char *envp[]);
 void		closing_the_program(t_env *environment);
 // signal.c
 void		default_signal_behavior(void);
+void		heredoc_signal_behavior(void);
 void		cmd_signal_behavior(void);
 // get_environment.c
 t_env		*get_environment(char *envp[]);
@@ -156,7 +157,5 @@ void	free_redirect(t_redirect *redirect);
 void	free_cmds_parsed(t_cmd **tab);
 
 					/* Utils */
-// syntax_error.c
-void	syntax_error_near(char c);
 
 #endif

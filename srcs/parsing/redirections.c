@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/02 19:35:14 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/06 11:07:05 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,7 +236,7 @@ int	heredoc_file(t_redirect *redirect)
 	fd = open(redirect->infile, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (fd == -1)
 	{
-		perror("open");
+		perror("minishell: open");
 		free(filename);
 		redirect->infile = NULL;
 	}

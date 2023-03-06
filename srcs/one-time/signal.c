@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:06 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/01 14:58:07 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/06 11:14:30 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,21 @@ void	cmd_signal_behavior(void)
 	struct sigaction	sa_quit;
 
 	sa_int.sa_handler = _cmd_sigint;
+	sa_int.sa_flags = 0;
+	sigemptyset(&sa_int.sa_mask);
+	sigaction(SIGINT, &sa_int, NULL);
+	sa_quit.sa_handler = SIG_DFL;
+	sa_quit.sa_flags = 0;
+	sigemptyset(&sa_quit.sa_mask);
+	sigaction(SIGQUIT, &sa_quit, NULL);
+}
+
+void	heredoc_signal_behavior(void)
+{
+	struct sigaction	sa_int;
+	struct sigaction	sa_quit;
+
+	sa_int.sa_handler = SIG_DFL;
 	sa_int.sa_flags = 0;
 	sigemptyset(&sa_int.sa_mask);
 	sigaction(SIGINT, &sa_int, NULL);

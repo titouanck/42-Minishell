@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 11:34:21 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/01 14:58:07 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/06 11:44:49 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ static void	_noarg(t_env *environment)
 
 void	ftbuiltin_cd(t_env *environment, char **args)
 {
+	char	*cwd;
 	char	*err_str;
 	char	*key;
 	char	*value;
@@ -89,7 +90,6 @@ void	ftbuiltin_cd(t_env *environment, char **args)
 
 	key = ft_strdup("OLDPWD");
 	value = getcwd(NULL, 0);
-	_export_element(environment, key, value);
 	if (args && args[0] && !args[1])
 		_noarg(environment);
 	else if (args && args[0] && args[1])
@@ -102,6 +102,8 @@ void	ftbuiltin_cd(t_env *environment, char **args)
 				ft_putstr_fd(ERRALLOC, 2);
 			perror(err_str);
 			free(err_str);
+			free(key);
+			free(value);
 			g_returnval = 1;
 		}
 		else
@@ -109,6 +111,15 @@ void	ftbuiltin_cd(t_env *environment, char **args)
 	}
 	else
 		g_returnval = 1;
+	cwd = getcwd(NULL, 0);
+	if (ft_strcmp(cwd, value) != 0)
+		_export_element(environment, key, value);
+	else
+	{
+		free (key);
+		free(value);
+	}
+	free(cwd);
 	key = ft_strdup("PWD");
 	value = getcwd(NULL, 0);
 	_export_element(environment, key, value);
