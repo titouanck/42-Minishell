@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 13:47:57 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/02 17:00:32 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/06 15:50:07 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*_locate_file(char **path, char *arg)
 	char	*filepath;
 	size_t	i;
 
-	if (ft_strncmp(arg, "/", 1) == 0 || ft_strncmp(arg, "./", 2) == 0)
+	if (ft_strncmp(arg, "/", 1) == 0 || ft_strncmp(arg, ".", 1) == 0)
 	{
 		filepath = ft_strdup(arg);
 		if (!filepath)
@@ -54,7 +54,7 @@ char	*_locate_file(char **path, char *arg)
 		free(filepath);
 		i++;
 	}
-	return (ft_putstr_fd("minishell: ", 2), perror(arg), NULL);
+	return (ft_putstr_fd("minishell: ", 2), ft_putstr_fd(arg, 2), ft_putstr_fd(": command not found\n", 2), NULL);
 }
 
 int	execute_cmd(t_env *environment, char **args)
@@ -75,10 +75,19 @@ int	execute_cmd(t_env *environment, char **args)
 		execve(filepath, args, envp);
 		free(filepath);
 		filepath = NULL;
-		errmsg = ft_strjoin("minishell: ", args[0]);
-		perror(errmsg);
-		if (errmsg)
-			free(errmsg);
+		if (errno == 13)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(args[0], 2);
+			ft_putstr_fd(": Is a directory\n", 2);
+		}
+		else
+		{
+			errmsg = ft_strjoin("minishell: ", args[0]);
+			perror(errmsg);
+			if (errmsg)
+				free(errmsg);
+		}
 	}
 	if (envp)
 		free_tabstr(envp);
