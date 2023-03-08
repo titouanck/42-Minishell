@@ -6,13 +6,13 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 16:26:08 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/01 14:58:07 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:27:01 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	_export_noarg(t_env *environment)
+static void	_export_noarg()
 {
 	while (environment)
 	{
@@ -28,7 +28,7 @@ static void	_export_noarg(t_env *environment)
 	}
 }
 
-static void	_export_element(t_env *environment, \
+static void	_export_element(\
 	char *key, char *value, int append)
 {
 	t_env	*elem;
@@ -61,7 +61,7 @@ static void	_export_element(t_env *environment, \
 		elem = elem->next;
 	}
 	if (value)
-		env_lstaddback(environment, key, value, 1);
+		env_lstaddback(key, value, 1);
 	else
 		free(key);
 }
@@ -90,13 +90,13 @@ static int	_export_key(char *arg, char *key, size_t i)
 	return (1);
 }
 
-static char	*_export_value(t_env *environment, char *arg, char **key, int append)
+static char	*_export_value(char *arg, char **key, int append)
 {
 	char	*value;
 
 	value = NULL;
 	if (arg[0] == '\0')
-		_export_element(environment, *key, NULL, append);
+		_export_element(*key, NULL, append);
 	else
 	{
 		value = ft_substr(arg, 1, ft_strlen(arg + 1));
@@ -107,12 +107,12 @@ static char	*_export_value(t_env *environment, char *arg, char **key, int append
 			g_returnval = 1;
 			return (NULL);
 		}
-		_export_element(environment, *key, value, append);
+		_export_element(*key, value, append);
 	}
 	return (value);
 }
 
-void	ftbuiltin_export(t_env *environment, char **args)
+void	ftbuiltin_export(char **args)
 {
 	char	*key;
 	size_t	j;
@@ -120,7 +120,7 @@ void	ftbuiltin_export(t_env *environment, char **args)
 	char	*arg;
 
 	if (!args[1])
-		_export_noarg(environment);
+		_export_noarg();
 	else
 	{
 		j = 1;
@@ -139,10 +139,10 @@ void	ftbuiltin_export(t_env *environment, char **args)
 				if (*key && key[ft_strlen(key) - 1] == '+')
 				{
 					key[ft_strlen(key) - 1] = '\0';
-					_export_value(environment, arg, &key, TRUE);
+					_export_value(arg, &key, TRUE);
 				}
 				else
-					_export_value(environment, arg, &key, FALSE);
+					_export_value(arg, &key, FALSE);
 			}
 			j++;
 		}

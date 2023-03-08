@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:18:38 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:26:11 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,42 +97,42 @@ extern int		g_returnval;
 			/* Built-in Functions & Commands */
 
 void		ftbuiltin_echo(char **args);
-void		ftbuiltin_cd(t_env *environment, char **args);
-void		ftbuiltin_pwd(t_env *environment);
-void		ftbuiltin_export(t_env *environment, char **args);
-void		ftbuiltin_unset(t_env *environment, char **args);
-void		ftbuiltin_env(t_env *environment);
-void		ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr);
+void		ftbuiltin_cd(char **args);
+void		ftbuiltin_pwd();
+void		ftbuiltin_export(char **args);
+void		ftbuiltin_unset(char **args);
+void		ftbuiltin_env();
+void		ftbuiltin_exit(char **args, t_cmd **cmds, size_t cmdnbr);
 
 // execute_cmd.c
-int		execute_cmd(t_env *environment, char **args);
+int		execute_cmd(char **args);
 
 					/* Parsing */
 
 // parse_builtin.c
-int	parse_builtin(t_env *environment, char **args, \
+int	parse_builtin(char **args, \
 	t_cmd **cmds, size_t cmdnbr);
 // split_cmds.c
 char		**split_cmds(char **ptr);
 // parsing.c
-void		parsing(t_env *environment, char **line);
+void		parsing(char **line);
 // parse_cmd.c
-t_cmd		*parse_cmd(t_env *environment, char **line, t_free to_free);
+t_cmd		*parse_cmd(char **line, t_free to_free);
 // parse_args.c
-t_cmd		*parse_args(t_env *environment, char **line, t_free to_free);
+t_cmd		*parse_args(char **line, t_free to_free);
 // redirections.c
-t_redirect	*redirections(t_env *environment, char *line, int empty, t_free to_free);
+t_redirect	*redirections(char *line, int empty, t_free to_free);
 // replace_key_by_value.c
-char		*replace_key_by_value(t_env *environment, char *line);
+char		*replace_key_by_value(char *line);
 // quotes_interpretation.c
-int			quotes_interpretation(t_env *environment, char **line);
+int			quotes_interpretation(char **line);
 
 				/* One-time actions */
 
 // opening.c
 t_env		*opening(int argc, char **argv, char *envp[]);
 // closing.c
-void		closing_the_program(t_env *environment);
+void		closing_the_program();
 // signal.c
 void		default_signal_behavior(void);
 void		heredoc_signal_behavior(void);
@@ -143,23 +143,23 @@ t_env		*get_environment(char *envp[]);
 					/* Environment */
 
 // ftbuiltin_unset.c
-void		ftbuiltin_unset_element(t_env *environment, char *arg);
+void		ftbuiltin_unset_element(char *arg);
 // change_local_variables.c
-int			change_local_variables(t_env *environment, char *line, size_t size);
+int			change_local_variables(char *line, size_t size);
 // environment.c
-char		**format_environment(t_env *environment);
-void		free_environment(t_env *environment);
-char		*get_value_by_key(t_env *environment, char *key);
-int			env_lstaddback(t_env *env, char *key, char *value, int exported);
+char		**format_environment();
+void		free_environment();
+char		*get_value_by_key(char *key);
+int			env_lstaddback(char *key, char *value, int exported);
 // path.c
 char		**get_path(char *envp[]);
 
 					/* Pipex */
 
-int		pipex(t_env *environment, char **cmds);
-int		first_child(t_env *environment, int pipefd[2], t_cmd **cmds);
-int		middle_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr);
-void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr);
+int		pipex(char **cmds);
+int		first_child(int pipefd[2], t_cmd **cmds);
+int		middle_child(int pipefd[2], t_cmd **cmds, size_t cmdnbr);
+void	last_child(int pipefd[2], t_cmd **cmds, size_t cmdnbr);
 // io_open_fds.c
 int		io_open_fds(t_redirect *redirect);
 

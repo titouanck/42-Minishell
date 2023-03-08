@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/06 17:35:02 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:23:55 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static void	_actions_default(char c, \
 		*double_quote_open = TRUE;
 }
 
-static int	_parse_value(t_env *environment, char **line, char **value)
+static int	_parse_value(char **line, char **value)
 {
 	char	*value_start;
 	char	*value_end;
@@ -94,13 +94,13 @@ static int	_parse_value(t_env *environment, char **line, char **value)
 	*value = ft_strndup(value_start, value_end - value_start);
 	if (!(*value))
 		ft_putstr_fd(ERRALLOC, 2);
-	if (!quotes_interpretation(environment, value))
+	if (!quotes_interpretation(value))
 		return (free(*value), 0);
 	return (1);
 }
 
 
-static void	_export_element(t_env *environment, \
+static void	_export_element(\
 	char *key, char *value, int append)
 {
 	t_env	*elem;
@@ -128,10 +128,10 @@ static void	_export_element(t_env *environment, \
 		}
 		elem = elem->next;
 	}
-	env_lstaddback(environment, key, value, 0);
+	env_lstaddback(key, value, 0);
 }
 
-int	change_local_variables(t_env *environment, char *line, size_t size)
+int	change_local_variables(char *line, size_t size)
 {
 	char	*ptr;
 	char	*key;
@@ -150,7 +150,7 @@ int	change_local_variables(t_env *environment, char *line, size_t size)
 	if (!key)
 		return (0);
 	else
-		if(!_parse_value(environment, &line, &value))	
+		if(!_parse_value(&line, &value))	
 			return (free(key), -1);
 	if (!value)
 		value = ft_strdup("");
@@ -163,6 +163,6 @@ int	change_local_variables(t_env *environment, char *line, size_t size)
 		free(value);
 	}
 	else
-		_export_element(environment, key, value, append);
+		_export_element(key, value, append);
 	return (1);
 }

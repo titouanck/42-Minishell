@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:04:05 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:23:55 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ t_heredoc *lstnew_heredoc(t_heredoc *heredoc, char *limiter)
 	return (heredoc);
 }
 
-static int _leftchevron(t_env *environment, char *line, t_redirect *redirect)
+static int _leftchevron(char *line, t_redirect *redirect)
 {
 	size_t	old_i;
 	size_t	i;
@@ -245,7 +245,7 @@ int	heredoc_file(t_redirect *redirect)
 	return (fd);
 }
 
-void	use_heredoc(t_env *environment, t_redirect *redirect, t_free to_free)
+void	use_heredoc(t_redirect *redirect, t_free to_free)
 {
 	t_heredoc	*current;
 	char		*line;
@@ -286,7 +286,7 @@ void	use_heredoc(t_env *environment, t_redirect *redirect, t_free to_free)
 					while (line[++i])
 						if (line[i] == '$')
 							line[i] = VARKEY;
-					line = replace_key_by_value(environment, line);
+					line = replace_key_by_value(line);
 				}
 				if (fd != -1 && current->next == NULL)
 				{
@@ -317,7 +317,7 @@ void	use_heredoc(t_env *environment, t_redirect *redirect, t_free to_free)
 		wait(NULL);
 }
 
-t_redirect	*redirections(t_env *environment, char *line, int empty, t_free to_free)
+t_redirect	*redirections(char *line, int empty, t_free to_free)
 {
 	t_redirect	*redirect;
 	int			leftreturn;
@@ -334,7 +334,7 @@ t_redirect	*redirections(t_env *environment, char *line, int empty, t_free to_fr
 	if (!empty)
 	{
 		redirect->to_execute = TRUE;
-		leftreturn = _leftchevron(environment, line, redirect);
+		leftreturn = _leftchevron(line, redirect);
 		if (leftreturn == -1)
 			return (free_redirect(redirect), NULL);
 		else if (leftreturn == 0)
@@ -348,7 +348,7 @@ t_redirect	*redirections(t_env *environment, char *line, int empty, t_free to_fr
 			return (free_redirect(redirect), NULL);
 		else if (leftreturn == 0)
 			redirect->to_execute = FALSE;
-		use_heredoc(environment, redirect, to_free);
+		use_heredoc(redirect, to_free);
 	}
 	else
 	{

@@ -6,13 +6,13 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 18:15:33 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/01 14:58:07 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:23:55 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ftbuiltin_unset_element(t_env *environment, char *arg)
+void	ftbuiltin_unset_element(char *arg)
 {
 	t_env	*elem;
 	t_env	*tmp;
@@ -35,7 +35,7 @@ void	ftbuiltin_unset_element(t_env *environment, char *arg)
 	}
 }
 
-void	ftbuiltin_unset(t_env *environment, char **args)
+void	ftbuiltin_unset(char **args)
 {
 	size_t	i;
 	char	*arg;
@@ -58,7 +58,7 @@ void	ftbuiltin_unset(t_env *environment, char **args)
 			return ;
 		}
 		else
-			ftbuiltin_unset_element(environment, arg);
+			ftbuiltin_unset_element(arg);
 		i++;
 	}
 }

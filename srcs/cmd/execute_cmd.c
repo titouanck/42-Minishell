@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 13:47:57 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/06 17:26:28 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:23:16 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ char	*_locate_file(char **path, char *arg)
 	return (ft_putstr_fd("minishell: ", 2), ft_putstr_fd(arg, 2), ft_putstr_fd(": command not found\n", 2), NULL);
 }
 
-int	execute_cmd(t_env *environment, char **args)
+int	execute_cmd(char **args)
 {
 	char	**envp;
 	char	**path;

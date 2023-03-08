@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-char	*replace_key_by_value(t_env *environment, char *line)
+char	*replace_key_by_value(char *line)
 {
 	char	*first_part;
 	char	*second_part;
@@ -53,7 +53,7 @@ char	*replace_key_by_value(t_env *environment, char *line)
 				var = ft_itoa(g_returnval);
 			}
 			else
-				var = get_value_by_key(environment, var);
+				var = get_value_by_key(var);
 			if (!var)
 				var = "";
 			tmp = ft_strrjoin(first_part, var, second_part);
