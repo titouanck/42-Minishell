@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/01 14:58:07 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 13:02:20 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ int	first_child(t_env *environment, int pipefd[2], t_cmd **cmds)
 		close(pipefd[1]);
 		return (1);
 	}
-	if (ft_strcmp((cmds[cmdnbr]->args)[0], "exit") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "cd") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "unset") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "export") == 0)
+	if (ft_strcmp((cmds[cmdnbr]->args)[0], "exit") == 0)
+	// if (ft_strcmp((cmds[cmdnbr]->args)[0], "exit") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "cd") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "unset") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "export") == 0)
 	{
 		if ((cmds[cmdnbr])->redirect->infile)
 		{
