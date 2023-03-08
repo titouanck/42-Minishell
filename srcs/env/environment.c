@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	free_environment()
+void	free_environment(t_env *environment)
 {
 	t_env	*tmp;
 
@@ -28,7 +28,7 @@ void	free_environment()
 	}
 }
 
-char	**format_environment()
+char	**format_environment(t_env *environment)
 {
 	t_env	*elem;
 	size_t	size;
@@ -61,7 +61,7 @@ char	**format_environment()
 	return (env);
 }
 
-char	*get_value_by_key(char *key)
+char	*get_value_by_key(t_env *environment, char *key)
 {
 	t_env	*current;
 
@@ -78,11 +78,8 @@ char	*get_value_by_key(char *key)
 	return (NULL);
 }
 
-int		env_lstaddback(char *key, char *value, int exported)
+int		env_lstaddback(t_env *env, char *key, char *value, int exported)
 {
-	t_env	*env;
-
-	env = environment;
 	if (!env)
 		return (0);
 	while (env->next)

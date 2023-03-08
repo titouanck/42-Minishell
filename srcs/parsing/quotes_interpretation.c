@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 12:48:16 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:29:50 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 12:57:17 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	_actions_doublequoteopen(char *line, \
 		line[(*i)] = VARKEY;
 }
 
-static void	_heredoc_limiter_between_quotes(char *line)
+static void	_heredoc_limiter_between_quotes(t_env *environment, char *line)
 {
 	size_t	i;
 
@@ -111,7 +111,7 @@ static void	_actions_default(char *line, \
 static int	_detect_missing_quote(int single_quote_open, int double_quote_open)
 {
 	if (single_quote_open || double_quote_open)
-		environment->g_returnval = 2;
+		g_returnval = 2;
 	if (single_quote_open)
 		return (ft_putstr_fd \
 		("minishell: syntax error: ending quote missing (')\n", 2), 0);
@@ -148,7 +148,7 @@ static int _detect_empty_redirections(char *line)
 	return (1);
 }
 
-int	quotes_interpretation(char **line)
+int	quotes_interpretation(t_env *environment, char **line)
 {
 	char	*ptr;
 	size_t	i;
@@ -170,12 +170,12 @@ int	quotes_interpretation(char **line)
 			_actions_doublequoteopen((*line), &double_quote_open, &i);
 		else
 		{
-			_heredoc_limiter_between_quotes(*line + i);
+			_heredoc_limiter_between_quotes(environment, *line + i);
 			_actions_default((*line), \
 			&single_quote_open, &double_quote_open, &i);
 		}
 		ptr = *line;
-		(*line) = replace_key_by_value((*line));
+		(*line) = replace_key_by_value(environment, (*line));
 		if (ptr == *line)
 			i++;
 	}

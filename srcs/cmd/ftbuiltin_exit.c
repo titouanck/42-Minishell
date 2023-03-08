@@ -6,13 +6,13 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:29:50 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/02 19:57:29 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	_i_want_to_exit(t_cmd **cmds, \
+static void	_i_want_to_exit(t_env *environment, t_cmd **cmds, \
 unsigned char code, size_t cmdnbr)
 {
 	if (cmds && cmds[cmdnbr] && (cmds[cmdnbr])->redirect->infile)
@@ -33,7 +33,7 @@ unsigned char code, size_t cmdnbr)
 	exit(code);
 }
 
-void	ftbuiltin_exit(char **args, t_cmd **cmds, size_t cmdnbr)
+void	ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr)
 {
 	unsigned char	code;
 	char			*errmsg;
@@ -51,7 +51,7 @@ void	ftbuiltin_exit(char **args, t_cmd **cmds, size_t cmdnbr)
 			else
 				ft_putstr_fd(errmsg, 2);
 			free(errmsg);
-			_i_want_to_exit(cmds, 2, cmdnbr);
+			_i_want_to_exit(environment, cmds, 2, cmdnbr);
 			return ;
 		}
 		else
@@ -66,7 +66,7 @@ void	ftbuiltin_exit(char **args, t_cmd **cmds, size_t cmdnbr)
 					else
 						ft_putstr_fd(errmsg, 2);
 					free(errmsg);
-					_i_want_to_exit(cmds, 2, cmdnbr);
+					_i_want_to_exit(environment, cmds, 2, cmdnbr);
 					return ;
 				}
 			}
@@ -74,10 +74,10 @@ void	ftbuiltin_exit(char **args, t_cmd **cmds, size_t cmdnbr)
 		if (args[2])
 		{
 			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-			environment->g_returnval = 1;
+			g_returnval = 1;
 			return ;
 		}
 		code = (unsigned char) ft_atoi(args[1]);
 	}
-	_i_want_to_exit(cmds, code, cmdnbr);	
+	_i_want_to_exit(environment, cmds, code, cmdnbr);	
 }

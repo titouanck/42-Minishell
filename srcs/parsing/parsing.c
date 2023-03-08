@@ -6,13 +6,13 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:23:55 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/06 17:26:28 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	parsing(char **line)
+void	parsing(t_env *environment, char **line)
 {
 	char	**cmds;
 	size_t	i;
@@ -30,7 +30,7 @@ void	parsing(char **line)
 	{
 		while (1)
 		{
-			r = change_local_variables(cmds[i], size);
+			r = change_local_variables(environment, cmds[i], size);
 			if (r == -1)
 				break ;
 			else if (r != 1)
@@ -48,7 +48,7 @@ void	parsing(char **line)
 	}
 	if (cmds && *cmds)
 	{
-		pipex(cmds);
+		pipex(environment, cmds);
 		default_signal_behavior();
 	}
 	else

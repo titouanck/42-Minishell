@@ -6,16 +6,15 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:43:53 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 13:05:26 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	last_child(int pipefd[2], t_cmd **cmds, size_t cmdnbr)
+void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 {
 	pid_t	pid;
-	int		returnval;
 
 	if(cmds[cmdnbr]->redirect->to_execute == FALSE || !io_open_fds((cmds[cmdnbr])->redirect))
 	{
@@ -37,7 +36,7 @@ void	last_child(int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 			cmds[cmdnbr]->saved_stdout = dup(1);
 			dup2((cmds[cmdnbr])->redirect->fd_outfile, STDOUT_FILENO);
 		}
-		parse_builtin((cmds[cmdnbr])->args, cmds, cmdnbr);
+		parse_builtin(environment, (cmds[cmdnbr])->args, cmds, cmdnbr);
 		if ((cmds[cmdnbr])->redirect->infile)
 		{
 			close((cmds[cmdnbr])->redirect->fd_infile);
@@ -71,18 +70,17 @@ void	last_child(int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 		}
 		else if (cmdnbr != 0)
 			dup2(pipefd[0], STDIN_FILENO);
-		if (!parse_builtin((cmds[cmdnbr])->args, cmds, cmdnbr))
-			execute_cmd((cmds[cmdnbr])->args);
+		if (!parse_builtin(environment, (cmds[cmdnbr])->args, cmds, cmdnbr))
+			execute_cmd(environment, (cmds[cmdnbr])->args);
 		if (cmdnbr != 0 && (cmds[cmdnbr])->redirect->infile == NULL)
 			close(pipefd[0]);
 		if ((cmds[cmdnbr])->redirect->outfile)
 			close((cmds[cmdnbr])->redirect->fd_outfile);
 		if ((cmds[cmdnbr])->redirect->infile)
 			close((cmds[cmdnbr])->redirect->fd_infile);
-		returnval = environment->g_returnval;
 		free_cmds_parsed(cmds);
 		closing_the_program(environment);
-		exit(returnval);
+		exit(g_returnval);
 	}
 	else
 	{
@@ -90,8 +88,8 @@ void	last_child(int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 			close((cmds[cmdnbr])->redirect->fd_outfile);
 		if ((cmds[cmdnbr])->redirect->infile)
 			close((cmds[cmdnbr])->redirect->fd_infile);
-		waitpid(pid, &(environment->g_returnval), 0);
-		environment->g_returnval = WEXITSTATUS(environment->g_returnval);
+		waitpid(pid, &g_returnval, 0);
+		g_returnval = WEXITSTATUS(g_returnval);
 		if (cmdnbr != 0)
 			close(pipefd[0]);
 	}

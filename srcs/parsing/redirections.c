@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 17:26:19 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 17:18:35 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ t_heredoc *lstnew_heredoc(t_heredoc *heredoc, char *limiter)
 	return (heredoc);
 }
 
-static int _leftchevron(char *line, t_redirect *redirect)
+static int _leftchevron(t_env *environment, char *line, t_redirect *redirect)
 {
 	size_t	old_i;
 	size_t	i;
@@ -281,35 +281,23 @@ int	use_heredoc(t_env *environment, t_redirect *redirect)
 			}
 			if (ft_strcmp(current->limiter, line) == 0)
 			{
-				line = readline("> ");
-				if (!line)
-				{
-					ft_putstr_fd("minishell: warning: here-document delimited by end-of-file (wanted `", 2);
-					ft_putstr_fd(current->limiter, 2);
-					ft_putstr_fd("\')\n", 2);
-					break ;
-				}
-				if (ft_strcmp(current->limiter, line) == 0)
-				{
-					free(line);
-					break ;
-				}
-				if (!(environment->limiter_between_quotes))
-				{
-					i = -1;
-					while (line[++i])
-						if (line[i] == '$')
-							line[i] = VARKEY;
-					line = replace_key_by_value(line);
-				}
-				if (fd != -1 && current->next == NULL)
-				{
-					write(fd, line, ft_strlen(line));
-					write(fd, "\n", 1);
-				}
 				free(line);
+				break ;
 			}
-			current = current->next;
+			if (!(environment->limiter_between_quotes))
+			{
+				i = -1;
+				while (line[++i])
+					if (line[i] == '$')
+						line[i] = VARKEY;
+				line = replace_key_by_value(environment, line);
+			}
+			if (fd != -1 && current->next == NULL)
+			{
+				write(fd, line, ft_strlen(line));
+				write(fd, "\n", 1);
+			}
+			free(line);
 		}
 		if (g_returnval == 130)
 			break ;
@@ -328,7 +316,7 @@ int	use_heredoc(t_env *environment, t_redirect *redirect)
 	return (1);
 }
 
-t_redirect	*redirections(char *line, int empty, t_free to_free)
+t_redirect	*redirections(t_env *environment, char *line, int empty)
 {
 	t_redirect	*redirect;
 	int			leftreturn;
@@ -345,7 +333,7 @@ t_redirect	*redirections(char *line, int empty, t_free to_free)
 	if (!empty)
 	{
 		redirect->to_execute = TRUE;
-		leftreturn = _leftchevron(line, redirect);
+		leftreturn = _leftchevron(environment, line, redirect);
 		if (leftreturn == -1)
 		{
 			g_returnval = 2;

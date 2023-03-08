@@ -6,13 +6,13 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 11:34:21 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:29:50 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/06 11:44:49 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	_export_element(\
+static void	_export_element(t_env *environment, \
 	char *key, char *value)
 {
 	t_env	*elem;
@@ -48,22 +48,22 @@ static void	_export_element(\
 		elem = elem->next;
 	}
 	if (value)
-		env_lstaddback(key, value, 1);
+		env_lstaddback(environment, key, value, 1);
 	else
 		free(key);
 }
 
-static void	_noarg()
+static void	_noarg(t_env *environment)
 {
 	char	*err_str;
 	char	*home;
 	int		r;
 	
-	home = get_value_by_key("HOME");
+	home = get_value_by_key(environment, "HOME");
 	if (!home)
 	{
 		ft_putstr_fd("minishell: cd: HOME not set\n", 2);
-		environment->g_returnval = 1;
+		g_returnval = 1;
 		return ;
 	}
 	r = chdir(home);
@@ -74,13 +74,13 @@ static void	_noarg()
 			ft_putstr_fd(ERRALLOC, 2);
 		perror(err_str);
 		free(err_str);
-		environment->g_returnval = 1;
+		g_returnval = 1;
 	}
 	else
-		environment->g_returnval = 0;
+		g_returnval = 0;
 }
 
-void	ftbuiltin_cd(char **args)
+void	ftbuiltin_cd(t_env *environment, char **args)
 {
 	char	*cwd;
 	char	*err_str;
@@ -91,7 +91,7 @@ void	ftbuiltin_cd(char **args)
 	key = ft_strdup("OLDPWD");
 	value = getcwd(NULL, 0);
 	if (args && args[0] && !args[1])
-		_noarg();
+		_noarg(environment);
 	else if (args && args[0] && args[1])
 	{
 		r = chdir(args[1]);
@@ -104,16 +104,16 @@ void	ftbuiltin_cd(char **args)
 			free(err_str);
 			free(key);
 			free(value);
-			environment->g_returnval = 1;
+			g_returnval = 1;
 		}
 		else
-			environment->g_returnval = 0;
+			g_returnval = 0;
 	}
 	else
-		environment->g_returnval = 1;
+		g_returnval = 1;
 	cwd = getcwd(NULL, 0);
 	if (ft_strcmp(cwd, value) != 0)
-		_export_element(key, value);
+		_export_element(environment, key, value);
 	else
 	{
 		free (key);
@@ -122,5 +122,5 @@ void	ftbuiltin_cd(char **args)
 	free(cwd);
 	key = ft_strdup("PWD");
 	value = getcwd(NULL, 0);
-	_export_element(key, value);
+	_export_element(environment, key, value);
 }

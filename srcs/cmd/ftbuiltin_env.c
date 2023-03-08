@@ -6,13 +6,13 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 16:25:33 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:29:50 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/01 14:58:07 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ftbuiltin_env()
+void	ftbuiltin_env(t_env *environment)
 {
 	while (environment)
 	{
@@ -25,5 +25,5 @@ void	ftbuiltin_env()
 		}	
 		environment = environment->next;
 	}
-	environment->g_returnval = 0;
+	g_returnval = 0;
 }

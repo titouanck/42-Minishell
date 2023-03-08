@@ -6,17 +6,16 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:41:55 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 13:02:28 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	middle_child(int pipefd[2], t_cmd **cmds, size_t cmdnbr)
+int	middle_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 {
 	pid_t	pid;
 	int		new_pipefd[2];
-	int		returnval;
 
 	if (pipe(new_pipefd) == -1)
 		return (perror("minishell: pipe"), close(pipefd[0]), 0);
@@ -43,7 +42,7 @@ int	middle_child(int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 			cmds[cmdnbr]->saved_stdout = dup(1);
 			dup2((cmds[cmdnbr])->redirect->fd_outfile, STDOUT_FILENO);
 		}
-		parse_builtin((cmds[cmdnbr])->args, cmds, cmdnbr);
+		parse_builtin(environment, (cmds[cmdnbr])->args, cmds, cmdnbr);
 		if ((cmds[cmdnbr])->redirect->infile)
 		{
 			close((cmds[cmdnbr])->redirect->fd_infile);
@@ -92,8 +91,8 @@ int	middle_child(int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 		}
 		else
 			dup2(pipefd[0], STDIN_FILENO);
-		if (!parse_builtin((cmds[cmdnbr])->args, cmds, cmdnbr))
-			execute_cmd((cmds[cmdnbr])->args);
+		if (!parse_builtin(environment, (cmds[cmdnbr])->args, cmds, cmdnbr))
+			execute_cmd(environment, (cmds[cmdnbr])->args);
 		if ((cmds[cmdnbr])->redirect->outfile == NULL)
 			close(new_pipefd[1]);
 		if ((cmds[cmdnbr])->redirect->infile == NULL)
@@ -102,10 +101,9 @@ int	middle_child(int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 			close((cmds[cmdnbr])->redirect->fd_outfile);
 		if ((cmds[cmdnbr])->redirect->infile)
 			close((cmds[cmdnbr])->redirect->fd_infile);
-		returnval = environment->g_returnval;
 		free_cmds_parsed(cmds);
 		closing_the_program(environment);
-		exit(returnval);
+		exit(g_returnval);
 	}
 	else
 	{

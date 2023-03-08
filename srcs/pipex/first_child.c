@@ -6,17 +6,16 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:41:38 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 13:02:20 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	first_child(int pipefd[2], t_cmd **cmds)
+int	first_child(t_env *environment, int pipefd[2], t_cmd **cmds)
 {
 	pid_t	pid;
 	size_t	cmdnbr;
-	int		returnval;
 
 	cmdnbr = 0;
 	if (pipe(pipefd) == -1)
@@ -40,7 +39,7 @@ int	first_child(int pipefd[2], t_cmd **cmds)
 			cmds[cmdnbr]->saved_stdout = dup(1);
 			dup2((cmds[cmdnbr])->redirect->fd_outfile, STDOUT_FILENO);
 		}
-		parse_builtin((cmds[cmdnbr])->args, cmds, cmdnbr);
+		parse_builtin(environment, (cmds[cmdnbr])->args, cmds, cmdnbr);
 		if ((cmds[cmdnbr])->redirect->infile)
 		{
 			close((cmds[cmdnbr])->redirect->fd_infile);
@@ -72,18 +71,17 @@ int	first_child(int pipefd[2], t_cmd **cmds)
 			dup2(pipefd[1], STDOUT_FILENO);
 		if ((cmds[cmdnbr])->redirect->infile)
 			dup2((cmds[cmdnbr])->redirect->fd_infile, STDIN_FILENO);
-		if (!parse_builtin((cmds[cmdnbr])->args, cmds, cmdnbr))
-			execute_cmd((cmds[cmdnbr])->args);
+		if (!parse_builtin(environment, (cmds[cmdnbr])->args, cmds, cmdnbr))
+			execute_cmd(environment, (cmds[cmdnbr])->args);
 		if ((cmds[cmdnbr])->redirect->outfile == NULL)
 			close(pipefd[1]);
 		if ((cmds[cmdnbr])->redirect->outfile)
 			close((cmds[cmdnbr])->redirect->fd_outfile);
 		if ((cmds[cmdnbr])->redirect->infile)
 			close((cmds[cmdnbr])->redirect->fd_infile);
-		returnval = environment->g_returnval;
 		free_cmds_parsed(cmds);
 		closing_the_program(environment);
-		exit(returnval);
+		exit(g_returnval);
 	}
 	else
 	{
