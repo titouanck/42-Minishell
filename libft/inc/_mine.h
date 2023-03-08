@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 14:29:05 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/06 17:36:45 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 17:09:50 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,6 @@ int			ft_iswhitespace(char c);
 
 char		*ft_strip(char *str);
 
+void		ft_swap(int *a, int *b);
 
 #endif

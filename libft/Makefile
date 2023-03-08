@@ -69,6 +69,7 @@ SRCS += ft_inset.c
 SRCS += ft_strinset.c
 SRCS += ft_iswhitespace.c
 SRCS += ft_strip.c
+SRCS += ft_swap.c
 
 INC = -I inc
 

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:06 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 16:34:29 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 17:23:29 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,24 +43,12 @@ void	cmd_signal_behavior(void)
 static void	_heredoc_sigint(int sig)
 {
 	(void) sig;
-	// free(redirect->infile);
-	// free(redirect->outfile);
-	// free(redirect);
-	// ft_freetab(environment->to_free.cmds);
-	// free_cmds_parsed(environment->to_free.cmds_parsed);
-	// free(environment->to_free.cmd);
-	closing_the_program();
-	exit(130);
+	g_returnval = 130;
+	rl_done = 1;
 }
 
 void	heredoc_signal_behavior(void)
 {
 	signal(SIGINT, _heredoc_sigint);
-	signal(SIGQUIT, SIG_IGN);
-}
-
-void	heredoc_signal_behavior_parent(void)
-{
-	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 }

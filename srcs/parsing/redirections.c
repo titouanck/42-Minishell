@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:50:44 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 17:26:19 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,28 +245,41 @@ int	heredoc_file(t_redirect *redirect)
 	return (fd);
 }
 
-void	use_heredoc(t_redirect *redirect, t_free to_free)
+int	use_heredoc(t_env *environment, t_redirect *redirect)
 {
 	t_heredoc	*current;
 	char		*line;
 	int			fd;
 	size_t		i;
-	pid_t		pid;
+	int			returnval;
 
 	if (!redirect || !redirect->heredoc)
-		return ;
+		return (1);
 	fd = -1;
 	if (redirect->infile == NULL && redirect->heredoc)
 		fd = heredoc_file(redirect);
-	heredoc_signal_behavior_parent();
-	pid = fork();
-	if (pid == 0)
+	current = redirect->heredoc;
+	returnval = g_returnval;
+	g_returnval = 0;
+	while (current)
 	{
 		heredoc_signal_behavior();
-		current = redirect->heredoc;
-		while (current)
+		while (1)
 		{
-			while (1)
+			line = readline("> ");
+			if (g_returnval == 130)
+			{
+				free(line);
+				break ;
+			}
+			if (!line)
+			{
+				ft_putstr_fd("minishell: warning: here-document delimited by end-of-file (wanted `", 2);
+				ft_putstr_fd(current->limiter, 2);
+				ft_putstr_fd("\')\n", 2);
+				break ;
+			}
+			if (ft_strcmp(current->limiter, line) == 0)
 			{
 				line = readline("> ");
 				if (!line)
@@ -298,25 +311,21 @@ void	use_heredoc(t_redirect *redirect, t_free to_free)
 			}
 			current = current->next;
 		}
+		if (g_returnval == 130)
+			break ;
+		current = current->next;
 	}
+	default_signal_behavior();
+	ft_swap(&returnval, &g_returnval);
+	if (returnval == 130)
+		g_returnval = returnval;
 	if (fd != -1)
 		close(fd);
 	free_heredocs(redirect->heredoc);
 	redirect->heredoc = NULL;
-	if (pid == 0)
-	{
-		free(redirect->infile);
-		free(redirect->outfile);
-		free(redirect);
-		ft_freetab(to_free.cmds);
-		free_cmds_parsed(to_free.cmds_parsed);
-		free(to_free.cmd);
-		closing_the_program(environment);
-		exit(0);
-	}
-	else
-		wait(NULL);
-	default_signal_behavior();
+	if (returnval == 130)
+		return (0);
+	return (1);
 }
 
 t_redirect	*redirections(char *line, int empty, t_free to_free)
@@ -338,7 +347,10 @@ t_redirect	*redirections(char *line, int empty, t_free to_free)
 		redirect->to_execute = TRUE;
 		leftreturn = _leftchevron(line, redirect);
 		if (leftreturn == -1)
+		{
+			g_returnval = 2;
 			return (free_redirect(redirect), NULL);
+		}
 		else if (leftreturn == 0)
 		{
 			redirect->to_execute = FALSE;
@@ -347,10 +359,17 @@ t_redirect	*redirections(char *line, int empty, t_free to_free)
 		}
 		rightreturn = _rightchevron(line, redirect);
 		if (rightreturn == -1)
+		{
+			g_returnval = 2;
 			return (free_redirect(redirect), NULL);
+		}
 		else if (leftreturn == 0)
 			redirect->to_execute = FALSE;
-		use_heredoc(redirect, to_free);
+		if (!use_heredoc(environment, redirect))
+		{
+			free_redirect(redirect);
+			return (NULL);
+		}
 	}
 	else
 	{
