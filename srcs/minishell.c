@@ -6,11 +6,14 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/02 17:17:14 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:17:58 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int		g_returnval;
+t_env	*environment;
 
 int	main(int argc, char **argv, char *envp[]) 
 {

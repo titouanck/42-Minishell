@@ -39,7 +39,7 @@ void	print_redirection(char *line, t_redirect *redirect)
 	printf("\n");
 }
 
-t_cmd	*parse_args(t_env *environment, char **line)
+t_cmd	*parse_args(t_env *environment, char **line, t_free to_free)
 {
 	t_cmd		*cmd;
 
@@ -48,15 +48,16 @@ t_cmd	*parse_args(t_env *environment, char **line)
 		return (ft_putstr_fd(ERRALLOC, 2), NULL);
 	cmd->args = NULL;
 	cmd->redirect = NULL;
+	to_free.cmd = cmd;
 	if (!quotes_interpretation(environment, line))
 	{
-		cmd->redirect = redirections(environment, *line, TRUE);
+		cmd->redirect = redirections(environment, *line, TRUE, to_free);
 		if (!(cmd->redirect))
 			return (free(cmd), NULL);
 		return (cmd);
 	}
 	else
-		cmd->redirect = redirections(environment, *line, FALSE);
+		cmd->redirect = redirections(environment, *line, FALSE, to_free);
 	if (!(cmd->redirect))
 		return (free(cmd), NULL);
 	cmd->args = ft_split(*line, SEPARATOR);

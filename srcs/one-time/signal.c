@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:06 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/06 11:14:30 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:10:12 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,8 @@ static void	_default_sigint(int sig)
 
 void	default_signal_behavior(void)
 {
-	struct sigaction	sa_int;
-	struct sigaction	sa_quit;
-
-	sa_int.sa_handler = _default_sigint;
-	sa_int.sa_flags = 0;
-	sigemptyset(&sa_int.sa_mask);
-	sigaction(SIGINT, &sa_int, NULL);
-	sa_quit.sa_handler = SIG_IGN;
-	sa_quit.sa_flags = 0;
-	sigemptyset(&sa_quit.sa_mask);
-	sigaction(SIGQUIT, &sa_quit, NULL);
+	signal(SIGINT, _default_sigint);
+	signal(SIGQUIT, SIG_IGN);
 }
 
 static void	_cmd_sigint(int sig)
@@ -45,30 +36,20 @@ static void	_cmd_sigint(int sig)
 
 void	cmd_signal_behavior(void)
 {
-	struct sigaction	sa_int;
-	struct sigaction	sa_quit;
+	signal(SIGINT, _cmd_sigint);
+	signal(SIGQUIT, SIG_DFL);
+}
 
-	sa_int.sa_handler = _cmd_sigint;
-	sa_int.sa_flags = 0;
-	sigemptyset(&sa_int.sa_mask);
-	sigaction(SIGINT, &sa_int, NULL);
-	sa_quit.sa_handler = SIG_DFL;
-	sa_quit.sa_flags = 0;
-	sigemptyset(&sa_quit.sa_mask);
-	sigaction(SIGQUIT, &sa_quit, NULL);
+static void	_heredoc_sigint(int sig)
+{
+	(void) sig;
+	write(1, "\n", 1);
+	
+	return ;
 }
 
 void	heredoc_signal_behavior(void)
 {
-	struct sigaction	sa_int;
-	struct sigaction	sa_quit;
-
-	sa_int.sa_handler = SIG_DFL;
-	sa_int.sa_flags = 0;
-	sigemptyset(&sa_int.sa_mask);
-	sigaction(SIGINT, &sa_int, NULL);
-	sa_quit.sa_handler = SIG_DFL;
-	sa_quit.sa_flags = 0;
-	sigemptyset(&sa_quit.sa_mask);
-	sigaction(SIGQUIT, &sa_quit, NULL);
+	signal(SIGINT, _heredoc_sigint);
+	signal(SIGQUIT, SIG_IGN);
 }

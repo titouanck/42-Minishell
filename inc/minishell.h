@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 12:23:32 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:18:38 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZ\
 #  define FALSE 0
 # endif
 
-extern int	g_returnval;
-
 typedef struct s_env
 {
 	char			*key;
@@ -86,6 +84,16 @@ typedef struct s_cmd
 	int			saved_stdin;
 }				t_cmd;
 
+typedef struct s_free
+{
+	char	**cmds;
+	t_cmd	**cmds_parsed;
+	t_cmd	*cmd;
+}			t_free;
+
+extern t_env	*environment;
+extern int		g_returnval;
+
 			/* Built-in Functions & Commands */
 
 void		ftbuiltin_echo(char **args);
@@ -109,11 +117,11 @@ char		**split_cmds(char **ptr);
 // parsing.c
 void		parsing(t_env *environment, char **line);
 // parse_cmd.c
-t_cmd		*parse_cmd(t_env *environment, char **line);
+t_cmd		*parse_cmd(t_env *environment, char **line, t_free to_free);
 // parse_args.c
-t_cmd		*parse_args(t_env *environment, char **line);
+t_cmd		*parse_args(t_env *environment, char **line, t_free to_free);
 // redirections.c
-t_redirect	*redirections(t_env *environment, char *line, int empty);
+t_redirect	*redirections(t_env *environment, char *line, int empty, t_free to_free);
 // replace_key_by_value.c
 char		*replace_key_by_value(t_env *environment, char *line);
 // quotes_interpretation.c

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 15:07:04 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/06 17:26:28 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:03:28 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ static t_cmd	**_get_cmds_parsed(t_env *environment, char **cmds)
 	t_cmd	**cmds_parsed;
 	size_t	size;
 	size_t	i;
+	t_free	to_free;
 
 	size = 0;
 	while (cmds[size])
@@ -43,10 +44,13 @@ static t_cmd	**_get_cmds_parsed(t_env *environment, char **cmds)
 	cmds_parsed = malloc(sizeof(t_cmd *) * (size + 1));
 	if (!cmds_parsed)
 		return (ft_putstr_fd(ERRALLOC, 2), ft_freetab(cmds), NULL);
+	to_free.cmds = cmds;
+	to_free.cmds_parsed = cmds_parsed;
 	i = 0;
 	while (i < size)
 	{
-		cmds_parsed[i] = parse_cmd(environment, cmds + i);
+		cmds_parsed[i] = NULL;
+		cmds_parsed[i] = parse_cmd(environment, cmds + i, to_free);
 		if (!cmds_parsed[i])
 			return (free_cmds_parsed(cmds_parsed), ft_freetab(cmds), NULL);
 		if (!cmds_parsed[i]->args || !(cmds_parsed[i]->args[0]) || !(cmds_parsed[i]->args[0][0]))
@@ -62,7 +66,7 @@ int	pipex(t_env *environment, char **cmds)
 	int		pipefd[2];
 	size_t	cmdnbr;
 	t_cmd	**cmds_parsed;
-	heredoc_signal_behavior();
+
 	cmds_parsed = _get_cmds_parsed(environment, cmds);
 	if (!cmds_parsed)
 		return (0);

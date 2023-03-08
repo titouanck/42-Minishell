@@ -58,7 +58,7 @@ vpath %.c ${SRCS_PATH}
 
 
 # CFLAGS +=  -Wall -Wextra -Werror 
-CFLAGS +=   
+CFLAGS += -g
 
 
 NAME = minishell
@@ -97,7 +97,7 @@ re:	fclean all
 
 
 
-NOCOLOR='\033[0m'
+NC='\033[0m'
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 ORANGE='\033[0;33m'

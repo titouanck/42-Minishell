@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 12:56:29 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:04:05 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,60 +245,79 @@ int	heredoc_file(t_redirect *redirect)
 	return (fd);
 }
 
-void	use_heredoc(t_env *environment, t_redirect *redirect)
+void	use_heredoc(t_env *environment, t_redirect *redirect, t_free to_free)
 {
 	t_heredoc	*current;
 	char		*line;
 	int			fd;
 	size_t		i;
+	pid_t		pid;
 
 	if (!redirect || !redirect->heredoc)
 		return ;
 	fd = -1;
 	if (redirect->infile == NULL && redirect->heredoc)
 		fd = heredoc_file(redirect);
-	current = redirect->heredoc;
-	while (current)
+	pid = fork();
+	if (pid == 0)
 	{
-		while (1)
+		heredoc_signal_behavior();
+		current = redirect->heredoc;
+		while (current)
 		{
-			line = readline("> ");
-			if (!line)
+			while (1)
 			{
-				ft_putstr_fd("minishell: warning: here-document delimited by end-of-file (wanted `", 2);
-				ft_putstr_fd(current->limiter, 2);
-				ft_putstr_fd("\')\n", 2);
-				break ;
-			}
-			if (ft_strcmp(current->limiter, line) == 0)
-			{
+				line = readline("> ");
+				if (!line)
+				{
+					ft_putstr_fd("minishell: warning: here-document delimited by end-of-file (wanted `", 2);
+					ft_putstr_fd(current->limiter, 2);
+					ft_putstr_fd("\')\n", 2);
+					break ;
+				}
+				if (ft_strcmp(current->limiter, line) == 0)
+				{
+					free(line);
+					break ;
+				}
+				if (!(environment->limiter_between_quotes))
+				{
+					i = -1;
+					while (line[++i])
+						if (line[i] == '$')
+							line[i] = VARKEY;
+					line = replace_key_by_value(environment, line);
+				}
+				if (fd != -1 && current->next == NULL)
+				{
+					write(fd, line, ft_strlen(line));
+					write(fd, "\n", 1);
+				}
 				free(line);
-				break ;
 			}
-			if (!(environment->limiter_between_quotes))
-			{
-				i = -1;
-				while (line[++i])
-					if (line[i] == '$')
-						line[i] = VARKEY;
-				line = replace_key_by_value(environment, line);
-			}
-			if (fd != -1 && current->next == NULL)
-			{
-				write(fd, line, ft_strlen(line));
-				write(fd, "\n", 1);
-			}
-			free(line);
+			current = current->next;
 		}
-		current = current->next;
 	}
 	if (fd != -1)
 		close(fd);
 	free_heredocs(redirect->heredoc);
 	redirect->heredoc = NULL;
+	if (pid == 0)
+	{
+		free(redirect->infile);
+		free(redirect->outfile);
+		free(redirect);
+		ft_freetab(to_free.cmds);
+		free_cmds_parsed(to_free.cmds_parsed);
+		free(to_free.cmd);
+		closing_the_program(environment);
+		exit(0);
+	}
+	else
+		wait(NULL);
 }
 
-t_redirect	*redirections(t_env *environment, char *line, int empty)
+t_redirect	*redirections(t_env *environment, char *line, int empty, t_free to_free)
 {
 	t_redirect	*redirect;
 	int			leftreturn;
@@ -329,7 +348,7 @@ t_redirect	*redirections(t_env *environment, char *line, int empty)
 			return (free_redirect(redirect), NULL);
 		else if (leftreturn == 0)
 			redirect->to_execute = FALSE;
-		use_heredoc(environment, redirect);
+		use_heredoc(environment, redirect, to_free);
 	}
 	else
 	{
