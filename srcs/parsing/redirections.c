@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 12:56:29 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 17:12:46 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,24 +245,33 @@ int	heredoc_file(t_redirect *redirect)
 	return (fd);
 }
 
-void	use_heredoc(t_env *environment, t_redirect *redirect)
+int	use_heredoc(t_env *environment, t_redirect *redirect)
 {
 	t_heredoc	*current;
 	char		*line;
 	int			fd;
 	size_t		i;
+	int			returnval;
 
 	if (!redirect || !redirect->heredoc)
-		return ;
+		return (1);
 	fd = -1;
 	if (redirect->infile == NULL && redirect->heredoc)
 		fd = heredoc_file(redirect);
 	current = redirect->heredoc;
+	returnval = g_returnval;
+	g_returnval = 0;
 	while (current)
 	{
+		heredoc_signal_behavior();
 		while (1)
 		{
 			line = readline("> ");
+			if (g_returnval == 130)
+			{
+				free(line);
+				break ;
+			}
 			if (!line)
 			{
 				ft_putstr_fd("minishell: warning: here-document delimited by end-of-file (wanted `", 2);
@@ -290,12 +299,21 @@ void	use_heredoc(t_env *environment, t_redirect *redirect)
 			}
 			free(line);
 		}
+		if (g_returnval == 130)
+			break ;
 		current = current->next;
 	}
+	default_signal_behavior();
+	ft_swap(&returnval, &g_returnval);
+	if (returnval == 130)
+		g_returnval = returnval;
 	if (fd != -1)
 		close(fd);
 	free_heredocs(redirect->heredoc);
 	redirect->heredoc = NULL;
+	if (returnval == 130)
+		return (0);
+	return (1);
 }
 
 t_redirect	*redirections(t_env *environment, char *line, int empty)
@@ -329,7 +347,11 @@ t_redirect	*redirections(t_env *environment, char *line, int empty)
 			return (free_redirect(redirect), NULL);
 		else if (leftreturn == 0)
 			redirect->to_execute = FALSE;
-		use_heredoc(environment, redirect);
+		if (!use_heredoc(environment, redirect))
+		{
+			free_redirect(redirect);
+			return (NULL);
+		}
 	}
 	else
 	{

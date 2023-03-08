@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 12:23:32 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 16:50:14 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,5 +160,6 @@ void	free_redirect(t_redirect *redirect);
 void	free_cmds_parsed(t_cmd **tab);
 
 					/* Utils */
+void	heredoc_signal_behavior(void);
 
 #endif
