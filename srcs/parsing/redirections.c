@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 17:12:46 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 17:18:35 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -335,7 +335,10 @@ t_redirect	*redirections(t_env *environment, char *line, int empty)
 		redirect->to_execute = TRUE;
 		leftreturn = _leftchevron(environment, line, redirect);
 		if (leftreturn == -1)
+		{
+			g_returnval = 2;
 			return (free_redirect(redirect), NULL);
+		}
 		else if (leftreturn == 0)
 		{
 			redirect->to_execute = FALSE;
@@ -344,7 +347,10 @@ t_redirect	*redirections(t_env *environment, char *line, int empty)
 		}
 		rightreturn = _rightchevron(line, redirect);
 		if (rightreturn == -1)
+		{
+			g_returnval = 2;
 			return (free_redirect(redirect), NULL);
+		}
 		else if (leftreturn == 0)
 			redirect->to_execute = FALSE;
 		if (!use_heredoc(environment, redirect))
