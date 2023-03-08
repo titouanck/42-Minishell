@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 15:07:04 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 17:07:32 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 18:46:43 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	free_cmds_parsed(t_cmd **tab)
 	free(tab);
 }
 
-static t_cmd	**_get_cmds_parsed(t_env *environment, char **cmds)
+static t_cmd	**_get_cmds_parsed(t_env *environment, char **cmds, int *tab)
 {
 	t_cmd	**cmds_parsed;
 	size_t	size;
@@ -51,21 +51,24 @@ static t_cmd	**_get_cmds_parsed(t_env *environment, char **cmds)
 			return (free_cmds_parsed(cmds_parsed), ft_freetab(cmds), NULL);
 		if (!cmds_parsed[i]->args || !(cmds_parsed[i]->args[0]) || !(cmds_parsed[i]->args[0][0]))
 			cmds_parsed[i]->redirect->to_execute = FALSE;
+		(cmds_parsed[i])->empty_cmd = tab[i];
 		i++;
 	}
 	cmds_parsed[i] = NULL;
 	return (cmds_parsed);
 }
 
-int	pipex(t_env *environment, char **cmds)
+int	pipex(t_env *environment, char **cmds, int *tab)
 {
 	int		pipefd[2];
 	size_t	cmdnbr;
 	t_cmd	**cmds_parsed;
+
 	heredoc_signal_behavior();
-	cmds_parsed = _get_cmds_parsed(environment, cmds);
+	cmds_parsed = _get_cmds_parsed(environment, cmds, tab);
 	if (!cmds_parsed)
 		return (0);
+	free(tab);
 	ft_freetab(cmds);
 	cmd_signal_behavior();
 	cmdnbr = 0;
