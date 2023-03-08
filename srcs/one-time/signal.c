@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:06 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 16:58:45 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 17:48:10 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static void	_default_sigint(int sig)
 {
 	(void) sig;
+	g_returnval = 130;
 	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
@@ -30,6 +31,7 @@ void	default_signal_behavior(void)
 static void	_cmd_sigint(int sig)
 {
 	(void) sig;
+	// g_returnval = 130;
 	write(1, "\n", 1);
 	return ;
 } 
