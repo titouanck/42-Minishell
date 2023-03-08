@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:49:18 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:23:55 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:29:50 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	parse_builtin(char **args, \
 		if (size == 1)
 			ftbuiltin_exit(args, cmds, cmdnbr);
 		else
-			g_returnval = 0;
+			environment->g_returnval = 0;
 	}
 	else
 		return (0);

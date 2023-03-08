@@ -62,14 +62,6 @@ t_cmd	*parse_args(char **line, t_free to_free)
 		return (free(cmd), NULL);
 	cmd->args = ft_split(*line, SEPARATOR);
 	if (!(cmd->args))
-	{
-		ft_putstr_fd(ERRALLOC, 2);
-		g_returnval = 12;
-		free(*line);
-		free_redirect(cmd->redirect);
-		free(cmd);
-		closing_the_program(environment);
-		exit(g_returnval);
-	}
+		return (ft_putstr_fd(ERRALLOC, 2), free(cmd), free_redirect(cmd->redirect), NULL);
 	return (cmd);
 }

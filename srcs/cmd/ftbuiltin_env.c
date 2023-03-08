@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 16:25:33 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:23:22 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:29:50 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,5 @@ void	ftbuiltin_env()
 		}	
 		environment = environment->next;
 	}
-	g_returnval = 0;
+	environment->g_returnval = 0;
 }

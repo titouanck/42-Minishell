@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 16:26:08 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:27:01 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:29:50 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static int	_export_key(char *arg, char *key, size_t i)
 	(void) i;
 	if (!key)
 	{
-		g_returnval = 1;
+		environment->g_returnval = 1;
 		return (0);
 	}
 	if (ft_isdigit(*key) \
@@ -84,7 +84,7 @@ static int	_export_key(char *arg, char *key, size_t i)
 		ft_putstr_fd(errmsg, 2);
 		if (errmsg)
 			free(errmsg);
-		g_returnval = 1;
+		environment->g_returnval = 1;
 		return (0);
 	}
 	return (1);
@@ -104,7 +104,7 @@ static char	*_export_value(char *arg, char **key, int append)
 		{
 			free(*key);
 			*key = NULL;
-			g_returnval = 1;
+			environment->g_returnval = 1;
 			return (NULL);
 		}
 		_export_element(*key, value, append);
@@ -147,6 +147,6 @@ void	ftbuiltin_export(char **args)
 			j++;
 		}
 	}
-	g_returnval = 0;
+	environment->g_returnval = 0;
 }
 

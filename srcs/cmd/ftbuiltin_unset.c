@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 18:15:33 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:23:55 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:29:50 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	ftbuiltin_unset(char **args)
 	char	*arg;
 	char	*errmsg;
 
-	g_returnval = 0;
+	environment->g_returnval = 0;
 	i = 1;
 	while (args[i])
 	{
@@ -54,7 +54,7 @@ void	ftbuiltin_unset(char **args)
 			ft_putstr_fd(errmsg, 2);
 			if (errmsg)
 				free(errmsg);
-			g_returnval = 1;
+			environment->g_returnval = 1;
 			return ;
 		}
 		else

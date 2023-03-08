@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:23:55 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:41:38 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	first_child(int pipefd[2], t_cmd **cmds)
 {
 	pid_t	pid;
 	size_t	cmdnbr;
+	int		returnval;
 
 	cmdnbr = 0;
 	if (pipe(pipefd) == -1)
@@ -79,9 +80,10 @@ int	first_child(int pipefd[2], t_cmd **cmds)
 			close((cmds[cmdnbr])->redirect->fd_outfile);
 		if ((cmds[cmdnbr])->redirect->infile)
 			close((cmds[cmdnbr])->redirect->fd_infile);
+		returnval = environment->g_returnval;
 		free_cmds_parsed(cmds);
 		closing_the_program(environment);
-		exit(g_returnval);
+		exit(returnval);
 	}
 	else
 	{

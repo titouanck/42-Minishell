@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 13:47:57 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:23:16 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:29:50 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	_command_not_found(char **args)
 {
-	g_returnval = 127;
+	environment->g_returnval = 127;
 }
 
 char	*_locate_file(char **path, char *arg)

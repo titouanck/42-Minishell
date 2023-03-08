@@ -50,7 +50,7 @@ char	*replace_key_by_value(char *line)
 			if (question_mark)
 			{
 				i--;
-				var = ft_itoa(g_returnval);
+				var = ft_itoa(environment->g_returnval);
 			}
 			else
 				var = get_value_by_key(var);

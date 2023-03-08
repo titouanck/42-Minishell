@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:26:11 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:30:37 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZ\
 
 typedef struct s_env
 {
+	int				g_returnval;
 	char			*key;
 	char			*value;
 	int				exported;
@@ -92,7 +93,6 @@ typedef struct s_free
 }			t_free;
 
 extern t_env	*environment;
-extern int		g_returnval;
 
 			/* Built-in Functions & Commands */
 

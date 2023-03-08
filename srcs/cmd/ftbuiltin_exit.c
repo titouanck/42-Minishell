@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:23:55 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:29:50 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	ftbuiltin_exit(char **args, t_cmd **cmds, size_t cmdnbr)
 		if (args[2])
 		{
 			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-			g_returnval = 1;
+			environment->g_returnval = 1;
 			return ;
 		}
 		code = (unsigned char) ft_atoi(args[1]);

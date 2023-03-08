@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:23:55 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:43:53 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	last_child(int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 {
 	pid_t	pid;
+	int		returnval;
 
 	if(cmds[cmdnbr]->redirect->to_execute == FALSE || !io_open_fds((cmds[cmdnbr])->redirect))
 	{
@@ -78,9 +79,10 @@ void	last_child(int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 			close((cmds[cmdnbr])->redirect->fd_outfile);
 		if ((cmds[cmdnbr])->redirect->infile)
 			close((cmds[cmdnbr])->redirect->fd_infile);
+		returnval = environment->g_returnval;
 		free_cmds_parsed(cmds);
 		closing_the_program(environment);
-		exit(g_returnval);
+		exit(returnval);
 	}
 	else
 	{
@@ -88,8 +90,8 @@ void	last_child(int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 			close((cmds[cmdnbr])->redirect->fd_outfile);
 		if ((cmds[cmdnbr])->redirect->infile)
 			close((cmds[cmdnbr])->redirect->fd_infile);
-		waitpid(pid, &g_returnval, 0);
-		g_returnval = WEXITSTATUS(g_returnval);
+		waitpid(pid, &(environment->g_returnval), 0);
+		environment->g_returnval = WEXITSTATUS(environment->g_returnval);
 		if (cmdnbr != 0)
 			close(pipefd[0]);
 	}

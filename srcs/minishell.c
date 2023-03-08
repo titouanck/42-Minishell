@@ -6,18 +6,18 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:28:33 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:33:49 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		g_returnval;
 t_env	*environment;
 
 int	main(int argc, char **argv, char *envp[]) 
 {
 	char	*line;
+	int		returnval;
 
 	environment = opening(argc, argv, envp);
 	if (!environment)
@@ -33,7 +33,8 @@ int	main(int argc, char **argv, char *envp[])
 		if (line)
 			free(line);
 	}
+	returnval = environment->g_returnval;
 	closing_the_program(environment);
 	ft_putstr_fd("exit\n", 2);
-	return (g_returnval);
+	return (returnval);
 }

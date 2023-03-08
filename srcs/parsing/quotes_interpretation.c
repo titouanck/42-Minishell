@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 12:48:16 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:23:55 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:29:50 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ static void	_actions_default(char *line, \
 static int	_detect_missing_quote(int single_quote_open, int double_quote_open)
 {
 	if (single_quote_open || double_quote_open)
-		g_returnval = 2;
+		environment->g_returnval = 2;
 	if (single_quote_open)
 		return (ft_putstr_fd \
 		("minishell: syntax error: ending quote missing (')\n", 2), 0);
