@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:30:37 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 16:34:58 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,16 +49,6 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZ\
 #  define FALSE 0
 # endif
 
-typedef struct s_env
-{
-	int				g_returnval;
-	char			*key;
-	char			*value;
-	int				exported;
-	int				limiter_between_quotes;
-	struct s_env	*next;
-}					t_env;
-
 typedef	struct	s_heredoc
 {
 	char				*limiter;
@@ -91,6 +81,17 @@ typedef struct s_free
 	t_cmd	**cmds_parsed;
 	t_cmd	*cmd;
 }			t_free;
+
+typedef struct s_env
+{
+	int				g_returnval;
+	char			*key;
+	char			*value;
+	int				exported;
+	int				limiter_between_quotes;
+	struct s_env	*next;
+	t_free			to_free;
+}					t_env;
 
 extern t_env	*environment;
 
@@ -168,5 +169,6 @@ void	free_redirect(t_redirect *redirect);
 void	free_cmds_parsed(t_cmd **tab);
 
 					/* Utils */
+void	heredoc_signal_behavior_parent(void);
 
 #endif

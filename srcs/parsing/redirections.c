@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 15:23:55 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:50:44 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,6 +258,7 @@ void	use_heredoc(t_redirect *redirect, t_free to_free)
 	fd = -1;
 	if (redirect->infile == NULL && redirect->heredoc)
 		fd = heredoc_file(redirect);
+	heredoc_signal_behavior_parent();
 	pid = fork();
 	if (pid == 0)
 	{
@@ -315,6 +316,7 @@ void	use_heredoc(t_redirect *redirect, t_free to_free)
 	}
 	else
 		wait(NULL);
+	default_signal_behavior();
 }
 
 t_redirect	*redirections(char *line, int empty, t_free to_free)
