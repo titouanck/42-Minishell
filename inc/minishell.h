@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/06 15:40:09 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 12:23:32 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZ\
 # define RIGHTCHEVRON -5
 # define HEREDOC -6
 # define EMPTYQUOTE -7
+# define NOTAVARKEY -8
 
 # ifndef TRUE
 #  define TRUE 1
@@ -55,6 +56,7 @@ typedef struct s_env
 	char			*key;
 	char			*value;
 	int				exported;
+	int				limiter_between_quotes;
 	struct s_env	*next;
 }					t_env;
 
@@ -111,7 +113,7 @@ t_cmd		*parse_cmd(t_env *environment, char **line);
 // parse_args.c
 t_cmd		*parse_args(t_env *environment, char **line);
 // redirections.c
-t_redirect	*redirections(char *line, int empty);
+t_redirect	*redirections(t_env *environment, char *line, int empty);
 // replace_key_by_value.c
 char		*replace_key_by_value(t_env *environment, char *line);
 // quotes_interpretation.c

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 12:48:16 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/02 19:31:42 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/08 12:57:17 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,48 @@ static void	_actions_doublequoteopen(char *line, \
 	else if (line[(*i)] == '$' && line[(*i) + 1] \
 	&& ft_strinset(line + (*i) + 1, VARNAMESET "?", 1))
 		line[(*i)] = VARKEY;
+}
+
+static void	_heredoc_limiter_between_quotes(t_env *environment, char *line)
+{
+	size_t	i;
+
+	if (line[0] == '<' && line[1] == '<')
+	{
+		environment->limiter_between_quotes = 0;
+		i = 2;
+		while (ft_iswhitespace(line[i]))
+			i++;
+		if (line[i] == '\'' || line[i] == '\"')
+		{
+			environment->limiter_between_quotes = 1;
+		}
+		if (line[i] == '\'')
+		{
+			while (line[++i] && line[i] != '\'')
+			{
+				if (line[i] == '$')
+					line[i] = NOTAVARKEY;
+			}
+		}	
+		else if (line[i] == '\"')
+		{
+			while (line[++i] && line[i] != '\"')
+			{
+				if (line[i] == '$')
+					line[i] = NOTAVARKEY;
+			}
+		}
+		else
+		{
+			while (line[i] && line[i] != '\"' && line[i] != '\'')
+			{
+				if (line[i] == '$')
+					line[i] = NOTAVARKEY;
+				i++;
+			}
+		}	
+	}
 }
 
 static void	_actions_default(char *line, \
@@ -119,6 +161,7 @@ int	quotes_interpretation(t_env *environment, char **line)
 	double_quote_open = FALSE;
 	if (_detect_empty_redirections(*line) == 0)
 		return (0);
+	environment->limiter_between_quotes = 0;
 	while ((*line)[i])
 	{
 		if (single_quote_open)
@@ -126,13 +169,20 @@ int	quotes_interpretation(t_env *environment, char **line)
 		else if (double_quote_open)
 			_actions_doublequoteopen((*line), &double_quote_open, &i);
 		else
+		{
+			_heredoc_limiter_between_quotes(environment, *line + i);
 			_actions_default((*line), \
 			&single_quote_open, &double_quote_open, &i);
+		}
 		ptr = *line;
 		(*line) = replace_key_by_value(environment, (*line));
 		if (ptr == *line)
 			i++;
 	}
+	i = -1;
+	while ((*line)[++i])
+		if ((*line)[i] == NOTAVARKEY)
+			(*line)[i] = '$';
 	return \
 	(_detect_missing_quote(single_quote_open, double_quote_open));
 }
