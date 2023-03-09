@@ -1,32 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putadress.c                                     :+:      :+:    :+:   */
+/*   ft_isnotnull.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/20 16:41:38 by tchevrie          #+#    #+#             */
-/*   Updated: 2022/11/08 10:22:22 by tchevrie         ###   ########.fr       */
+/*   Created: 2023/02/23 16:24:16 by tchevrie          #+#    #+#             */
+/*   Updated: 2023/02/23 16:26:09 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "_ft_printf.h"
+#include "libft.h"
 
-static size_t	printadress(const unsigned long n)
+int	ft_isnotnull(void *address)
 {
-	if (n / 16)
-		return (printadress(n / 16) + printadress(n % 16));
-	else if (!(n / 10))
-		ft_putchar(n + '0');
+	if (address)
+		return (1);
 	else
-		ft_putchar((char) n - 10 + 'a');
-	return (1);
-}
-
-size_t	ft_putadress(void *adress)
-{
-	if (!adress)
-		return (ft_putstr("(nil)"));
-	ft_putstr("0x");
-	return (2 + printadress((unsigned long) adress));
+		return (0);
 }

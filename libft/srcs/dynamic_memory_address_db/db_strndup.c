@@ -1,32 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putadress.c                                     :+:      :+:    :+:   */
+/*   db_free.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/20 16:41:38 by tchevrie          #+#    #+#             */
-/*   Updated: 2022/11/08 10:22:22 by tchevrie         ###   ########.fr       */
+/*   Created: 2023/03/06 14:29:05 by tchevrie          #+#    #+#             */
+/*   Updated: 2023/03/08 17:09:50 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "_ft_printf.h"
+#include "libft.h"
 
-static size_t	printadress(const unsigned long n)
+void	*db_strndup(void *old_address, size_t n)
 {
-	if (n / 16)
-		return (printadress(n / 16) + printadress(n % 16));
-	else if (!(n / 10))
-		ft_putchar(n + '0');
-	else
-		ft_putchar((char) n - 10 + 'a');
-	return (1);
-}
+	void	*new_address;
 
-size_t	ft_putadress(void *adress)
-{
-	if (!adress)
-		return (ft_putstr("(nil)"));
-	ft_putstr("0x");
-	return (2 + printadress((unsigned long) adress));
+	new_address = ft_strndup(old_address, n);
+	if (new_address)
+		dynamic_memory_address_db('+', new_address);
+	return (new_address);
 }

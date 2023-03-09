@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "_ft_printf.h"
 
 size_t	ft_putchar(const char c)
 {

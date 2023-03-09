@@ -70,6 +70,16 @@ SRCS += ft_strinset.c
 SRCS += ft_iswhitespace.c
 SRCS += ft_strip.c
 SRCS += ft_swap.c
+SRCS += ft_isnotnull.c
+
+# dynamic_memory_address_db
+
+SRCS += dynamic_memory_address_db.c
+SRCS += _addressdb_functions.c
+SRCS += db_malloc.c
+SRCS += db_strdup.c
+SRCS += db_strndup.c
+SRCS += db_free.c
 
 INC = -I inc
 
@@ -78,15 +88,18 @@ SRCS_PATH += srcs/get_next_line
 SRCS_PATH += srcs/libc
 SRCS_PATH += srcs/additional
 SRCS_PATH += srcs/mine
+SRCS_PATH += srcs/dynamic_memory_address_db
 
 OBJS = ${patsubst %.c, ${OBJS_PATH}/%.o, ${SRCS}}
 OBJS_PATH = ./objs/
 
 CC = cc
+CFLAGS = -Wall -Wextra -Werror
 
 vpath %.c ${SRCS_PATH}
 
 NAME = libft.a
+EXEC = xlibft
 
 all:	${NAME}
 
@@ -99,17 +112,21 @@ ${NAME}:  ${OBJS}
 	@	ar -rsc ${NAME} ${OBJS}
 	@	echo -ne "\r\033[2K" $(LIGHTGREEN) "→ $(NAME) OK!\n"$(NC)
 
+exec:	${OBJS}
+	@	${CC} ${CFLAGS} -o ${EXEC} ${OBJS} ${INC}
+	@	echo -ne "\r\033[2K" $(LIGHTGREEN) "→ $(EXEC) OK!\n"$(NC)
+
 clean:	
 	@	rm -rf ${OBJS_PATH}
 
 fclean:	clean;
-	@	rm -f ${NAME}
+	@	rm -f ${NAME} ${EXEC}
 
 re:	fclean all
 
 # Colors
 
-NOCOLOR='\033[0m'
+NC='\033[0m'
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 ORANGE='\033[0;33m'

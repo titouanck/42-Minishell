@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "_get_next_line.h"
 
 static t_fdList	*find_fdbegin(int fd, t_fdList **fd_list)
 {

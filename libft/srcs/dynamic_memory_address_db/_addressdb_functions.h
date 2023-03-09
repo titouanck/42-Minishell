@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   _mine.h                                            :+:      :+:    :+:   */
+/*   _addressdb_functions.h                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,29 +10,24 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef _MINE_H
-# define _MINE_H
+#ifndef _ADDRESSDB_FUNCTIONS_H
+# define _ADDRESSDB_FUNCTIONS_H
 
-size_t		ft_countc(const char *str, char c);
+typedef struct s_address
+{
+	void				*address;
+	struct s_address	*next;
+}						t_address;
 
-char		*ft_strchrset(const char *s, char *set);
+int		addressdb_lstinsert(t_address *db, void *address);
 
-char		*ft_strrjoin(char const *s1, char const *s2, char const *s3);
+int		addressdb_lstdel(t_address *db_elem, void *address, \
+		void (*del)(void *));
 
-void		ft_printtab(char **tab);
+int		addressdb_lstcheck(t_address *db_elem, void *address);
 
-void		ft_freetab(char **tab);
+int		addressdb_lstprint(t_address *db);
 
-int			ft_inset(char c, char *set);
-
-int			ft_strinset(const char *str, const char *set, size_t len);
-
-int			ft_iswhitespace(char c);
-
-char		*ft_strip(char *str);
-
-void		ft_swap(int *a, int *b);
-
-int			ft_isnotnull(void *address);
+void	addressdb_lsterase(t_address **db, void (*del)(void *));
 
 #endif

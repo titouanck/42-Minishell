@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "_get_next_line.h"
 
 t_bufferList	*ftlst_new_buffer(void)
 {

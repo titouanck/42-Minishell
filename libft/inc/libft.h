@@ -16,8 +16,9 @@
 # include "_libc.h"
 # include "_additional.h"
 # include "_mine.h"
-# include "ft_printf.h"
-# include "get_next_line.h"
+# include "_ft_printf.h"
+# include "_get_next_line.h"
+# include "_dynamic_memory_address_db.h"
 
 # define WHITESPACES " \t\n\v\f\r"
 
