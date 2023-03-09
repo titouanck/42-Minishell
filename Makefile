@@ -92,6 +92,7 @@ help:
 	@	echo -ne "\r\033[2K" $(LIGHTPURPLE) "re        →  "${NC}"Rebuilds the project.\n"
 	@	echo -ne "\r\033[2K" $(LIGHTPURPLE) "run       →  "${NC}"Compile and executes the program.\n"
 	@	echo -ne "\r\033[2K" $(LIGHTPURPLE) "valgrind  →  "${NC}"Check for memory leaks.\n"
+	@	echo -ne "\r\033[2K" $(LIGHTPURPLE) "libft     →  "${NC}"Rebuilds libft.\n"
 	@	echo -ne "\r\033[2K" $(WHITE) "----------------------------------------------"${NC}"\n"
 else
 help:
@@ -101,6 +102,7 @@ help:
 	@	echo -ne "\r\033[2K" $(LIGHTPURPLE)"re\n"${NC}" Rebuilds the project.\n"
 	@	echo -ne "\r\033[2K" $(LIGHTPURPLE)"run\n"${NC}" Compile and executes the program.\n"
 	@	echo -ne "\r\033[2K" $(LIGHTPURPLE)"valgrind\n"${NC}" Check for memory leaks.\n"
+	@	echo -ne "\r\033[2K" $(LIGHTPURPLE)"libft\n"${NC}" Rebuilds libft.\n"
 endif
 
 ${OBJS}: ${OBJS_PATH}/%.o: %.c Makefile
@@ -113,14 +115,6 @@ ${NAME}:  ${OBJS}
 	@	${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${LIBS} ${INC}	
 	@	echo -ne "\r\033[2K" $(LIGHTGREEN) "→ $(NAME) OK!\n"$(NC)
 
-run:	${NAME}
-		clear
-	@	./${NAME}
-
-valgrind:	${NAME}
-			clear
-			valgrind --track-fds=yes --suppressions=assets/ignore_readline_leaks.supp --leak-check=full --show-leak-kinds=all ./${NAME}
-
 clean:	
 	@	+$(MAKE) --no-print-directory -s -C libft clean
 	@	echo -ne "\r\033[2K" $(GREEN) "\t$(NAME) cleaned\n"$(NC)
@@ -132,6 +126,17 @@ fclean:	clean;
 	@	rm -f ${NAME}
 
 re:	fclean ${NAME}
+
+run:	${NAME}
+		clear
+	@	./${NAME}
+
+valgrind:	${NAME}
+			clear
+			valgrind --track-fds=yes --suppressions=assets/ignore_readline_leaks.supp --leak-check=full --show-leak-kinds=all ./${NAME}
+
+libft:
+	@	+$(MAKE) --no-print-directory -s -C libft re
 
 ifndef COLORCOMPIL
 COLORCOMPIL = \
@@ -148,4 +153,6 @@ T := $(words $(SRCS))
 N := x
 C = $(words $N)$(eval N := x $N)
 P = `expr $C '*' 100 / $T / 5`
-endif	
+endif
+
+.PHONY: libft

@@ -77,6 +77,7 @@ SRCS += ft_isnotnull.c
 SRCS += dynamic_memory_address_db.c
 SRCS += _addressdb_functions.c
 SRCS += db_malloc.c
+SRCS += db_calloc.c
 SRCS += db_strdup.c
 SRCS += db_strndup.c
 SRCS += db_free.c

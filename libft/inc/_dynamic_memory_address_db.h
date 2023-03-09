@@ -25,6 +25,8 @@ int		dynamic_memory_address_db(unsigned char action, void *address);
 
 void	*db_malloc(size_t bytes);
 
+void	*db_calloc(size_t count, size_t size);
+
 void	*db_strdup(void *old_address);
 
 void	*db_strndup(void *old_address, size_t n);
