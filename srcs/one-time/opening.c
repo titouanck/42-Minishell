@@ -29,7 +29,6 @@ t_env *opening(int argc, char **argv, char *envp[])
 	(void) argc;
 	(void) argv;
 	g_returnval = 0;
-	default_signal_behavior();
 	environment = get_environment(envp);
 	return (environment);
 }

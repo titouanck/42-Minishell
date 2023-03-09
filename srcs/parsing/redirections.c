@@ -198,12 +198,6 @@ static int _rightchevron(char *line, t_redirect *redirect)
 			start = line + i;
 			while (line[i] > 0 || line[i] == QUOTES)
 				i++;
-			if (line[i] == EMPTYQUOTE)
-			{
-				printf("situation\n");
-				ft_memmove(line + i, line + i + 1, ft_strlen(line + i) + 1);
-				i--;
-			}
 			end = line + i;
 			if (redirect->outfile)
 			{
@@ -324,7 +318,10 @@ int	use_heredoc(t_env *environment, t_redirect *redirect)
 			break ;
 		current = current->next;
 	}
-	default_signal_behavior();
+	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
+		default_signal_behavior();
+	else
+		notatty_signal_behavior();
 	ft_swap(&returnval, &g_returnval);
 	if (returnval == 130)
 		g_returnval = returnval;

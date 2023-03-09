@@ -16,21 +16,32 @@ int	main(int argc, char **argv, char *envp[])
 {
 	char	*line;
 	t_env	*environment;
+	int		tty;
 
 	environment = opening(argc, argv, envp);
 	if (!environment)
 		return (42);
 	while (1)
 	{
-		if (isatty(STDIN_FILENO))
+		tty = -1;
+		if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
 		{
-			if (isatty(STDERR_FILENO))
-				line = readline("\033[34;1m" PROMPT ENDCL " ");
-			else
-				line = readline(NULL);
+			if (tty != 1)
+			{
+				default_signal_behavior();
+				tty = 1;
+			}
+			line = readline("\033[34;1m" PROMPT ENDCL " ");
 		}
 		else
+		{
+			if (tty != 0)
+			{
+				notatty_signal_behavior();
+				tty = 0;
+			}
 			line = get_next_line(0);
+		}
 		if (line && *line)
 			add_history(line);
 		if (!line)
@@ -40,6 +51,7 @@ int	main(int argc, char **argv, char *envp[])
 			free(line);
 	}
 	closing_the_program(environment);
-	ft_putstr_fd("exit\n", 2);
+	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
+		ft_putstr_fd("exit\n", 2);
 	return (g_returnval);
 }

@@ -28,6 +28,18 @@ void	default_signal_behavior(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
+void	_no_action(int sig)
+{
+	(void) sig;
+	return ;
+}
+
+void	notatty_signal_behavior(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, _no_action);
+}
+
 static void	_cmd_sigint(int sig)
 {
 	(void) sig;

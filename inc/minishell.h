@@ -38,9 +38,8 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZ\
 # define LEFTCHEVRON -4
 # define RIGHTCHEVRON -5
 # define HEREDOC -6
-# define EMPTYQUOTE -7
-# define NOTAVARKEY -8
-# define QUOTES -9
+# define NOTAVARKEY -7
+# define QUOTES -8
 
 # ifndef TRUE
 #  define TRUE 1
@@ -164,5 +163,6 @@ void	free_cmds_parsed(t_cmd **tab);
 					/* Utils */
 void	heredoc_signal_behavior(void);
 void	cmd_signal_behavior_parent(void);
+void	notatty_signal_behavior(void);
 
 #endif

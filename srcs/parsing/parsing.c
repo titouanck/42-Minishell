@@ -12,41 +12,6 @@
 
 #include "minishell.h"
 
-static void	_actions_singlequoteopen(char c, \
-	int *single_quote_open)
-{
-	if (c == '\'')
-		*single_quote_open = FALSE;
-}
-
-static void	_actions_doublequoteopen(char c, \
-	int *double_quote_open)
-{
-	if (c == '\"')
-		*double_quote_open = FALSE;
-}
-
-static int	_actions_default(char *line, size_t i, \
-	int *single_quote_open, int *double_quote_open)
-{
-	int	j;
-
-	if (line[i] == '\'')
-		*single_quote_open = TRUE;
-	else if (line[i] == '\"')
-		*double_quote_open = TRUE;
-	else
-		return (0);
-	j = (int) i - 1;
-	if (j == -1)
-		return (1);
-	while ((j >= 0 && ft_iswhitespace(line[j]) && (1 || printf("(%c)", line[j]))))
-		j--;
-	if (j >= 0 && line[j] != '>' && line[j] != '<')
-		return (1);
-	return (0);
-}
-
 void	parsing(t_env *environment, char **line)
 {
 	char	**cmds;
@@ -83,10 +48,7 @@ void	parsing(t_env *environment, char **line)
 		i++;
 	}
 	if (cmds && *cmds)
-	{
 		pipex(environment, cmds);
-		default_signal_behavior();
-	}
 	else
 		ft_freetab(cmds);
 }

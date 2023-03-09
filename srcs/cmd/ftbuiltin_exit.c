@@ -29,7 +29,8 @@ unsigned char code, size_t cmdnbr)
 	}
 	free_cmds_parsed(cmds);
 	closing_the_program(environment);
-	ft_putstr_fd("exit\n", 2);
+	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
+		ft_putstr_fd("exit\n", 2);
 	exit(code);
 }
 
