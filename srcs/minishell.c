@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 14:28:56 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/09 18:43:34 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,15 @@ int	main(int argc, char **argv, char *envp[])
 		return (42);
 	while (1)
 	{
-		line = readline("\033[34;1m" PROMPT ENDCL " ");
+		if (isatty(STDIN_FILENO))
+		{
+			if (isatty(STDERR_FILENO))
+				line = readline("\033[34;1m" PROMPT ENDCL " ");
+			else
+				line = readline(NULL);
+		}
+		else
+			line = get_next_line(0);
 		if (line && *line)
 			add_history(line);
 		if (!line)

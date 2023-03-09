@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 17:56:39 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/09 18:09:05 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ typedef struct s_env
 	int				exported;
 	int				limiter_between_quotes;
 	struct s_env	*next;
+	int				fd;
 }					t_env;
 
 typedef	struct	s_heredoc
