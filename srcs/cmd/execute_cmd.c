@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 13:47:57 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 16:26:57 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/09 16:37:35 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,9 @@ int	execute_cmd(t_env *environment, char **args)
 	filepath = _locate_file(path, args[0]);
 	if (filepath)
 	{
+		cmd_signal_behavior();
 		execve(filepath, args, envp);
+		default_signal_behavior();
 		free(filepath);
 		filepath = NULL;
 		if (errno == 13)

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 15:07:38 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/09 16:45:22 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 		waitpid(pid, &g_returnval, 0);
 		if (g_returnval == 2)
 			g_returnval = 130;
-		else
+		else if (g_returnval > 255)
 			g_returnval = WEXITSTATUS(g_returnval);
 		if (cmdnbr != 0)
 			close(pipefd[0]);
