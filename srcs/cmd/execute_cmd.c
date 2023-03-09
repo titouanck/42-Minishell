@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 13:47:57 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 13:52:54 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/09 15:20:31 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,12 @@ char	*_locate_file(char **path, char *arg)
 		free(filepath);
 	}
 	if (!path)
-		return (ft_putstr_fd("minishell: ", 2), ft_putstr_fd(arg, 2), ft_putstr_fd(": command not found\n", 2), NULL);
+	{
+		if (ft_strchr(arg, '/'))
+			return (ft_putstr_fd("minishell: ", 2), ft_putstr_fd(arg, 2), ft_putstr_fd(": No such file or directory\n", 2), NULL);
+		else
+			return (ft_putstr_fd("minishell: ", 2), ft_putstr_fd(arg, 2), ft_putstr_fd(": command not found\n", 2), NULL);
+	}
 	i = 0;
 	while (path[i])
 	{
@@ -54,7 +59,11 @@ char	*_locate_file(char **path, char *arg)
 		free(filepath);
 		i++;
 	}
-	return (ft_putstr_fd("minishell: ", 2), ft_putstr_fd(arg, 2), ft_putstr_fd(": command not found\n", 2), NULL);
+	if (ft_strchr(arg, '/'))
+		return (ft_putstr_fd("minishell: ", 2), ft_putstr_fd(arg, 2), ft_putstr_fd(": No such file or directory\n", 2), NULL);
+	else
+		return (ft_putstr_fd("minishell: ", 2), ft_putstr_fd(arg, 2), ft_putstr_fd(": command not found\n", 2), NULL);
+
 }
 
 int	execute_cmd(t_env *environment, char **args)
@@ -62,7 +71,6 @@ int	execute_cmd(t_env *environment, char **args)
 	char	**envp;
 	char	**path;
 	char	*filepath;
-	char	*errmsg;
 
 	if (!args || !args[0])
 		return (ft_putstr_fd("minishell: : command not found\n", 2), \
@@ -83,10 +91,8 @@ int	execute_cmd(t_env *environment, char **args)
 		}
 		else
 		{
-			errmsg = ft_strjoin("minishell: ", args[0]);
-			perror(errmsg);
-			if (errmsg)
-				free(errmsg);
+			ft_putstr_fd("minishell: ", 2);
+			perror(args[0]);
 		}
 	}
 	if (envp)
