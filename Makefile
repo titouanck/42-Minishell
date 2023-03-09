@@ -55,47 +55,10 @@ CC = cc
 
 vpath %.c ${SRCS_PATH}
 
-
-
 # CFLAGS +=  -Wall -Wextra -Werror 
 CFLAGS += -g
 
-
 NAME = minishell
-
-all: ${NAME}
-
-${OBJS}: ${OBJS_PATH}/%.o: %.c Makefile
-	@	$(MAKE) --no-print-directory -s -C libft
-	@	mkdir -p ${OBJS_PATH}
-	@	$(COLORCOMPIL)
-	@	${CC} ${CFLAGS} -c $< -o $@ ${INC}
-
-${NAME}:  ${OBJS}
-	@	${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${LIBS} ${INC}	
-	@	echo -ne "\r\033[2K" $(LIGHTGREEN) "→ $(NAME) OK!\n"$(NC)
-
-run:	all
-		clear
-	@	./${NAME}
-
-valgrind:	all
-			clear
-			valgrind --track-fds=yes --suppressions=assets/ignore_readline_leaks.supp --leak-check=full --show-leak-kinds=all ./${NAME}
-
-clean:	
-	@	+$(MAKE) --no-print-directory -s -C libft clean
-	@	echo -ne "\r\033[2K" $(GREEN) "\t$(NAME) cleaned\n"$(NC)
-	@	rm -rf ${OBJS_PATH}
-
-
-fclean:	clean;
-	@	+$(MAKE) --no-print-directory -s -C libft fclean
-	@	rm -f ${NAME}
-
-re:	fclean all
-
-
 
 NC='\033[0m'
 RED='\033[0;31m'
@@ -115,6 +78,50 @@ LIGHTCYAN='\033[1;36m'
 YELLOW='\033[1;33m'
 WHITE='\033[1;37m'
 
+default:	help
+	@	${MAKE} --no-print-directory ${NAME}
+
+all: ${NAME}
+
+help:
+	@	echo -ne "\r\033[2K" $(WHITE) "----------------------------------------------"${NC}"\n"
+	@	echo -ne "\r\033[2K" $(LIGHTPURPLE) "all       →  "${NC}"Compile the program.\n"
+	@	echo -ne "\r\033[2K" $(LIGHTPURPLE) "clean     →  "${NC}"Removes temporary files.\n"
+	@	echo -ne "\r\033[2K" $(LIGHTPURPLE) "fclean    →  "${NC}"Deletes all generated files.\n"
+	@	echo -ne "\r\033[2K" $(LIGHTPURPLE) "re        →  "${NC}"Rebuilds the project.\n"
+	@	echo -ne "\r\033[2K" $(LIGHTPURPLE) "run       →  "${NC}"Compile and executes the program.\n"
+	@	echo -ne "\r\033[2K" $(LIGHTPURPLE) "valgrind  →  "${NC}"Check for memory leaks.\n"
+	@	echo -ne "\r\033[2K" $(WHITE) "----------------------------------------------"${NC}"\n"
+
+${OBJS}: ${OBJS_PATH}/%.o: %.c Makefile
+	@	$(MAKE) --no-print-directory -s -C libft
+	@	mkdir -p ${OBJS_PATH}
+	@	$(COLORCOMPIL)
+	@	${CC} ${CFLAGS} -c $< -o $@ ${INC}
+
+${NAME}:  ${OBJS}
+	@	${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${LIBS} ${INC}	
+	@	echo -ne "\r\033[2K" $(LIGHTGREEN) "→ $(NAME) OK!\n"$(NC)
+
+run:	${NAME}
+		clear
+	@	./${NAME}
+
+valgrind:	${NAME}
+			clear
+			valgrind --track-fds=yes --suppressions=assets/ignore_readline_leaks.supp --leak-check=full --show-leak-kinds=all ./${NAME}
+
+clean:	
+	@	+$(MAKE) --no-print-directory -s -C libft clean
+	@	echo -ne "\r\033[2K" $(GREEN) "\t$(NAME) cleaned\n"$(NC)
+	@	rm -rf ${OBJS_PATH}
+
+
+fclean:	clean;
+	@	+$(MAKE) --no-print-directory -s -C libft fclean
+	@	rm -f ${NAME}
+
+re:	fclean ${NAME}
 
 ifndef COLORCOMPIL
 COLORCOMPIL = \

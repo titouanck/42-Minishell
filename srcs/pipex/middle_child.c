@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 14:23:40 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/09 15:07:46 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	middle_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 
 	if (pipe(new_pipefd) == -1)
 		return (perror("minishell: pipe"), close(pipefd[0]), 0);
-	if(cmds[cmdnbr]->redirect->to_execute == FALSE || !io_open_fds((cmds[cmdnbr])->redirect))
+	if(!io_open_fds((cmds[cmdnbr])->redirect) || cmds[cmdnbr]->redirect->to_execute == FALSE)
 	{
 		if (!(cmds[cmdnbr]->args) || !(cmds[cmdnbr]->args) || ((cmds[cmdnbr]->args[0]) && !((cmds[cmdnbr]->args[0])[0])))
 		{
@@ -30,6 +30,18 @@ int	middle_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 		close(new_pipefd[1]);
 		pipefd[0] = new_pipefd[0];
 		pipefd[1] = new_pipefd[1];
+		if ((cmds[cmdnbr])->redirect->outfile)
+		{
+			close((cmds[cmdnbr])->redirect->fd_outfile);
+			free((cmds[cmdnbr])->redirect->outfile);
+			(cmds[cmdnbr])->redirect->outfile = NULL;
+		}
+		if ((cmds[cmdnbr])->redirect->infile)
+		{
+			close((cmds[cmdnbr])->redirect->fd_infile);
+			free((cmds[cmdnbr])->redirect->infile);
+			(cmds[cmdnbr])->redirect->infile = NULL;
+		}
 		return (1);
 	}
 	if (ft_strcmp((cmds[cmdnbr]->args)[0], "exit") == 0)
