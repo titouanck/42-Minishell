@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 12:48:16 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 12:57:17 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/09 14:05:37 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,14 +85,16 @@ static void	_actions_default(char *line, \
 	if (line[(*i)] == '\'')
 	{
 		*single_quote_open = TRUE;
-		ft_memmove(line + (*i), line + (*i) + 1, ft_strlen(line + (*i)));
-		(*i)--;
+		line[*i] = QUOTES;
+		// ft_memmove(line + (*i), line + (*i) + 1, ft_strlen(line + (*i)));
+		// (*i)--;
 	}
 	else if (line[(*i)] == '\"')
 	{
 		*double_quote_open = TRUE;
-		ft_memmove(line + (*i), line + (*i) + 1, ft_strlen(line + (*i)));
-		(*i)--;
+		line[*i] = QUOTES;
+		// ft_memmove(line + (*i), line + (*i) + 1, ft_strlen(line + (*i)));
+		// (*i)--;
 	}
 	else if (ft_iswhitespace(line[(*i)]))
 		line[(*i)] = SEPARATOR;
@@ -148,6 +150,45 @@ static int _detect_empty_redirections(char *line)
 	return (1);
 }
 
+void	print_line(char *line)
+{
+	size_t	i;
+
+	i = 0;
+	if (!line)
+	{
+		ft_putstr_fd("No line\n", 2);
+		return ;
+	}
+	while (line[i])
+	{
+		if (ft_isascii(line[i]))
+		{
+			ft_printf(BLUEBG);
+			write(1, line + i, 1);
+			ft_printf(ENDCL);
+		}
+		else if (line[i] == VARKEY)
+			ft_printf(GREENBG"$"ENDCL);
+		else if (line[i] == SEPARATOR)
+			ft_printf(" ");
+		else if (line[i] == LEFTCHEVRON)
+			ft_printf(REDBG"<"ENDCL);
+		else if (line[i] == RIGHTCHEVRON)
+			ft_printf(REDBG">"ENDCL);
+		else if (line[i] == HEREDOC)
+			ft_printf(REDBG"[here-d]"ENDCL);
+		else if (line[i] == EMPTYQUOTE)
+			ft_printf(MAGENTABG"[empty-quote]"ENDCL);
+		else if (line[i] == NOTAVARKEY)
+			ft_printf(CYANBG"[not-a-var-key]"ENDCL);
+		else if (line[i] == QUOTES)
+			ft_printf("\033[31;43m\""ENDCL);
+		i++;
+	}
+	ft_putstr("\n\n");
+}
+
 int	quotes_interpretation(t_env *environment, char **line)
 {
 	char	*ptr;
@@ -183,6 +224,7 @@ int	quotes_interpretation(t_env *environment, char **line)
 	while ((*line)[++i])
 		if ((*line)[i] == NOTAVARKEY)
 			(*line)[i] = '$';
+	print_line(*line);
 	return \
 	(_detect_missing_quote(single_quote_open, double_quote_open));
 }

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 19:03:36 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/09 14:18:07 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ void	parsing(t_env *environment, char **line)
 	size_t	i;
 	int		r;
 	size_t	size;
-	int		*tab;
 
 	cmds = split_cmds(line);
 	if (!cmds)
@@ -87,18 +86,7 @@ void	parsing(t_env *environment, char **line)
 	size = 0;
 	while (cmds[size])
 		size++;
-	tab = malloc(sizeof(int) * size);
-	if (!tab)
-	{
-		ft_freetab(cmds);
-		return ;
-	}
 	size = 0;
-	while (cmds[size])
-	{
-		tab[size] = presence_of_cmd(cmds[size]);
-		size++;
-	}
 	i = 0;
 	while (cmds[i])
 	{
@@ -122,7 +110,7 @@ void	parsing(t_env *environment, char **line)
 	}
 	if (cmds && *cmds)
 	{
-		pipex(environment, cmds, tab);
+		pipex(environment, cmds);
 		default_signal_behavior();
 	}
 	else

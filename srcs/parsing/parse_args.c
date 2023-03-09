@@ -39,6 +39,26 @@ void	print_redirection(char *line, t_redirect *redirect)
 	printf("\n");
 }
 
+void	remove_quote_token(char **args)
+{
+	size_t	i;
+	size_t	j;
+
+	if (!args)
+		return ;
+	i = 0;
+	while (args[i])
+	{
+		j = 0;
+		if (args[i][j] == QUOTES)
+		{
+			ft_memmove(args[i] + j, args[i] + j + 1, ft_strlen(args[i] + j + 1) + 1);
+			i--;
+		}
+		i++;
+	}
+}
+
 t_cmd	*parse_args(t_env *environment, char **line)
 {
 	t_cmd		*cmd;
@@ -50,10 +70,7 @@ t_cmd	*parse_args(t_env *environment, char **line)
 	cmd->redirect = NULL;
 	if (!quotes_interpretation(environment, line))
 	{
-		cmd->redirect = redirections(environment, *line, TRUE);
-		if (!(cmd->redirect))
-			return (free(cmd), NULL);
-		return (cmd);
+		return (free(cmd), NULL);
 	}
 	else
 		cmd->redirect = redirections(environment, *line, FALSE);
@@ -70,5 +87,7 @@ t_cmd	*parse_args(t_env *environment, char **line)
 		closing_the_program(environment);
 		exit(g_returnval);
 	}
+	remove_quote_token(cmd->args);
+	ft_printtab(cmd->args);
 	return (cmd);
 }
