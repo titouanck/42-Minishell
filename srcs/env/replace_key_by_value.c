@@ -29,7 +29,7 @@ char	*replace_key_by_value(t_env *environment, char *line)
 			line[i] = '\0';
 			first_part = ft_strdup(line);
 			if (!first_part)
-				return (free(line), NULL);
+				return (db_free(line), NULL);
 			question_mark = FALSE;
 			if (line[i + 1] == '\?')
 				question_mark = TRUE;
@@ -44,7 +44,7 @@ char	*replace_key_by_value(t_env *environment, char *line)
 			var = second_part;
 			second_part = ft_strdup(second_part);
 			if (!second_part)
-				return (free(line), free(first_part), NULL);
+				return (db_free(line),db_free(first_part), NULL);
 			*var = '\0';
 			var = line + i + 1;
 			if (question_mark)

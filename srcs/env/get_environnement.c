@@ -60,7 +60,7 @@ t_env	*get_environment(char *envp[])
 			current_line->next = env_nextelement(envp, i, j);
 			current_line = current_line->next;
 			if (!current_line)
-				return (free_environment(environment), NULL);
+				return (ft_free_environment(environment), NULL);
 		}
 		i++;
 	}

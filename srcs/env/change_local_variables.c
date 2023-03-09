@@ -95,7 +95,7 @@ static int	_parse_value(t_env *environment, char **line, char **value)
 	if (!(*value))
 		ft_putstr_fd(ERRALLOC, 2);
 	if (!quotes_interpretation(environment, value))
-		return (free(*value), 0);
+		return (db_free(*value), 0);
 	return (1);
 }
 
@@ -151,11 +151,11 @@ int	change_local_variables(t_env *environment, char *line, size_t size)
 		return (0);
 	else
 		if(!_parse_value(environment, &line, &value))	
-			return (free(key), -1);
+			return (db_free(key), -1);
 	if (!value)
 		value = ft_strdup("");
 	if (!value)
-		return (ft_putstr_fd(ERRALLOC, 2), free(key), -1);
+		return (ft_putstr_fd(ERRALLOC, 2),db_free(key), -1);
 	ft_memmove(ptr, line, ft_strlen(line) + 1);
 	if (size > 1)
 	{

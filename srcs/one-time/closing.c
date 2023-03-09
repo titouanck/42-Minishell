@@ -15,5 +15,6 @@
 void	closing_the_program(t_env *environment)
 {
 	rl_clear_history();
-	free_environment(environment);
+	ft_free_environment(environment);
+	dynamic_memory_address_db(ADDRESSDB_ERASURE, NULL);
 }

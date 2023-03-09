@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	free_cmds_parsed(t_cmd **tab)
+void	ft_free_cmds_parsed(t_cmd **tab)
 {
 	size_t	i;
 
@@ -24,7 +24,7 @@ void	free_cmds_parsed(t_cmd **tab)
 		if (tab[i]->args)
 			ft_freetab(tab[i]->args);
 		if (tab[i]->redirect)
-			free_redirect(tab[i]->redirect);
+			ft_free_redirect(tab[i]->redirect);
 		free(tab[i]);
 		i++;
 	}
@@ -48,7 +48,7 @@ static t_cmd	**_get_cmds_parsed(t_env *environment, char **cmds)
 	{
 		cmds_parsed[i] = parse_cmd(environment, cmds + i);
 		if (!cmds_parsed[i])
-			return (free_cmds_parsed(cmds_parsed), ft_freetab(cmds), NULL);
+			return (ft_free_cmds_parsed(cmds_parsed), ft_freetab(cmds), NULL);
 		if (!cmds_parsed[i]->args || !(cmds_parsed[i]->args[0]) || !(cmds_parsed[i]->args[0][0]))
 			cmds_parsed[i]->redirect->to_execute = FALSE;
 		i++;
@@ -83,7 +83,7 @@ int	pipex(t_env *environment, char **cmds)
 			while (1)
 				if (wait(NULL) <= 0)
 					break ;
-			return (free_cmds_parsed(cmds_parsed), 0);
+			return (ft_free_cmds_parsed(cmds_parsed), 0);
 		}	
 		cmdnbr++;
 	}
@@ -91,5 +91,5 @@ int	pipex(t_env *environment, char **cmds)
 	while (1)
 		if (wait(NULL) <= 0)
 			break ;
-	return (free_cmds_parsed(cmds_parsed), 1);
+	return (ft_free_cmds_parsed(cmds_parsed), 1);
 }

@@ -70,19 +70,19 @@ t_cmd	*parse_args(t_env *environment, char **line)
 	cmd->redirect = NULL;
 	if (!quotes_interpretation(environment, line))
 	{
-		return (free(cmd), NULL);
+		return (db_free(cmd), NULL);
 	}
 	else
 		cmd->redirect = redirections(environment, *line, FALSE);
 	if (!(cmd->redirect))
-		return (free(cmd), NULL);
+		return (db_free(cmd), NULL);
 	cmd->args = ft_split(*line, SEPARATOR);
 	if (!(cmd->args))
 	{
 		ft_putstr_fd(ERRALLOC, 2);
 		g_returnval = 12;
 		free(*line);
-		free_redirect(cmd->redirect);
+		ft_free_redirect(cmd->redirect);
 		free(cmd);
 		closing_the_program(environment);
 		exit(g_returnval);

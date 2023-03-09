@@ -32,7 +32,7 @@ char	*_locate_file(char **path, char *arg)
 			if (access(filepath, X_OK) == 0)
 				return (filepath);
 			else
-				return (ft_putstr_fd("minishell: ", 2), perror(arg), free(filepath), NULL);
+				return (ft_putstr_fd("minishell: ", 2), perror(arg),db_free(filepath), NULL);
 		}
 		free(filepath);
 	}
@@ -54,7 +54,7 @@ char	*_locate_file(char **path, char *arg)
 			if (access(filepath, X_OK) == 0)
 				return (filepath);
 			else
-				return (ft_putstr_fd("minishell: ", 2), perror(arg), free(filepath), NULL);
+				return (ft_putstr_fd("minishell: ", 2), perror(arg),db_free(filepath), NULL);
 		}
 		free(filepath);
 		i++;

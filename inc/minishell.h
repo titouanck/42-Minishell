@@ -141,7 +141,7 @@ void		ftbuiltin_unset_element(t_env *environment, char *arg);
 int			change_local_variables(t_env *environment, char *line, size_t size);
 // environment.c
 char		**format_environment(t_env *environment);
-void		free_environment(t_env *environment);
+void		ft_free_environment(t_env *environment);
 char		*get_value_by_key(t_env *environment, char *key);
 int			env_lstaddback(t_env *env, char *key, char *value, int exported);
 // path.c
@@ -157,8 +157,8 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr);
 int		io_open_fds(t_redirect *redirect);
 
 // PAS CLASSE
-void	free_redirect(t_redirect *redirect);
-void	free_cmds_parsed(t_cmd **tab);
+void	ft_free_redirect(t_redirect *redirect);
+void	ft_free_cmds_parsed(t_cmd **tab);
 
 					/* Utils */
 void	heredoc_signal_behavior(void);

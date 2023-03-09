@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	free_environment(t_env *environment)
+void	ft_free_environment(t_env *environment)
 {
 	t_env	*tmp;
 

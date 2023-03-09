@@ -43,7 +43,7 @@ static void	_remove_quote_token_line(char *line)
 	}
 }
 
-void	free_redirect(t_redirect *redirect)
+void	ft_free_redirect(t_redirect *redirect)
 {
 	int	fd;
 
@@ -355,7 +355,7 @@ t_redirect	*redirections(t_env *environment, char *line, int empty)
 		if (leftreturn == -1)
 		{
 			g_returnval = 2;
-			return (free_redirect(redirect), NULL);
+			return (ft_free_redirect(redirect), NULL);
 		}
 		else if (leftreturn == 0)
 		{
@@ -367,13 +367,13 @@ t_redirect	*redirections(t_env *environment, char *line, int empty)
 		if (rightreturn == -1)
 		{
 			g_returnval = 2;
-			return (free_redirect(redirect), NULL);
+			return (ft_free_redirect(redirect), NULL);
 		}
 		else if (leftreturn == 0)
 			redirect->to_execute = FALSE;
 		if (!use_heredoc(environment, redirect))
 		{
-			free_redirect(redirect);
+			ft_free_redirect(redirect);
 			return (NULL);
 		}
 	}
