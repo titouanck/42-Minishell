@@ -39,7 +39,7 @@ void	print_redirection(char *line, t_redirect *redirect)
 	printf("\n");
 }
 
-void	remove_quote_token(char **args)
+static void	_remove_quote_token_tab(char **args)
 {
 	size_t	i;
 	size_t	j;
@@ -87,6 +87,6 @@ t_cmd	*parse_args(t_env *environment, char **line)
 		closing_the_program(environment);
 		exit(g_returnval);
 	}
-	remove_quote_token(cmd->args);
+	_remove_quote_token_tab(cmd->args);
 	return (cmd);
 }

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 17:18:35 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/09 16:26:40 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,24 @@ void	free_heredocs(t_heredoc *heredoc)
 		free(heredoc->limiter);
 		free(heredoc);
 		heredoc = tmp;
+	}
+}
+
+static void	_remove_quote_token_line(char *line)
+{
+	size_t	i;
+
+	if (!line)
+		return ;
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] == QUOTES)
+		{
+			ft_memmove(line + i, line + i + 1, ft_strlen(line + i + 1) + 1);
+			i--;
+		}
+		i++;
 	}
 }
 
@@ -89,7 +107,7 @@ static int _leftchevron(t_env *environment, char *line, t_redirect *redirect)
 				if (!line[i] || line[i] == LEFTCHEVRON || line[i] == RIGHTCHEVRON)
 					return (ft_putstr_fd("minishell: syntax error: expected limiter near `<<\'\n", 2), -1);
 				start = line + i;
-				while (line[i] > 0)
+				while (line[i] > 0 || line[i] == QUOTES)
 					i++;
 				end = line + i;
 				if (redirect->infile)
@@ -108,6 +126,7 @@ static int _leftchevron(t_env *environment, char *line, t_redirect *redirect)
 				limiter = ft_strndup(start, end - start);
 				if (!limiter)
 					return (0);
+				_remove_quote_token_line(limiter);
 				redirect->heredoc = lstnew_heredoc(redirect->heredoc, limiter);
 				redirect->infile = NULL;
 				ft_memmove(line + old_i, line + i, ft_strlen(line + i) + 1);
@@ -119,7 +138,7 @@ static int _leftchevron(t_env *environment, char *line, t_redirect *redirect)
 				if (!line[i] || line[i] == LEFTCHEVRON || line[i] == RIGHTCHEVRON)
 					return (ft_putstr_fd("minishell: syntax error: expected infile near `<\'\n", 2), -1);
 				start = line + i;
-				while (line[i] > 0)
+				while (line[i] > 0 || line[i] == QUOTES)
 					i++;
 				end = line + i;
 				if (redirect->infile)
@@ -136,6 +155,7 @@ static int _leftchevron(t_env *environment, char *line, t_redirect *redirect)
 					free(redirect->infile);
 				}
 				redirect->infile = ft_strndup(start, end - start);
+				_remove_quote_token_line(redirect->infile);
 				ft_memmove(line + old_i, line + i, ft_strlen(line + i) + 1);
 			}
 			i = old_i - 1;
@@ -176,7 +196,7 @@ static int _rightchevron(char *line, t_redirect *redirect)
 			if (!line[i] || line[i] == LEFTCHEVRON || line[i] == RIGHTCHEVRON)
 				return (ft_putstr_fd("minishell: syntax error: expected outfile near `>\'\n", 2), -1);
 			start = line + i;
-			while (line[i] > 0)
+			while (line[i] > 0 || line[i] == QUOTES)
 				i++;
 			if (line[i] == EMPTYQUOTE)
 			{
@@ -202,6 +222,7 @@ static int _rightchevron(char *line, t_redirect *redirect)
 				free(redirect->outfile);
 			}
 			redirect->outfile = ft_strndup(start, end - start);
+			_remove_quote_token_line(redirect->outfile);
 			ft_memmove(line + old_i, line + i, ft_strlen(line + i) + 1);
 			i = old_i - 1;
 		}

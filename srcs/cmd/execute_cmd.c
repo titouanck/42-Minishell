@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 13:47:57 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 15:49:18 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/09 16:26:57 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ char	*_locate_file(char **path, char *arg)
 		filepath = ft_strdup(arg);
 		if (!filepath)
 			return (ft_putstr_fd(ERRALLOC, 2), NULL);
-		printf("Ici: %s\n", filepath);
 		if (access(filepath, F_OK) == 0)
 		{
 			if (access(filepath, X_OK) == 0)

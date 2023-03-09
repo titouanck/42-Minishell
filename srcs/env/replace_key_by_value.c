@@ -48,10 +48,7 @@ char	*replace_key_by_value(t_env *environment, char *line)
 			*var = '\0';
 			var = line + i + 1;
 			if (question_mark)
-			{
-				i--;
 				var = ft_itoa(g_returnval);
-			}
 			else
 				var = get_value_by_key(environment, var);
 			if (!var)
