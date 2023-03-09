@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 14:18:07 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/09 14:28:22 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,32 +44,6 @@ static int	_actions_default(char *line, size_t i, \
 		j--;
 	if (j >= 0 && line[j] != '>' && line[j] != '<')
 		return (1);
-	return (0);
-}
-
-int	presence_of_cmd(char *line)
-{
-	size_t	i;
-	int		single_quote_open;
-	int		double_quote_open;
-
-	i = 0;
-	single_quote_open = FALSE;
-	double_quote_open = FALSE;
-	if (!line)
-		return (0);
-	while (line[i])
-	{
-		if (single_quote_open)
-			_actions_singlequoteopen(line[i], &single_quote_open);
-		else if (double_quote_open)
-			_actions_doublequoteopen(line[i], &double_quote_open);
-		else
-			if (_actions_default(line, i, \
-			&single_quote_open, &double_quote_open))
-				return (1);
-		i++;
-	}
 	return (0);
 }
 

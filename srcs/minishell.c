@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 13:50:09 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/09 14:28:56 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ int	main(int argc, char **argv, char *envp[])
 	while (1)
 	{
 		line = readline("\033[34;1m" PROMPT ENDCL " ");
-		// printf("\033[37;43m%s"ENDCL"\n\n", line);
 		if (line && *line)
 			add_history(line);
 		if (!line)
