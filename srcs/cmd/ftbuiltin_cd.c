@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 11:34:21 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/06 11:44:49 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/09 15:52:25 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,6 @@ void	ftbuiltin_cd(t_env *environment, char **args)
 				ft_putstr_fd(ERRALLOC, 2);
 			perror(err_str);
 			free(err_str);
-			free(key);
-			free(value);
 			g_returnval = 1;
 		}
 		else
