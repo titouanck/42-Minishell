@@ -88,6 +88,5 @@ t_cmd	*parse_args(t_env *environment, char **line)
 		exit(g_returnval);
 	}
 	remove_quote_token(cmd->args);
-	ft_printtab(cmd->args);
 	return (cmd);
 }

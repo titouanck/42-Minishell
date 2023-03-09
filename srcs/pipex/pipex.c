@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 15:07:04 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 14:19:12 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/09 14:24:43 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,6 @@ static t_cmd	**_get_cmds_parsed(t_env *environment, char **cmds)
 			return (free_cmds_parsed(cmds_parsed), ft_freetab(cmds), NULL);
 		if (!cmds_parsed[i]->args || !(cmds_parsed[i]->args[0]) || !(cmds_parsed[i]->args[0][0]))
 			cmds_parsed[i]->redirect->to_execute = FALSE;
-		
-		ft_printf(REDBG);
-		if (cmds_parsed[i]->redirect->infile)
-			ft_printf("< %s\n", cmds_parsed[i]->redirect->infile);
-		if (cmds_parsed[i]->redirect->outfile && cmds_parsed[i]->redirect->append == 0)
-			ft_printf("> %s\n", cmds_parsed[i]->redirect->outfile);
-		if (cmds_parsed[i]->redirect->outfile && cmds_parsed[i]->redirect->append == 1)
-			ft_printf("> %s\n", cmds_parsed[i]->redirect->outfile);
-		ft_printf(ENDCL);
 		i++;
 	}
 	cmds_parsed[i] = NULL;
