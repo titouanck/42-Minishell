@@ -1,48 +1,28 @@
-
-
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   path.c                                             :+:      :+:    :+:   */
+/*   db_freetab.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/25 01:02:28 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/01/25 17:39:29 by tchevrie         ###   ########.fr       */
+/*   Created: 2023/03/06 16:31:35 by tchevrie          #+#    #+#             */
+/*   Updated: 2023/03/06 17:32:48 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-static char	*get_path_ptr(char *envp[])
+void	db_freetab(char **tab)
 {
-	int		i;
-	char	*ptr;
+	size_t	i;
 
+	if (!tab)
+		return ;
 	i = 0;
-	while (1)
+	while (tab[i])
 	{
-		ptr = envp[i];
-		if (!ptr)
-			break ;
-		if (strncmp(ptr, "PATH=", 5) == 0)
-			return (ptr);
+		db_free(tab[i]);
 		i++;
 	}
-	return (NULL);
-}
-
-char	**get_path(char *envp[])
-{
-	char	*path_ptr;
-	char	**path;
-
-	if (!envp)
-		return (NULL);
-	path_ptr = get_path_ptr(envp);
-	if (!path_ptr)
-		return (NULL);
-	path_ptr += 5;
-	path = db_split(path_ptr, ':');
-	return (path);
+	db_free(tab);
 }

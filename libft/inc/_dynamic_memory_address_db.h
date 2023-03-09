@@ -33,4 +33,8 @@ void	*db_strndup(void *old_address, size_t n);
 
 void	db_free(void *address);
 
+void	db_freetab(char **tab);
+
+char	**db_split(char const *s, char c);
+
 #endif

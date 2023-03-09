@@ -98,8 +98,8 @@ int	execute_cmd(t_env *environment, char **args)
 		}
 	}
 	if (envp)
-		ft_freetab(envp);
+		db_freetab(envp);
 	if (path)
-		ft_freetab(path);
+		db_freetab(path);
 	return (_command_not_found(args), 0);
 }

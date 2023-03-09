@@ -76,12 +76,12 @@ t_cmd	*parse_args(t_env *environment, char **line)
 		cmd->redirect = redirections(environment, *line, FALSE);
 	if (!(cmd->redirect))
 		return (db_free(cmd), NULL);
-	cmd->args = ft_split(*line, SEPARATOR);
+	cmd->args = db_split(*line, SEPARATOR);
 	if (!(cmd->args))
 	{
 		ft_putstr_fd(ERRALLOC, 2);
 		g_returnval = 12;
-		db_free(*line);
+		// db_free(*line);
 		ft_free_redirect(cmd->redirect);
 		db_free(cmd);
 		closing_the_program(environment);

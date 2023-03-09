@@ -20,7 +20,7 @@ static int	check_for_stdout(char *output)
 
 	if (!output || output[0] != '/')
 		return (0);
-	tab = ft_split(output, '/');
+	tab = db_split(output, '/');
 	if (!tab)
 		return (0);
 	size = 0;
@@ -30,7 +30,7 @@ static int	check_for_stdout(char *output)
 		r = 1;
 	else
 		r = 0;
-	ft_freetab(tab);
+	db_freetab(tab);
 	return (r);
 }
 

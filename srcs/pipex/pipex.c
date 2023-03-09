@@ -22,7 +22,7 @@ void	ft_free_cmds_parsed(t_cmd **tab)
 	while (tab[i])
 	{
 		if (tab[i]->args)
-			ft_freetab(tab[i]->args);
+			db_freetab(tab[i]->args);
 		if (tab[i]->redirect)
 			ft_free_redirect(tab[i]->redirect);
 		db_free(tab[i]);
@@ -42,13 +42,13 @@ static t_cmd	**_get_cmds_parsed(t_env *environment, char **cmds)
 		size++;
 	cmds_parsed = db_malloc(sizeof(t_cmd *) * (size + 1));
 	if (!cmds_parsed)
-		return (ft_putstr_fd(ERRALLOC, 2), ft_freetab(cmds), NULL);
+		return (ft_putstr_fd(ERRALLOC, 2), db_freetab(cmds), NULL);
 	i = 0;
 	while (i < size)
 	{
 		cmds_parsed[i] = parse_cmd(environment, cmds + i);
 		if (!cmds_parsed[i])
-			return (ft_free_cmds_parsed(cmds_parsed), ft_freetab(cmds), NULL);
+			return (ft_free_cmds_parsed(cmds_parsed), db_freetab(cmds), NULL);
 		if (!cmds_parsed[i]->args || !(cmds_parsed[i]->args[0]) || !(cmds_parsed[i]->args[0][0]))
 			cmds_parsed[i]->redirect->to_execute = FALSE;
 		i++;
@@ -67,7 +67,7 @@ int	pipex(t_env *environment, char **cmds)
 	cmds_parsed = _get_cmds_parsed(environment, cmds);
 	if (!cmds_parsed)
 		return (0);
-	ft_freetab(cmds);
+	db_freetab(cmds);
 	cmd_signal_behavior_parent();
 	cmdnbr = 0;
 	if (cmds_parsed[1])

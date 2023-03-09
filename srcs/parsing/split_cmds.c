@@ -82,7 +82,7 @@ char	**split_cmds(char **ptr)
 		return (ft_putstr_fd(ERRPIPE, 2), NULL);
 	if (!_check_doublons(line))
 		return (ft_putstr_fd("minishell: syntax error near unexpected `||\'\n", 2), NULL);
-	cmds = ft_split(line, PIPECHAR);
+	cmds = db_split(line, PIPECHAR);
 	if (!cmds)
 		ft_putstr_fd(ERRALLOC, 2);
 	return (cmds);

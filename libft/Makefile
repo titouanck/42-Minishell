@@ -81,6 +81,8 @@ SRCS += db_calloc.c
 SRCS += db_strdup.c
 SRCS += db_strndup.c
 SRCS += db_free.c
+SRCS += db_freetab.c
+SRCS += db_split.c
 
 INC = -I inc
 

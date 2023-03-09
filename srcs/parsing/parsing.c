@@ -41,7 +41,7 @@ void	parsing(t_env *environment, char **line)
 			ft_strip(cmds[i]);
 		else
 		{
-			ft_freetab(cmds + i);
+			db_freetab(cmds + i);
 			cmds[i] = NULL;
 			break ;
 		}
@@ -50,5 +50,5 @@ void	parsing(t_env *environment, char **line)
 	if (cmds && *cmds)
 		pipex(environment, cmds);
 	else
-		ft_freetab(cmds);
+		db_freetab(cmds);
 }
