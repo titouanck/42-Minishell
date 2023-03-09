@@ -1,6 +1,6 @@
+TERM_WIDTH := $(shell tput cols)
+
 SHELL = /bin/bash
-
-
 SRCS += execute_cmd.c
 SRCS += ftbuiltin_cd.c
 SRCS += ftbuiltin_echo.c
@@ -79,10 +79,12 @@ YELLOW='\033[1;33m'
 WHITE='\033[1;37m'
 
 default:	help
+	@	echo -ne ${TERM_WIDTH}"\n"
 	@	${MAKE} --no-print-directory ${NAME}
 
 all: ${NAME}
 
+ifeq ($(shell test $(TERM_WIDTH) -gt 50; echo $$?), 0)
 help:
 	@	echo -ne "\r\033[2K" $(WHITE) "----------------------------------------------"${NC}"\n"
 	@	echo -ne "\r\033[2K" $(LIGHTPURPLE) "all       →  "${NC}"Compile the program.\n"
@@ -92,6 +94,15 @@ help:
 	@	echo -ne "\r\033[2K" $(LIGHTPURPLE) "run       →  "${NC}"Compile and executes the program.\n"
 	@	echo -ne "\r\033[2K" $(LIGHTPURPLE) "valgrind  →  "${NC}"Check for memory leaks.\n"
 	@	echo -ne "\r\033[2K" $(WHITE) "----------------------------------------------"${NC}"\n"
+else
+help:
+	@	echo -ne "\r\033[2K" $(LIGHTPURPLE)"all\n"${NC}" Compile the program.\n"
+	@	echo -ne "\r\033[2K" $(LIGHTPURPLE)"clean\n"${NC}" Removes temporary files.\n"
+	@	echo -ne "\r\033[2K" $(LIGHTPURPLE)"fclean\n"${NC}" Deletes all generated files.\n"
+	@	echo -ne "\r\033[2K" $(LIGHTPURPLE)"re\n"${NC}" Rebuilds the project.\n"
+	@	echo -ne "\r\033[2K" $(LIGHTPURPLE)"run\n"${NC}" Compile and executes the program.\n"
+	@	echo -ne "\r\033[2K" $(LIGHTPURPLE)"valgrind\n"${NC}" Check for memory leaks.\n"
+endif
 
 ${OBJS}: ${OBJS_PATH}/%.o: %.c Makefile
 	@	$(MAKE) --no-print-directory -s -C libft
