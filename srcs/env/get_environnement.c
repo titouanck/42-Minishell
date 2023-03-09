@@ -16,7 +16,7 @@ static t_env	*env_initialisation(void)
 {
 	t_env	*environment;
 
-	environment = malloc(sizeof(t_env));
+	environment = db_malloc(sizeof(t_env));
 	if (!environment)
 		return (ft_putstr_fd(ERRALLOC, 2), NULL);
 	environment->key = NULL;
@@ -30,7 +30,7 @@ static t_env	*env_nextelement(char *envp[], size_t i, size_t j)
 {
 	t_env	*element;
 
-	element = malloc(sizeof(t_env));
+	element = db_malloc(sizeof(t_env));
 	if (!element)
 		return (ft_putstr_fd(ERRALLOC, 2), NULL);
 	element->key = ft_substr(envp[i], 0, j);

@@ -63,7 +63,7 @@ t_cmd	*parse_args(t_env *environment, char **line)
 {
 	t_cmd		*cmd;
 
-	cmd = malloc(sizeof(t_cmd));
+	cmd = db_malloc(sizeof(t_cmd));
 	if (!cmd)
 		return (ft_putstr_fd(ERRALLOC, 2), NULL);
 	cmd->args = NULL;
@@ -81,9 +81,9 @@ t_cmd	*parse_args(t_env *environment, char **line)
 	{
 		ft_putstr_fd(ERRALLOC, 2);
 		g_returnval = 12;
-		free(*line);
+		db_free(*line);
 		ft_free_redirect(cmd->redirect);
-		free(cmd);
+		db_free(cmd);
 		closing_the_program(environment);
 		exit(g_returnval);
 	}

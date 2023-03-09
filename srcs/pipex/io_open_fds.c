@@ -45,9 +45,9 @@ int	io_open_fds(t_redirect *redirect)
 		{
 			ft_putstr_fd("minishell: ", 2);
 			perror(redirect->infile);
-			free(redirect->infile);
+			db_free(redirect->infile);
 			redirect->infile = NULL;
-			free(redirect->outfile);
+			db_free(redirect->outfile);
 			redirect->outfile = NULL;
 			return (0);
 		}
@@ -66,16 +66,16 @@ int	io_open_fds(t_redirect *redirect)
 				perror(redirect->outfile);
 				if (redirect->infile)
 					close(redirect->fd_infile);
-				free(redirect->infile);
+				db_free(redirect->infile);
 				redirect->infile = NULL;
-				free(redirect->outfile);
+				db_free(redirect->outfile);
 				redirect->outfile = NULL;
 				return (0);
 			}
 		}
 		else
 		{
-			free(redirect->outfile);
+			db_free(redirect->outfile);
 			redirect->outfile = NULL;
 		}
 	}

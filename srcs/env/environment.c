@@ -21,10 +21,10 @@ void	ft_free_environment(t_env *environment)
 		tmp = environment;
 		environment = environment->next;
 		if (tmp->key)
-			free(tmp->key);
+			db_free(tmp->key);
 		if (tmp->value)
-			free(tmp->value);
-		free(tmp);
+			db_free(tmp->value);
+		db_free(tmp);
 	}
 }
 
@@ -44,7 +44,7 @@ char	**format_environment(t_env *environment)
 		elem = elem->next;
 		size++;
 	}
-	env = malloc(sizeof(char *) * (size + 1));
+	env = db_malloc(sizeof(char *) * (size + 1));
 	if (!env)
 		return (ft_putstr_fd(ERRALLOC, 2), NULL);
 	i = 0;
@@ -84,7 +84,7 @@ int		env_lstaddback(t_env *env, char *key, char *value, int exported)
 		return (0);
 	while (env->next)
 		env = env->next;
-	env->next = malloc(sizeof(t_env));
+	env->next = db_malloc(sizeof(t_env));
 	if (!(env->next))
 		return (ft_putstr_fd(ERRALLOC, 2), 0);
 	env = env->next;

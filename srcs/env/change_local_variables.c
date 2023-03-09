@@ -30,7 +30,7 @@ static int	_parse_key(char **line, char **key)
 	if (!((*line)[i] == '=' || ((*line)[i] == '+' && (*line)[i + 1] == '=')))
 		return (0);
 	append = 0;
-	*key = ft_strndup(key_start, key_end - key_start);
+	*key = db_strndup(key_start, key_end - key_start);
 	if (!(*key))
 		ft_putstr_fd(ERRALLOC, 2);
 	if ((*line)[i] == '+' && (*line)[i + 1] == '=')
@@ -91,7 +91,7 @@ static int	_parse_value(t_env *environment, char **line, char **value)
 	if (value_start == value_end)
 		return (1);
 	*line = value_end;
-	*value = ft_strndup(value_start, value_end - value_start);
+	*value = db_strndup(value_start, value_end - value_start);
 	if (!(*value))
 		ft_putstr_fd(ERRALLOC, 2);
 	if (!quotes_interpretation(environment, value))
@@ -114,16 +114,16 @@ static void	_export_element(t_env *environment, \
 	{
 		if (ft_strcmp(elem->key, key) == 0)
 		{
-			free(key);
+			db_free(key);
 			tmp = elem->value;
 			if (value && append)
 			{
 				elem->value = ft_strjoin(elem->value, value);
-				free(value);
+				db_free(value);
 			}
 			else if (!append)
 				elem->value = value;
-			free(tmp);
+			db_free(tmp);
 			return ;
 		}
 		elem = elem->next;
@@ -153,14 +153,14 @@ int	change_local_variables(t_env *environment, char *line, size_t size)
 		if(!_parse_value(environment, &line, &value))	
 			return (db_free(key), -1);
 	if (!value)
-		value = ft_strdup("");
+		value = db_strdup("");
 	if (!value)
 		return (ft_putstr_fd(ERRALLOC, 2),db_free(key), -1);
 	ft_memmove(ptr, line, ft_strlen(line) + 1);
 	if (size > 1)
 	{
-		free(key);
-		free(value);
+		db_free(key);
+		db_free(value);
 	}
 	else
 		_export_element(environment, key, value, append);

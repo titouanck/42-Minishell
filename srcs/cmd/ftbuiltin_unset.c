@@ -26,9 +26,9 @@ void	ftbuiltin_unset_element(t_env *environment, char *arg)
 		{
 			tmp = elem->next;
 			elem->next = elem->next->next;
-			free(tmp->key);
-			free(tmp->value);
-			free(tmp);
+			db_free(tmp->key);
+			db_free(tmp->value);
+			db_free(tmp);
 			return ;
 		}
 		elem = elem->next;
@@ -53,7 +53,7 @@ void	ftbuiltin_unset(t_env *environment, char **args)
 			errmsg = ft_strrjoin("minishell: unset: `", arg, "': not a valid identifier\n");
 			ft_putstr_fd(errmsg, 2);
 			if (errmsg)
-				free(errmsg);
+				db_free(errmsg);
 			g_returnval = 1;
 			return ;
 		}

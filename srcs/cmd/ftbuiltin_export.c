@@ -42,7 +42,7 @@ static void	_export_element(t_env *environment, \
 	{
 		if (ft_strcmp(elem->key, key) == 0)
 		{
-			free(key);
+			db_free(key);
 			elem->exported = 1;
 			if (value)
 			{
@@ -50,11 +50,11 @@ static void	_export_element(t_env *environment, \
 				if (append)
 				{
 					elem->value = ft_strjoin(elem->value, value);
-					free(value);
+					db_free(value);
 				}
 				else
 					elem->value = value;
-				free(tmp);
+				db_free(tmp);
 			}
 			return ;
 		}
@@ -63,7 +63,7 @@ static void	_export_element(t_env *environment, \
 	if (value)
 		env_lstaddback(environment, key, value, 1);
 	else
-		free(key);
+		db_free(key);
 }
 
 static int	_export_key(char *arg, char *key, size_t i)
@@ -83,7 +83,7 @@ static int	_export_key(char *arg, char *key, size_t i)
 		errmsg = ft_strrjoin("minishell: export: `", arg, "': not a valid identifier\n");
 		ft_putstr_fd(errmsg, 2);
 		if (errmsg)
-			free(errmsg);
+			db_free(errmsg);
 		g_returnval = 1;
 		return (0);
 	}
@@ -102,7 +102,7 @@ static char	*_export_value(t_env *environment, char *arg, char **key, int append
 		value = ft_substr(arg, 1, ft_strlen(arg + 1));
 		if (!value)
 		{
-			free(*key);
+			db_free(*key);
 			*key = NULL;
 			g_returnval = 1;
 			return (NULL);
@@ -132,7 +132,7 @@ void	ftbuiltin_export(t_env *environment, char **args)
 				i++;
 			key = ft_substr(arg, 0, i);
 			if (!_export_key(arg, key, i))
-				free(key);
+				db_free(key);
 			else
 			{
 				arg = arg + i;

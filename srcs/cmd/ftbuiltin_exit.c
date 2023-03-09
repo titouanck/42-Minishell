@@ -51,7 +51,7 @@ void	ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr
 				ft_putstr_fd(ERRALLOC, 2);
 			else
 				ft_putstr_fd(errmsg, 2);
-			free(errmsg);
+			db_free(errmsg);
 			_i_want_to_exit(environment, cmds, 2, cmdnbr);
 			return ;
 		}
@@ -66,7 +66,7 @@ void	ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr
 						ft_putstr_fd(ERRALLOC, 2);
 					else
 						ft_putstr_fd(errmsg, 2);
-					free(errmsg);
+					db_free(errmsg);
 					_i_want_to_exit(environment, cmds, 2, cmdnbr);
 					return ;
 				}

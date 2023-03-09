@@ -21,13 +21,13 @@ static void	_export_element(t_env *environment, \
 	elem = environment;
 	if (!elem)
 	{
-		free(key);
-		free(value);
+		db_free(key);
+		db_free(value);
 		return ;
 	}
 	if (!key)
 	{
-		free(value);
+		db_free(value);
 		return ;
 	}
 	elem = elem->next;
@@ -35,13 +35,13 @@ static void	_export_element(t_env *environment, \
 	{
 		if (ft_strcmp(elem->key, key) == 0)
 		{
-			free(key);
+			db_free(key);
 			elem->exported = 1;
 			if (value)
 			{
 				tmp = elem->value;
 				elem->value = value;
-				free(tmp);
+				db_free(tmp);
 			}
 			return ;
 		}
@@ -50,7 +50,7 @@ static void	_export_element(t_env *environment, \
 	if (value)
 		env_lstaddback(environment, key, value, 1);
 	else
-		free(key);
+		db_free(key);
 }
 
 static void	_noarg(t_env *environment)
@@ -73,7 +73,7 @@ static void	_noarg(t_env *environment)
 		if (!err_str)
 			ft_putstr_fd(ERRALLOC, 2);
 		perror(err_str);
-		free(err_str);
+		db_free(err_str);
 		g_returnval = 1;
 	}
 	else
@@ -88,7 +88,7 @@ void	ftbuiltin_cd(t_env *environment, char **args)
 	char	*value;
 	int		r;
 
-	key = ft_strdup("OLDPWD");
+	key = db_strdup("OLDPWD");
 	value = getcwd(NULL, 0);
 	if (args && args[0] && !args[1])
 		_noarg(environment);
@@ -101,7 +101,7 @@ void	ftbuiltin_cd(t_env *environment, char **args)
 			if (!err_str)
 				ft_putstr_fd(ERRALLOC, 2);
 			perror(err_str);
-			free(err_str);
+			db_free(err_str);
 			g_returnval = 1;
 		}
 		else
@@ -114,11 +114,11 @@ void	ftbuiltin_cd(t_env *environment, char **args)
 		_export_element(environment, key, value);
 	else
 	{
-		free (key);
-		free(value);
+		db_free (key);
+		db_free(value);
 	}
-	free(cwd);
-	key = ft_strdup("PWD");
+	db_free(cwd);
+	key = db_strdup("PWD");
 	value = getcwd(NULL, 0);
 	_export_element(environment, key, value);
 }

@@ -48,7 +48,7 @@ int	main(int argc, char **argv, char *envp[])
 			break ;
 		parsing(environment, &line);
 		if (line)
-			free(line);
+			db_free(line);
 	}
 	closing_the_program(environment);
 	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))

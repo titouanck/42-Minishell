@@ -24,7 +24,7 @@ char	*_locate_file(char **path, char *arg)
 
 	if (ft_strncmp(arg, "/", 1) == 0 || ft_strncmp(arg, ".", 1) == 0)
 	{
-		filepath = ft_strdup(arg);
+		filepath = db_strdup(arg);
 		if (!filepath)
 			return (ft_putstr_fd(ERRALLOC, 2), NULL);
 		if (access(filepath, F_OK) == 0)
@@ -34,7 +34,7 @@ char	*_locate_file(char **path, char *arg)
 			else
 				return (ft_putstr_fd("minishell: ", 2), perror(arg),db_free(filepath), NULL);
 		}
-		free(filepath);
+		db_free(filepath);
 	}
 	if (!path)
 	{
@@ -56,7 +56,7 @@ char	*_locate_file(char **path, char *arg)
 			else
 				return (ft_putstr_fd("minishell: ", 2), perror(arg),db_free(filepath), NULL);
 		}
-		free(filepath);
+		db_free(filepath);
 		i++;
 	}
 	if (ft_strchr(arg, '/'))
@@ -83,7 +83,7 @@ int	execute_cmd(t_env *environment, char **args)
 		cmd_signal_behavior();
 		execve(filepath, args, envp);
 		default_signal_behavior();
-		free(filepath);
+		db_free(filepath);
 		filepath = NULL;
 		if (errno == 13)
 		{

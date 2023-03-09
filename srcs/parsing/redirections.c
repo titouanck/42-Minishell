@@ -19,8 +19,8 @@ void	free_heredocs(t_heredoc *heredoc)
 	while (heredoc)
 	{
 		tmp = heredoc->next;
-		free(heredoc->limiter);
-		free(heredoc);
+		db_free(heredoc->limiter);
+		db_free(heredoc);
 		heredoc = tmp;
 	}
 }
@@ -57,9 +57,9 @@ void	ft_free_redirect(t_redirect *redirect)
 		if (fd != -1)
 			close(fd);
 	}
-	free(redirect->infile);
-	free(redirect->outfile);
-	free(redirect);
+	db_free(redirect->infile);
+	db_free(redirect->outfile);
+	db_free(redirect);
 }
 
 t_heredoc *lstnew_heredoc(t_heredoc *heredoc, char *limiter)
@@ -67,7 +67,7 @@ t_heredoc *lstnew_heredoc(t_heredoc *heredoc, char *limiter)
 	t_heredoc	*new;
 	t_heredoc	*current;
 
-	new = malloc(sizeof(t_heredoc));
+	new = db_malloc(sizeof(t_heredoc));
 	if (!new)
 		return (ft_putstr_fd(ERRALLOC, 2), NULL);
 	new->limiter = limiter;
@@ -121,9 +121,9 @@ static int _leftchevron(t_env *environment, char *line, t_redirect *redirect)
 					}
 					else
 						close(fd);
-					free(redirect->infile);
+					db_free(redirect->infile);
 				}
-				limiter = ft_strndup(start, end - start);
+				limiter = db_strndup(start, end - start);
 				if (!limiter)
 					return (0);
 				_remove_quote_token_line(limiter);
@@ -152,9 +152,9 @@ static int _leftchevron(t_env *environment, char *line, t_redirect *redirect)
 					}
 					else
 						close(fd);
-					free(redirect->infile);
+					db_free(redirect->infile);
 				}
-				redirect->infile = ft_strndup(start, end - start);
+				redirect->infile = db_strndup(start, end - start);
 				_remove_quote_token_line(redirect->infile);
 				ft_memmove(line + old_i, line + i, ft_strlen(line + i) + 1);
 			}
@@ -213,9 +213,9 @@ static int _rightchevron(char *line, t_redirect *redirect)
 				}
 				else
 					close(fd);
-				free(redirect->outfile);
+				db_free(redirect->outfile);
 			}
-			redirect->outfile = ft_strndup(start, end - start);
+			redirect->outfile = db_strndup(start, end - start);
 			_remove_quote_token_line(redirect->outfile);
 			ft_memmove(line + old_i, line + i, ft_strlen(line + i) + 1);
 			i = old_i - 1;
@@ -232,7 +232,7 @@ int	heredoc_file(t_redirect *redirect)
 	char			*filename;
 	size_t			i;
 
-	filename = ft_strdup("/tmp/.tmpheredocfile_____.minishell");
+	filename = db_strdup("/tmp/.tmpheredocfile_____.minishell");
 	if (!filename)
 		return (ft_putstr_fd(ERRALLOC, 2), -1);
 	redirect->infile = filename;
@@ -252,7 +252,7 @@ int	heredoc_file(t_redirect *redirect)
 	if (fd == -1)
 	{
 		perror("minishell: open");
-		free(filename);
+		db_free(filename);
 		redirect->infile = NULL;
 	}
 	else
@@ -284,7 +284,7 @@ int	use_heredoc(t_env *environment, t_redirect *redirect)
 			line = readline("> ");
 			if (g_returnval == 130)
 			{
-				free(line);
+				db_free(line);
 				break ;
 			}
 			if (!line)
@@ -296,7 +296,7 @@ int	use_heredoc(t_env *environment, t_redirect *redirect)
 			}
 			if (ft_strcmp(current->limiter, line) == 0)
 			{
-				free(line);
+				db_free(line);
 				break ;
 			}
 			if (!(environment->limiter_between_quotes))
@@ -312,7 +312,7 @@ int	use_heredoc(t_env *environment, t_redirect *redirect)
 				write(fd, line, ft_strlen(line));
 				write(fd, "\n", 1);
 			}
-			free(line);
+			db_free(line);
 		}
 		if (g_returnval == 130)
 			break ;
@@ -340,7 +340,7 @@ t_redirect	*redirections(t_env *environment, char *line, int empty)
 	int			leftreturn;
 	int			rightreturn;
 
-	redirect = malloc(sizeof(t_redirect));
+	redirect = db_malloc(sizeof(t_redirect));
 	if (!redirect)
 		return (ft_putstr_fd(ERRALLOC, 2), NULL);
 	redirect->infile = NULL;

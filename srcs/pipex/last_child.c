@@ -28,13 +28,13 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 		if ((cmds[cmdnbr])->redirect->outfile)
 		{
 			close((cmds[cmdnbr])->redirect->fd_outfile);
-			free((cmds[cmdnbr])->redirect->outfile);
+			db_free((cmds[cmdnbr])->redirect->outfile);
 			(cmds[cmdnbr])->redirect->outfile = NULL;
 		}
 		if ((cmds[cmdnbr])->redirect->infile)
 		{
 			close((cmds[cmdnbr])->redirect->fd_infile);
-			free((cmds[cmdnbr])->redirect->infile);
+			db_free((cmds[cmdnbr])->redirect->infile);
 			(cmds[cmdnbr])->redirect->infile = NULL;
 		}
 		return ;

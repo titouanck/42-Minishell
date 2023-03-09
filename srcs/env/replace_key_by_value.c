@@ -27,7 +27,7 @@ char	*replace_key_by_value(t_env *environment, char *line)
 		if (line[i] == VARKEY)
 		{
 			line[i] = '\0';
-			first_part = ft_strdup(line);
+			first_part = db_strdup(line);
 			if (!first_part)
 				return (db_free(line), NULL);
 			question_mark = FALSE;
@@ -42,7 +42,7 @@ char	*replace_key_by_value(t_env *environment, char *line)
 					second_part++;
 			}
 			var = second_part;
-			second_part = ft_strdup(second_part);
+			second_part = db_strdup(second_part);
 			if (!second_part)
 				return (db_free(line),db_free(first_part), NULL);
 			*var = '\0';
@@ -55,10 +55,10 @@ char	*replace_key_by_value(t_env *environment, char *line)
 				var = "";
 			tmp = ft_strrjoin(first_part, var, second_part);
 			if (question_mark)
-				free(var);
-			free(line);
-			free(first_part);
-			free(second_part);
+				db_free(var);
+			db_free(line);
+			db_free(first_part);
+			db_free(second_part);
 			line = tmp;
 			if (!line)
 				return (NULL);

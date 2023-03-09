@@ -25,10 +25,10 @@ void	ft_free_cmds_parsed(t_cmd **tab)
 			ft_freetab(tab[i]->args);
 		if (tab[i]->redirect)
 			ft_free_redirect(tab[i]->redirect);
-		free(tab[i]);
+		db_free(tab[i]);
 		i++;
 	}
-	free(tab);
+	db_free(tab);
 }
 
 static t_cmd	**_get_cmds_parsed(t_env *environment, char **cmds)
@@ -40,7 +40,7 @@ static t_cmd	**_get_cmds_parsed(t_env *environment, char **cmds)
 	size = 0;
 	while (cmds[size])
 		size++;
-	cmds_parsed = malloc(sizeof(t_cmd *) * (size + 1));
+	cmds_parsed = db_malloc(sizeof(t_cmd *) * (size + 1));
 	if (!cmds_parsed)
 		return (ft_putstr_fd(ERRALLOC, 2), ft_freetab(cmds), NULL);
 	i = 0;

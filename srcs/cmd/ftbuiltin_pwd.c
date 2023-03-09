@@ -23,6 +23,6 @@ void	ftbuiltin_pwd(t_env *environment)
 	{
 		ft_putstr(pwd);
 		ft_putchar('\n');
-		free(pwd);
+		db_free(pwd);
 	}
 }
