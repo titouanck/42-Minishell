@@ -46,6 +46,7 @@ int	main(int argc, char **argv, char *envp[])
 			add_history(line);
 		if (!line)
 			break ;
+		dynamic_memory_address_db('+', line);
 		parsing(environment, &line);
 		if (line)
 			db_free(line);
