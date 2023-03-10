@@ -35,4 +35,6 @@ void		ft_swap(int *a, int *b);
 
 int			ft_isnotnull(void *address);
 
+char		*ft_randomstr(char *prefix, char *suffix, size_t len);
+
 #endif

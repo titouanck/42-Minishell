@@ -3,3 +3,4 @@ libft/objs
 libft/libft.a
 minishell
 .vscode
+libft/xlibft
