@@ -28,6 +28,15 @@ void	default_signal_behavior(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
+static void	_notatty_sigint(int sig)
+{
+	(void) sig;
+	g_returnval = 130;
+	rl_clear_history();
+	dynamic_memory_address_db(ADDRESSDB_ERASURE, NULL);
+	exit(g_returnval);
+} 
+
 void	_no_action(int sig)
 {
 	(void) sig;
@@ -36,7 +45,7 @@ void	_no_action(int sig)
 
 void	notatty_signal_behavior(void)
 {
-	signal(SIGINT, SIG_DFL);
+	signal(SIGINT, _notatty_sigint);
 	signal(SIGQUIT, _no_action);
 }
 

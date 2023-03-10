@@ -11,10 +11,12 @@ SRCS += ft_puthexa_lower.c
 SRCS += ft_putnbr.c
 SRCS += ft_putunbr.c
 
-# get_next_line
+# get_next_line / db_get_next_line
 
-SRCS += get_next_line.c
-SRCS += get_next_line_utils.c
+# SRCS += get_next_line.c
+# SRCS += get_next_line_utils.c
+SRCS += db_get_next_line.c
+SRCS += db_get_next_line_utils.c
 
 # libc
 
@@ -83,11 +85,13 @@ SRCS += db_strndup.c
 SRCS += db_free.c
 SRCS += db_freetab.c
 SRCS += db_split.c
+SRCS += db_substr.c
 
 INC = -I inc
 
 SRCS_PATH += srcs/ft_printf
-SRCS_PATH += srcs/get_next_line
+# SRCS_PATH += srcs/get_next_line
+SRCS_PATH += srcs/db_get_next_line
 SRCS_PATH += srcs/libc
 SRCS_PATH += srcs/additional
 SRCS_PATH += srcs/mine

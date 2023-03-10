@@ -37,4 +37,6 @@ void	db_freetab(char **tab);
 
 char	**db_split(char const *s, char c);
 
+char	*db_substr(char const *s, unsigned int start, size_t len);
+
 #endif

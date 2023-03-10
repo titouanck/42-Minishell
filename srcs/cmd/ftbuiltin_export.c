@@ -99,7 +99,7 @@ static char	*_export_value(t_env *environment, char *arg, char **key, int append
 		_export_element(environment, *key, NULL, append);
 	else
 	{
-		value = ft_substr(arg, 1, ft_strlen(arg + 1));
+		value = db_substr(arg, 1, ft_strlen(arg + 1));
 		if (!value)
 		{
 			db_free(*key);
@@ -130,7 +130,7 @@ void	ftbuiltin_export(t_env *environment, char **args)
 			i = 0;
 			while (arg[i] && arg[i] != '=')
 				i++;
-			key = ft_substr(arg, 0, i);
+			key = db_substr(arg, 0, i);
 			if (!_export_key(arg, key, i))
 				db_free(key);
 			else

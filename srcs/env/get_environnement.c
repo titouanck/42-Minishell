@@ -33,8 +33,8 @@ static t_env	*env_nextelement(char *envp[], size_t i, size_t j)
 	element = db_malloc(sizeof(t_env));
 	if (!element)
 		return (ft_putstr_fd(ERRALLOC, 2), NULL);
-	element->key = ft_substr(envp[i], 0, j);
-	element->value = ft_substr(envp[i], j + 1, ft_strlen(envp[i] + j + 1));
+	element->key = db_substr(envp[i], 0, j);
+	element->value = db_substr(envp[i], j + 1, ft_strlen(envp[i] + j + 1));
 	element->exported = 1;
 	element->next = NULL;
 	return (element);
