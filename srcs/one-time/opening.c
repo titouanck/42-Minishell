@@ -29,20 +29,5 @@ t_env *opening(int argc, char **argv, char *envp[])
 	(void) argv;
 	g_returnval = 0;
 	environment = get_environment(envp);
-	if (!environment)
-		return (NULL);
-	environment->fd_log = -1;
-	if (access("assets/", X_OK) == 0)
-	{
-		environment->fd_log = open("./assets/minishell.log", O_WRONLY | O_TRUNC | O_CREAT, 0644);
-		if (environment->fd_log == -1)
-		{
-			ft_putstr_fd("minishell: ", 2);
-			perror("open");
-			g_returnval = 1;
-		}
-		else
-			ft_putstr_fd("minishell: open: Success.\n\n", environment->fd_log);
-	}
 	return (environment);
 }
