@@ -58,7 +58,7 @@ static int	set_mem(char **tab, char const *s, char c)
 		{
 			tab[i] = db_malloc(sizeof(char) * (count + 1));
 			if (!tab[i])
-				return (ft_freetab(tab), 0);
+				return (db_freetab(tab), 0);
 			fill_tab(tab[i], (s + index), c);
 			i++;
 			index = index + count;

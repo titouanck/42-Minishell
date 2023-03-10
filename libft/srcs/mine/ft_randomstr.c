@@ -20,7 +20,7 @@ static int	_buf_iteration(int fd, char *buf, size_t len)
 	while (i < len)
 	{
 		while (!ft_isalpha(buf[i]) && !ft_isdigit(buf[i]) && \
-		buf[i] != '_' && buf[i] != '.' && buf[i] != '-' && buf[i] != '+')
+		buf[i] != '_' && buf[i] != '-' && buf[i] != '+')
 		{
 			if (read(fd, buf + i, 1) != 1)
 				return (0);

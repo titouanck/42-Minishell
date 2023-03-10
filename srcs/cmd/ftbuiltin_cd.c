@@ -83,7 +83,7 @@ static void	_noarg(t_env *environment)
 void	ftbuiltin_cd(t_env *environment, char **args)
 {
 	char	*cwd;
-	char	*err_str;
+	char	*errmsg;
 	char	*key;
 	char	*value;
 	int		r;
@@ -97,11 +97,11 @@ void	ftbuiltin_cd(t_env *environment, char **args)
 		r = chdir(args[1]);
 		if (r == -1)
 		{
-			err_str = ft_strjoin("minishell: cd: ", args[1]);
-			if (!err_str)
+			errmsg = ft_strjoin("minishell: cd: ", args[1]);
+			if (!errmsg)
 				ft_putstr_fd(ERRALLOC, 2);
-			perror(err_str);
-			db_free(err_str);
+			perror(errmsg);
+			db_free(errmsg);
 			g_returnval = 1;
 		}
 		else

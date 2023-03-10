@@ -12,31 +12,76 @@
 
 #include "minishell.h"
 
+static void	_logfile(int fd, char **args, char *line)
+{
+	int		db_size;
+	size_t	i;
+
+	dup2(fd, STDOUT_FILENO);
+	if (args)
+	{
+		ft_printf("Child procces terminated with exit code (%d)\n", g_returnval);
+		if (args[0])
+		{
+			ft_printf("cmd:\t\"%s\"\n", args[0]);
+			if (args[1])
+				ft_printf("args:\t");
+			i = 1;
+			while (args[i])
+			{
+				ft_printf("\"%s\"", args[i++]);
+				if (args[i])
+					ft_putstr(", ");
+				else
+					ft_putstr("\n");
+			}
+		}
+	}
+	else
+	{
+		ft_printf("Parent procces terminated with exit code (%d)\n", g_returnval);
+		ft_printf("last input: \"%s\"\n", line);
+	}
+	db_freetab(args);
+	db_free(line);
+	db_size = dynamic_memory_address_db(ADDRESSDB_SIZE, NULL);
+	if (db_size > 0)
+		ft_printf("\n%d memory addresses were not freed manually :\n", db_size);
+	else
+		ft_putstr("\nAll memory addresses seem to have been freed.\n");
+	dynamic_memory_address_db(ADDRESSDB_PRINT, NULL);
+	close(fd);
+}
+
 void	closing_the_program(t_env *environment)
 {
 	char	*file;
+	char	**args;
+	char	*line;
 	int		fd;
 
 	rl_clear_history();
+	args = NULL;
+	line = NULL;
 	if (environment)
+	{
+		args = environment->args;
+		line = environment->line;
 		ft_free_environment(environment);
+	}
 	file = ft_randomstr(".logs/", ".log", 16);
 	if (file)
 	{
 		fd = open(file, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+		free(file);
 		if (fd != -1)
-		{
-			dup2(fd, STDOUT_FILENO);
-			ft_putstr("Procces terminated with exit code (");
-			ft_putnbr(g_returnval);
-			ft_putstr(")\n");
-			ft_putnbr(dynamic_memory_address_db(ADDRESSDB_SIZE, NULL));
-			ft_putstr(" memory addresses were not free :\n\n");
-			dynamic_memory_address_db(ADDRESSDB_PRINT, NULL);
-			close(fd);
-		}
+			_logfile(fd, args, line);
 		else
+		{
 			perror("minishell: open");
+			db_freetab(args);
+			db_free(line);
+		}
 	}
 	dynamic_memory_address_db(ADDRESSDB_ERASURE, NULL);
 }

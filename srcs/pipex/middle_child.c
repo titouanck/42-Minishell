@@ -117,7 +117,9 @@ int	middle_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 			close((cmds[cmdnbr])->redirect->fd_outfile);
 		if ((cmds[cmdnbr])->redirect->infile)
 			close((cmds[cmdnbr])->redirect->fd_infile);
-		ft_free_cmds_parsed(cmds);
+		environment->args = (cmds[cmdnbr])->args;
+		(cmds[cmdnbr])->args = NULL;
+		ft_free_cmds_parsed(environment, cmds);
 		closing_the_program(environment);
 		exit(g_returnval);
 	}

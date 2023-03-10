@@ -69,9 +69,7 @@ t_cmd	*parse_args(t_env *environment, char **line)
 	cmd->args = NULL;
 	cmd->redirect = NULL;
 	if (!quotes_interpretation(environment, line))
-	{
 		return (db_free(cmd), NULL);
-	}
 	else
 		cmd->redirect = redirections(environment, *line, FALSE);
 	if (!(cmd->redirect))

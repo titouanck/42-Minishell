@@ -125,16 +125,25 @@ clean:
 fclean:	clean;
 	@	+$(MAKE) --no-print-directory -s -C libft fclean
 	@	rm -f ${NAME}
+	@	rm -rf .logs
 
 re:	fclean ${NAME}
 
 run:	${NAME}
-		clear
-	@	./${NAME}
+	@	clear
+	@	-./${NAME}
+	@	${MAKE} --no-print-directory log
+
+log:	
+	@	find .logs -type f -printf "%T@ %p\n" | sort | cut -d' ' -f2- | xargs awk 'FNR==1 && NR!=1 {print "\n----------------------------------------------\n"}{print}' - > assets/minishell.log
+	@	rm -rf .logs
+	@	echo -ne "\r\033[2K" $(LIGHTGREEN) "→ $(NAME).log OK!\n"$(NC)
 
 valgrind:	${NAME}
-			clear
-			valgrind --track-fds=yes --suppressions=assets/ignore_readline_leaks.supp --leak-check=full --show-leak-kinds=all ./${NAME}
+	@		clear
+	@		echo -ne "\r\033[2K"$(LIGHTBLUE)"valgrind --track-fds=yes [...] --show-leak-kinds=all ./${NAME}"$(NC)"\n"
+	@		-valgrind --track-fds=yes --suppressions=assets/ignore_readline_leaks.supp --leak-check=full --show-leak-kinds=all ./${NAME}
+	@		${MAKE} --no-print-directory log
 
 libft:
 	@	+$(MAKE) --no-print-directory -s -C libft re

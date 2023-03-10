@@ -46,6 +46,7 @@ int	main(int argc, char **argv, char *envp[])
 	environment = opening(argc, argv, envp);
 	if (!environment)
 		return (closing_the_program(NULL), 42);
+	environment->line = NULL;
 	while (1)
 	{
 		tty = -1;
@@ -57,6 +58,7 @@ int	main(int argc, char **argv, char *envp[])
 				tty = 1;
 			}
 			line = readline("\033[34;1m" PROMPT ENDCL " ");
+			dynamic_memory_address_db('+', line);
 		}
 		else
 		{
@@ -71,10 +73,9 @@ int	main(int argc, char **argv, char *envp[])
 			add_history(line);
 		if (!line)
 			break ;
-		dynamic_memory_address_db('+', line);
+		db_free(environment->line);
+		environment->line = line;
 		parsing(environment, &line);
-		if (line)
-			db_free(line);
 	}
 	closing_the_program(environment);
 	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))

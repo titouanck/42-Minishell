@@ -53,6 +53,8 @@ extern int	g_returnval;
 
 typedef struct s_env
 {
+	char			**args;
+	char			*line;
 	char			*key;
 	char			*value;
 	int				exported;
@@ -158,7 +160,7 @@ int		io_open_fds(t_redirect *redirect);
 
 // PAS CLASSE
 void	ft_free_redirect(t_redirect *redirect);
-void	ft_free_cmds_parsed(t_cmd **tab);
+void	ft_free_cmds_parsed(t_env *environment, t_cmd **tab);
 
 					/* Utils */
 void	heredoc_signal_behavior(void);
