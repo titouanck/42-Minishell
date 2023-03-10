@@ -96,6 +96,7 @@ void		ftbuiltin_export(t_env *environment, char **args);
 void		ftbuiltin_unset(t_env *environment, char **args);
 void		ftbuiltin_env(t_env *environment);
 void		ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr);
+void		ftbuiltin_dma_db(void);
 
 // execute_cmd.c
 int		execute_cmd(t_env *environment, char **args);

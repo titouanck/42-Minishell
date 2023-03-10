@@ -9,6 +9,7 @@ SRCS += ftbuiltin_exit.c
 SRCS += ftbuiltin_export.c
 SRCS += ftbuiltin_pwd.c
 SRCS += ftbuiltin_unset.c
+SRCS += ftbuiltin_dma_db.c
 
 SRCS += change_local_variables.c
 SRCS += environment.c

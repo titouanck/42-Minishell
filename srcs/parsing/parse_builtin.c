@@ -39,6 +39,8 @@ int	parse_builtin(t_env *environment, char **args, \
 		else
 			g_returnval = 0;
 	}
+	else if (ft_strcmp(args[0], "dma_db") == 0)
+		ftbuiltin_dma_db();
 	else
 		return (0);
 	return (1);

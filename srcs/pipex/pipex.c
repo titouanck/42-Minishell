@@ -68,7 +68,8 @@ int	pipex(t_env *environment, char **cmds)
 	if (!cmds_parsed)
 		return (0);
 	db_freetab(cmds);
-	cmd_signal_behavior_parent();
+	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
+		cmd_signal_behavior_parent();
 	cmdnbr = 0;
 	if (cmds_parsed[1])
 	{
