@@ -127,6 +127,10 @@ int	middle_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 		close(new_pipefd[1]);
 		pipefd[0] = new_pipefd[0];
 		pipefd[1] = new_pipefd[1];
+		if ((cmds[cmdnbr])->redirect->outfile)
+			close((cmds[cmdnbr])->redirect->fd_outfile);
+		if ((cmds[cmdnbr])->redirect->infile)
+			close((cmds[cmdnbr])->redirect->fd_infile);
 	}
 	return (1);
 }
