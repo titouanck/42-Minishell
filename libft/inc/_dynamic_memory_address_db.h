@@ -20,6 +20,7 @@
 # define ADDRESSDB_CHECK 'C'
 # define ADDRESSDB_PRINT 'P'
 # define ADDRESSDB_ERASURE 'E'
+# define ADDRESSDB_SIZE 'S'
 
 int		dynamic_memory_address_db(unsigned char action, void *address);
 

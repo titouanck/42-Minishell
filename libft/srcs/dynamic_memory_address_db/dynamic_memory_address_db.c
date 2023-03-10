@@ -13,6 +13,21 @@
 #include "_addressdb_functions.h"
 #include "libft.h"
 
+static int	addressdb_lstsize(t_address *db)
+{
+	int	n;
+
+	if (!db)
+		return (0);
+	n = 0;
+	while (db->next)
+	{
+		db = db->next;
+		n++;
+	}
+	return (n);
+}
+
 int	dynamic_memory_address_db(unsigned char action, void *address)
 {
 	static t_address	*db;
@@ -32,9 +47,11 @@ int	dynamic_memory_address_db(unsigned char action, void *address)
 		return (addressdb_lstdel(db, address, free));
 	else if (action == ADDRESSDB_CHECK && address)
 		return (addressdb_lstcheck(db, address));
-	else if (action == ADDRESSDB_PRINT && !address)
+	else if (action == ADDRESSDB_PRINT)
 		return (addressdb_lstprint(db));
-	else if (action == ADDRESSDB_ERASURE && !address)
+	else if (action == ADDRESSDB_SIZE)
+		return (addressdb_lstsize(db));
+	else if (action == ADDRESSDB_ERASURE)
 		return (addressdb_lsterase(&db, free), !ft_isnotnull(db));
 	return (0);
 }

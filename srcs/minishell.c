@@ -12,6 +12,31 @@
 
 #include "minishell.h"
 
+static void	_export_line(t_env *environment, \
+	char *line)
+{
+	t_env	*elem;
+	
+	elem = environment;
+	if (!elem)
+		return ;
+	elem = elem->next;
+	while (elem)
+	{
+		if (ft_strcmp(elem->key, "[minishell]_line") == 0)
+		{
+			if (line)
+				elem->value = line;
+			else
+				elem->value = NULL;
+			return ;
+		}
+		elem = elem->next;
+	}
+	if (line)
+		env_lstaddback(environment, db_strdup("[minishell]_line"), line, 1);
+}
+
 int	main(int argc, char **argv, char *envp[]) 
 {
 	char	*line;
@@ -20,7 +45,7 @@ int	main(int argc, char **argv, char *envp[])
 
 	environment = opening(argc, argv, envp);
 	if (!environment)
-		return (42);
+		return (closing_the_program(NULL), 42);
 	while (1)
 	{
 		tty = -1;

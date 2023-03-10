@@ -32,8 +32,7 @@ static void	_notatty_sigint(int sig)
 {
 	(void) sig;
 	g_returnval = 130;
-	rl_clear_history();
-	dynamic_memory_address_db(ADDRESSDB_ERASURE, NULL);
+	closing_the_program(NULL);
 	exit(g_returnval);
 } 
 
