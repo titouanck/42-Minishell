@@ -81,7 +81,7 @@ t_cmd	*parse_args(t_env *environment, char **line)
 	{
 		ft_putstr_fd(ERRALLOC, 2);
 		g_returnval = 12;
-		// db_free(*line);
+		db_free(*line);
 		ft_free_redirect(cmd->redirect);
 		db_free(cmd);
 		closing_the_program(environment);

@@ -58,7 +58,7 @@ typedef struct s_env
 	int				exported;
 	int				limiter_between_quotes;
 	struct s_env	*next;
-	int				fd;
+	int				fd_log;
 }					t_env;
 
 typedef	struct	s_heredoc

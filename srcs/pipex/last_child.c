@@ -95,7 +95,7 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 			close((cmds[cmdnbr])->redirect->fd_outfile);
 		if ((cmds[cmdnbr])->redirect->infile)
 			close((cmds[cmdnbr])->redirect->fd_infile);
-		// ft_free_cmds_parsed(cmds);
+		ft_free_cmds_parsed(cmds);
 		closing_the_program(environment);
 		exit(g_returnval);
 	}

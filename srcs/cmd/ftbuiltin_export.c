@@ -68,8 +68,6 @@ static void	_export_element(t_env *environment, \
 
 static int	_export_key(char *arg, char *key, size_t i)
 {
-	char	*errmsg;
-
 	(void) i;
 	if (!key)
 	{
@@ -80,10 +78,9 @@ static int	_export_key(char *arg, char *key, size_t i)
 	|| (!ft_strinset(key, VARNAMESET, ft_strlen(key) - 1)) \
 	|| (*key == '+' || !ft_strinset(key + (ft_strlen(key) - 1), VARNAMESET "+", 1)))
 	{
-		errmsg = ft_strrjoin("minishell: export: `", arg, "': not a valid identifier\n");
-		ft_putstr_fd(errmsg, 2);
-		if (errmsg)
-			db_free(errmsg);
+		ft_putstr_fd("minishell: export: `", 2);
+		ft_putstr_fd(arg, 2);
+		ft_putstr_fd("': not a valid identifier\n", 2);
 		g_returnval = 1;
 		return (0);
 	}
@@ -119,6 +116,7 @@ void	ftbuiltin_export(t_env *environment, char **args)
 	size_t	i;
 	char	*arg;
 
+	g_returnval = 0;
 	if (!args[1])
 		_export_noarg(environment);
 	else
@@ -147,6 +145,5 @@ void	ftbuiltin_export(t_env *environment, char **args)
 			j++;
 		}
 	}
-	g_returnval = 0;
 }
 

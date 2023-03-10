@@ -14,7 +14,25 @@
 
 void	closing_the_program(t_env *environment)
 {
+	int	fd;
+
 	rl_clear_history();
-	ft_free_environment(environment);
+	if (environment)
+	{
+		fd = environment->fd_log;
+		ft_free_environment(environment);
+	}
+	else
+		fd = -1;
+	if (fd != -1 && (access("assets/", X_OK) == 0 && access("assets/minishell.log", W_OK) == 0))
+	{
+		dup2(fd, STDOUT_FILENO);
+		ft_putstr("Memory addresses still open before closing the program with (");
+		ft_putnbr(g_returnval);
+		ft_putstr(") :\n");
+		dynamic_memory_address_db(ADDRESSDB_PRINT, NULL);
+		ft_putchar('\n');
+		close(fd);
+	}
 	dynamic_memory_address_db(ADDRESSDB_ERASURE, NULL);
 }

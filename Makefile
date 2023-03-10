@@ -106,7 +106,7 @@ help:
 	@	echo -ne "\r\033[2K" $(LIGHTPURPLE)"libft\n"${NC}" Rebuilds libft.\n"
 endif
 
-${OBJS}: ${OBJS_PATH}/%.o: %.c Makefile
+${OBJS}: ${OBJS_PATH}/%.o: %.c Makefile libft/
 	@	$(MAKE) --no-print-directory -s -C libft
 	@	mkdir -p ${OBJS_PATH}
 	@	$(COLORCOMPIL)

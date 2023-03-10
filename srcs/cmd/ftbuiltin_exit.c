@@ -27,7 +27,7 @@ unsigned char code, size_t cmdnbr)
 		dup2(cmds[cmdnbr]->saved_stdout, STDOUT_FILENO);
 		close(cmds[cmdnbr]->saved_stdout);
 	}
-	// ft_free_cmds_parsed(cmds);
+	ft_free_cmds_parsed(cmds);
 	closing_the_program(environment);
 	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
 		ft_putstr_fd("exit\n", 2);

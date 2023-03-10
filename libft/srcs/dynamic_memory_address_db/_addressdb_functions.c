@@ -19,13 +19,11 @@ int	addressdb_lstinsert(t_address *db, void *address)
 
 	if (!db)
 		return (0);
-	while (db->next)
-		db = db->next;
 	new = malloc(sizeof(t_address));
 	if (!new)
 		return (0);
 	new->address = address;
-	new->next = NULL;
+	new->next = db->next;
 	db->next = new;
 	return (1);
 }
