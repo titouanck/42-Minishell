@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static void	_logfile(int fd, char **args, char *line)
+static void	_logfile(int fd, char **args, char *last_input)
 {
 	int		db_size;
 	size_t	i;
@@ -40,10 +40,10 @@ static void	_logfile(int fd, char **args, char *line)
 	else
 	{
 		ft_printf("Parent procces terminated with exit code (%d)\n", g_returnval);
-		ft_printf("last input: \"%s\"\n", line);
+		ft_printf("last input: \"%s\"\n", last_input);
 	}
 	db_freetab(args);
-	db_free(line);
+	db_free(last_input);
 	db_size = dynamic_memory_address_db(ADDRESSDB_SIZE, NULL);
 	if (db_size > 0)
 		ft_printf("\n%d memory addresses were not freed manually :\n", db_size);
@@ -57,16 +57,17 @@ void	closing_the_program(t_env *environment)
 {
 	char	*file;
 	char	**args;
-	char	*line;
+	char	*last_input;
 	int		fd;
 
 	rl_clear_history();
 	args = NULL;
-	line = NULL;
+	last_input = NULL;
 	if (environment)
 	{
+		db_free(environment->line);
 		args = environment->args;
-		line = environment->line;
+		last_input = environment->last_input;
 		ft_free_environment(environment);
 	}
 	file = ft_randomstr(".logs/", ".log", 16);
@@ -75,12 +76,12 @@ void	closing_the_program(t_env *environment)
 		fd = open(file, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 		free(file);
 		if (fd != -1)
-			_logfile(fd, args, line);
+			_logfile(fd, args, last_input);
 		else
 		{
 			perror("minishell: open");
 			db_freetab(args);
-			db_free(line);
+			db_free(last_input);
 		}
 	}
 	dynamic_memory_address_db(ADDRESSDB_ERASURE, NULL);

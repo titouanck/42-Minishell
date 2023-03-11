@@ -55,6 +55,7 @@ typedef struct s_env
 {
 	char			**args;
 	char			*line;
+	char			*last_input;
 	char			*key;
 	char			*value;
 	int				exported;

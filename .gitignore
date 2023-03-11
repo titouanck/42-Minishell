@@ -4,3 +4,5 @@ libft/libft.a
 minishell
 .vscode
 libft/xlibft
+assets/minishell.log
+.logs/

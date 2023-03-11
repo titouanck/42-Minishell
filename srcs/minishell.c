@@ -47,6 +47,7 @@ int	main(int argc, char **argv, char *envp[])
 	if (!environment)
 		return (closing_the_program(NULL), 42);
 	environment->line = NULL;
+	environment->last_input = NULL;
 	while (1)
 	{
 		tty = -1;
@@ -74,7 +75,9 @@ int	main(int argc, char **argv, char *envp[])
 		if (!line)
 			break ;
 		db_free(environment->line);
+		db_free(environment->last_input);
 		environment->line = line;
+		environment->last_input = db_strdup(line);
 		parsing(environment, &line);
 	}
 	closing_the_program(environment);

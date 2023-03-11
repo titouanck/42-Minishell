@@ -93,6 +93,7 @@ help:
 	@	echo -ne "\r\033[2K" $(LIGHTPURPLE) "re        →  "${NC}"Rebuilds the project.\n"
 	@	echo -ne "\r\033[2K" $(LIGHTPURPLE) "run       →  "${NC}"Compile and executes the program.\n"
 	@	echo -ne "\r\033[2K" $(LIGHTPURPLE) "valgrind  →  "${NC}"Check for memory leaks.\n"
+	@	echo -ne "\r\033[2K" $(LIGHTPURPLE) "log       →  "${NC}"Creates log file.\n"
 	@	echo -ne "\r\033[2K" $(LIGHTPURPLE) "libft     →  "${NC}"Rebuilds libft.\n"
 	@	echo -ne "\r\033[2K" $(WHITE) "----------------------------------------------"${NC}"\n"
 else
@@ -103,6 +104,7 @@ help:
 	@	echo -ne "\r\033[2K" $(LIGHTPURPLE)"re\n"${NC}" Rebuilds the project.\n"
 	@	echo -ne "\r\033[2K" $(LIGHTPURPLE)"run\n"${NC}" Compile and executes the program.\n"
 	@	echo -ne "\r\033[2K" $(LIGHTPURPLE)"valgrind\n"${NC}" Check for memory leaks.\n"
+	@	echo -ne "\r\033[2K" $(LIGHTPURPLE)"log\n"${NC}" Creates log file.\n"
 	@	echo -ne "\r\033[2K" $(LIGHTPURPLE)"libft\n"${NC}" Rebuilds libft.\n"
 endif
 
@@ -118,13 +120,13 @@ ${NAME}:  ${OBJS}
 
 clean:	
 	@	+$(MAKE) --no-print-directory -s -C libft clean
-	@	echo -ne "\r\033[2K" $(GREEN) "\t$(NAME) cleaned\n"$(NC)
+	@	echo -ne "\r\033[2K" $(LIGHTGREEN) "→ $(NAME) cleaned\n"$(NC)
 	@	rm -rf ${OBJS_PATH}
 
 
 fclean:	clean;
 	@	+$(MAKE) --no-print-directory -s -C libft fclean
-	@	rm -f ${NAME}
+	@	rm -f ${NAME} assets/minishell.log
 	@	rm -rf .logs
 
 re:	fclean ${NAME}
@@ -134,16 +136,28 @@ run:	${NAME}
 	@	-./${NAME}
 	@	${MAKE} --no-print-directory log
 
-log:	
-	@	find .logs -type f -printf "%T@ %p\n" | sort | cut -d' ' -f2- | xargs awk 'FNR==1 && NR!=1 {print "\n----------------------------------------------\n"}{print}' - > assets/minishell.log
-	@	rm -rf .logs
-	@	echo -ne "\r\033[2K" $(LIGHTGREEN) "→ $(NAME).log OK!\n"$(NC)
-
 valgrind:	${NAME}
 	@		clear
 	@		echo -ne "\r\033[2K"$(LIGHTBLUE)"valgrind --track-fds=yes [...] --show-leak-kinds=all ./${NAME}"$(NC)"\n"
 	@		-valgrind --track-fds=yes --suppressions=assets/ignore_readline_leaks.supp --leak-check=full --show-leak-kinds=all ./${NAME}
 	@		${MAKE} --no-print-directory log
+
+log:	
+	@	if [ -d .logs ]; then \
+			rm -f assets/minishell.log; \
+			find .logs -type f -printf "%T@ %p\n" | sort | cut -d' ' -f2- | xargs awk 'FNR==1 && NR!=1 {print "\n----------------------------------------------\n"}{print}' - > assets/minishell.log; \
+			rm -rf .logs; \
+			echo -ne "\r\033[2K" $(LIGHTGREEN) "→ $(NAME).log OK!"$(NC)"\n"; \
+		else \
+			echo -ne "\r\033[2K" $(LIGHTRED) "→ Not able to update $(NAME).log, already up-to-date ?"$(NC)"\n"; \
+		fi
+
+# log:	
+# 	@	if [ -f assets/minishell.log ]; then \
+#  			echo -ne "\r\033[2K" $(LIGHTGREEN) "→ $(NAME).log OK!\n"$(NC); \
+#     	else \
+#     	    echo "failure"; \
+#     	fi
 
 libft:
 	@	+$(MAKE) --no-print-directory -s -C libft re
