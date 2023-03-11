@@ -147,11 +147,11 @@ log:
 			rm -f assets/minishell.log; \
 			find .logs -type f -printf "%T@ %p\n" | sort | cut -d' ' -f2- | xargs awk 'FNR==1 && NR!=1 {print "\n----------------------------------------------\n"}{print}' - > assets/minishell.log; \
 			rm -rf .logs; \
-			echo -ne "\r\033[2K" $(LIGHTGREEN) "→ $(NAME).log OK!"$(NC)"\n"; \
+			echo -ne "\r\033[2K" $(LIGHTGREEN) "→ assets/$(NAME).log OK!"$(NC)"\n"; \
 		elif [ -f assets/minishell.log ]; then \
-			echo -ne "\r\033[2K" $(LIGHTRED) "→ Unable to update $(NAME).log, already up-to-date ?"$(NC)"\n"; \
+			echo -ne "\r\033[2K" $(ORANGE) "→ Unable to update assets/$(NAME).log, already up-to-date ?"$(NC)"\n"; \
 		else \
-			echo -ne "\r\033[2K" $(LIGHTRED) "→ Unable to generate $(NAME).log :("$(NC)"\n"; \
+			echo -ne "\r\033[2K" $(LIGHTRED) "→ Unable to generate assets/$(NAME).log :("$(NC)"\n"; \
 		fi
 
 libft:
