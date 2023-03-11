@@ -80,7 +80,6 @@ YELLOW='\033[1;33m'
 WHITE='\033[1;37m'
 
 default:	help
-	@	echo "${TERM_WIDTH}"
 	@	${MAKE} --no-print-directory ${NAME}
 
 all: ${NAME}
