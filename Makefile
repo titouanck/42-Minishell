@@ -152,13 +152,6 @@ log:
 			echo -ne "\r\033[2K" $(LIGHTRED) "→ Unable to update $(NAME).log, already up-to-date ?"$(NC)"\n"; \
 		fi
 
-# log:	
-# 	@	if [ -f assets/minishell.log ]; then \
-#  			echo -ne "\r\033[2K" $(LIGHTGREEN) "→ $(NAME).log OK!\n"$(NC); \
-#     	else \
-#     	    echo "failure"; \
-#     	fi
-
 libft:
 	@	+$(MAKE) --no-print-directory -s -C libft re
 

@@ -1,4 +1,0 @@
-echo Voici un ls
-ls
-echo Au revoir
-exit
