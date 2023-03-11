@@ -149,7 +149,7 @@ log:
 			rm -rf .logs; \
 			echo -ne "\r\033[2K" $(LIGHTGREEN) "→ $(NAME).log OK!"$(NC)"\n"; \
 		else \
-			echo -ne "\r\033[2K" $(LIGHTRED) "→ Not able to update $(NAME).log, already up-to-date ?"$(NC)"\n"; \
+			echo -ne "\r\033[2K" $(LIGHTRED) "→ Unable to update $(NAME).log, already up-to-date ?"$(NC)"\n"; \
 		fi
 
 # log:	
