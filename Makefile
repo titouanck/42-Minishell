@@ -129,6 +129,7 @@ fclean:	clean;
 	@	+$(MAKE) --no-print-directory -s -C libft fclean
 	@	rm -f ${NAME} assets/minishell.log
 	@	rm -rf .logs assets
+#	@	git clean -f
 
 re:	fclean ${NAME}
 

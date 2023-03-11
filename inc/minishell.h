@@ -167,5 +167,5 @@ void	ft_free_cmds_parsed(t_env *environment, t_cmd **tab);
 void	heredoc_signal_behavior(void);
 void	cmd_signal_behavior_parent(void);
 void	notatty_signal_behavior(void);
-
+int		use_readline(void);
 #endif

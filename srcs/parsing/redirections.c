@@ -281,7 +281,17 @@ int	use_heredoc(t_env *environment, t_redirect *redirect)
 		heredoc_signal_behavior();
 		while (1)
 		{
-			line = readline("> ");
+			if (use_readline())
+			{
+				line = readline("> ");
+				dynamic_memory_address_db('+', line);
+			}
+			else
+			{
+				line = get_next_line(0);
+				if (line && ft_strlen(line) > 0 && line[ft_strlen(line) - 1] == '\n')
+					line[ft_strlen(line) - 1] = '\0';
+			}
 			if (g_returnval == 130)
 			{
 				db_free(line);
@@ -318,7 +328,7 @@ int	use_heredoc(t_env *environment, t_redirect *redirect)
 			break ;
 		current = current->next;
 	}
-	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
+	if (use_readline())
 		default_signal_behavior();
 	else
 		notatty_signal_behavior();

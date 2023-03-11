@@ -30,7 +30,7 @@ unsigned char code, size_t cmdnbr)
 	ft_free_cmds_parsed(environment, cmds);
 	g_returnval = code;
 	closing_the_program(environment);
-	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
+	if (use_readline())
 		ft_putstr_fd("exit\n", 2);
 	exit(g_returnval);
 }

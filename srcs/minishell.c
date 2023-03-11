@@ -12,29 +12,12 @@
 
 #include "minishell.h"
 
-static void	_export_line(t_env *environment, \
-	char *line)
+int	use_readline(void)
 {
-	t_env	*elem;
-	
-	elem = environment;
-	if (!elem)
-		return ;
-	elem = elem->next;
-	while (elem)
-	{
-		if (ft_strcmp(elem->key, "[minishell]_line") == 0)
-		{
-			if (line)
-				elem->value = line;
-			else
-				elem->value = NULL;
-			return ;
-		}
-		elem = elem->next;
-	}
-	if (line)
-		env_lstaddback(environment, db_strdup("[minishell]_line"), line, 1);
+	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
+		return (TRUE);
+	else
+		return (FALSE);
 }
 
 int	main(int argc, char **argv, char *envp[]) 
@@ -51,7 +34,7 @@ int	main(int argc, char **argv, char *envp[])
 	while (1)
 	{
 		tty = -1;
-		if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
+		if (use_readline())
 		{
 			if (tty != 1)
 			{
@@ -69,6 +52,8 @@ int	main(int argc, char **argv, char *envp[])
 				tty = 0;
 			}
 			line = get_next_line(0);
+			if (line && ft_strlen(line) > 0 && line[ft_strlen(line) - 1] == '\n')
+				line[ft_strlen(line) - 1] = '\0';
 		}
 		if (line && *line)
 			add_history(line);
@@ -81,7 +66,7 @@ int	main(int argc, char **argv, char *envp[])
 		parsing(environment, &line);
 	}
 	closing_the_program(environment);
-	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
+	if (use_readline())
 		ft_putstr_fd("exit\n", 2);
 	return (g_returnval);
 }
