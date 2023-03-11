@@ -1,3 +1,4 @@
+TERM_WIDTH := $(shell tput cols)
 SHELL = /bin/bash
 
 # ft_printf
@@ -154,6 +155,7 @@ WHITE='\033[1;37m'
 
 
 ifndef COLORCOMPIL
+ifeq ($(shell test $(TERM_WIDTH) -gt 86; echo $$?), 0)
 COLORCOMPIL = \
 	if [ "$(shell test $P -lt 33; echo $$?)" = "0" ]; then \
     	echo -ne "\r\033[2K" $(LIGHTRED) "[$(P)%] "$(DARKGRAY) "Compiling ${NAME}" $(WHITE) "$<"; \
@@ -164,6 +166,18 @@ COLORCOMPIL = \
        		echo -ne "\r\033[2K" $(LIGHTGREEN) "[$(P)%]" $(DARKGRAY) "Compiling ${NAME}" $(WHITE) "$<"; \
 		fi \
 	fi
+else
+COLORCOMPIL = \
+	if [ "$(shell test $P -lt 33; echo $$?)" = "0" ]; then \
+    	echo -ne "\r\033[2K" $(LIGHTRED) "[$(P)%] "$(DARKGRAY) "Compiling ${NAME}"; \
+	else \
+		if [ "$(shell test $P -lt 66; echo $$?)" = "0" ]; then \
+    		echo -ne "\r\033[2K" $(YELLOW) "[$(P)%]" $(DARKGRAY) "Compiling ${NAME}"; \
+		else \
+       		echo -ne "\r\033[2K" $(LIGHTGREEN) "[$(P)%]" $(DARKGRAY) "Compiling ${NAME}"; \
+		fi \
+	fi
+endif
 T := $(words $(SRCS))
 N := x
 C = $(words $N)$(eval N := x $N)
