@@ -115,6 +115,7 @@ ${OBJS}: ${OBJS_PATH}/%.o: %.c Makefile libft/
 	@	${CC} ${CFLAGS} -c $< -o $@ ${INC}
 
 ${NAME}:  ${OBJS}
+	@	-mkdir -p assets
 	@	${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${LIBS} ${INC}	
 	@	echo -ne "\r\033[2K" $(LIGHTGREEN) "→ $(NAME) OK!\n"$(NC)
 
@@ -127,7 +128,7 @@ clean:
 fclean:	clean;
 	@	+$(MAKE) --no-print-directory -s -C libft fclean
 	@	rm -f ${NAME} assets/minishell.log
-	@	rm -rf .logs
+	@	rm -rf .logs assets
 
 re:	fclean ${NAME}
 
@@ -137,12 +138,25 @@ run:	${NAME}
 	@	${MAKE} --no-print-directory log
 
 valgrind:	${NAME}
+	@	echo -ne \
+		"{\n" \
+		"	ignore_readline_leaks\n" \
+		"	Memcheck:Leak\n" \
+		"	...\n" \
+		"	fun:readline\n" \
+		"}\n" \
+		"{\n" \
+		"	ignore_readline_leaks\n" \
+		"	Memcheck:Leak\n" \
+		"	...\n" \
+		"	fun:add_history\n" \
+		"}\n" > assets/ignore_readline_leaks.supp
 	@		clear
-	@		echo -ne "\r\033[2K"$(LIGHTBLUE)"valgrind --track-fds=yes [...] --show-leak-kinds=all ./${NAME}"$(NC)"\n"
+	@		echo -ne "\r\033[2K"$(LIGHTBLUE)"Valgrind ./${NAME}: \n--track-fds=yes \n--suppressions=assets/ignore_readline_leaks.supp \n--leak-check=full --show-leak-kinds=all"$(NC)"\n"
 	@		-valgrind --track-fds=yes --suppressions=assets/ignore_readline_leaks.supp --leak-check=full --show-leak-kinds=all ./${NAME}
 	@		${MAKE} --no-print-directory log
 
-log:	
+log:
 	@	if [ -d .logs ]; then \
 			rm -f assets/minishell.log; \
 			find .logs -type f -printf "%T@ %p\n" | sort | cut -d' ' -f2- | xargs awk 'FNR==1 && NR!=1 {print "\n----------------------------------------------\n"}{print}' - > assets/minishell.log; \
