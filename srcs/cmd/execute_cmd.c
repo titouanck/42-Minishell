@@ -22,7 +22,7 @@ char	*_locate_file(char **path, char *arg)
 	char	*filepath;
 	size_t	i;
 
-	if (ft_strncmp(arg, "/", 1) == 0 || ft_strncmp(arg, ".", 1) == 0)
+	if (ft_strncmp(arg, "/", 1) == 0 || ft_strncmp(arg, "./", 2) == 0 || ft_strncmp(arg, "../", 3) == 0)
 	{
 		filepath = db_strdup(arg);
 		if (!filepath)
@@ -32,9 +32,10 @@ char	*_locate_file(char **path, char *arg)
 			if (access(filepath, X_OK) == 0)
 				return (filepath);
 			else
-				return (ft_putstr_fd("minishell: ", 2), perror(arg),db_free(filepath), NULL);
+				return (ft_putstr_fd("minishell: ", 2), perror(arg), db_free(filepath), NULL);
 		}
 		db_free(filepath);
+		return (ft_putstr_fd("minishell: ", 2), ft_putstr_fd(arg, 2), ft_putstr_fd(": No such file or directory\n", 2), NULL);
 	}
 	if (!path)
 	{

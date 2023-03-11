@@ -70,7 +70,7 @@ void	closing_the_program(t_env *environment)
 		last_input = environment->last_input;
 		ft_free_environment(environment);
 	}
-	file = ft_randomstr(".logs/", ".log", 16);
+	file = ft_randomstr(".logs/minsh_", ".log", 16);
 	if (file)
 	{
 		fd = open(file, O_WRONLY | O_TRUNC | O_CREAT, 0644);

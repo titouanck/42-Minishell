@@ -41,7 +41,7 @@ void	ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr
 	char			*errmsg;
 	size_t			i;
 
-	code = 0;
+	code = g_returnval;
 	if (args && *args && args[1])
 	{
 		i = 1;
