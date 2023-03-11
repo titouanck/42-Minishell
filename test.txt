@@ -1,5 +1,0 @@
-ls
-echo "Hello, world!"
-<< limiter ls
-echo Nobody should be able to see that
-limiter
