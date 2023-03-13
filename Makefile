@@ -35,6 +35,7 @@ SRCS += last_child.c
 SRCS += middle_child.c
 SRCS += pipex.c
 
+SRCS += ft_syntaxerror.c
 
 SRCS += minishell.c
 
@@ -47,6 +48,7 @@ SRCS_PATH += ./srcs/env/
 SRCS_PATH += ./srcs/one-time/
 SRCS_PATH += ./srcs/parsing/
 SRCS_PATH += ./srcs/pipex/
+SRCS_PATH += ./srcs/utils/
 
 
 OBJS = ${patsubst %.c, ${OBJS_PATH}/%.o, ${SRCS}}

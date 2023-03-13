@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 10:49:33 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/01 14:58:07 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/13 11:54:17 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,9 @@ void	closing_the_program(t_env *environment)
 		fd = open(file, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 		free(file);
 		if (fd != -1)
+		{
 			_logfile(fd, args, last_input);
+		}
 		else
 		{
 			perror("minishell: open");

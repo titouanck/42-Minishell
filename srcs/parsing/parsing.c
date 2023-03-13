@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 14:28:22 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/13 11:43:20 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	parsing(t_env *environment, char **line)
 	int		r;
 	size_t	size;
 
-	cmds = split_cmds(line);
+	cmds = split_cmds(environment, line);
 	if (!cmds)
 		return ;
 	size = 0;

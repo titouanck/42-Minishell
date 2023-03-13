@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 18:09:05 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/13 11:50:56 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,9 @@ extern int	g_returnval;
 
 typedef struct s_env
 {
-	char			**args;
 	char			*line;
+	size_t			line_nbr;
+	char			**args;
 	char			*last_input;
 	char			*key;
 	char			*value;
@@ -109,7 +110,7 @@ int		execute_cmd(t_env *environment, char **args);
 int	parse_builtin(t_env *environment, char **args, \
 	t_cmd **cmds, size_t cmdnbr);
 // split_cmds.c
-char		**split_cmds(char **ptr);
+char		**split_cmds(t_env *environment, char **ptr);
 // parsing.c
 void		parsing(t_env *environment, char **line);
 // parse_cmd.c
@@ -168,4 +169,7 @@ void	heredoc_signal_behavior(void);
 void	cmd_signal_behavior_parent(void);
 void	notatty_signal_behavior(void);
 int		use_readline(void);
+
+void	ft_syntaxerror(t_env *environment, char *err);
+
 #endif

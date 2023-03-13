@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 18:43:34 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/13 11:55:13 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ int	main(int argc, char **argv, char *envp[])
 		return (closing_the_program(NULL), 42);
 	environment->line = NULL;
 	environment->last_input = NULL;
-	while (1)
+	environment->line_nbr = 0;
+	while (++(environment->line_nbr))
 	{
 		tty = -1;
 		if (use_readline())

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 16:26:40 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/13 11:42:16 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ static int _leftchevron(t_env *environment, char *line, t_redirect *redirect)
 				while (line[i] == SEPARATOR)
 					i++;
 				if (!line[i] || line[i] == LEFTCHEVRON || line[i] == RIGHTCHEVRON)
-					return (ft_putstr_fd("minishell: syntax error: expected limiter near `<<\'\n", 2), -1);
+					return (ft_putstr_fd("minishell: syntax error: expected limiter near `<<\'\n", 2), ft_syntaxerror(environment, NULL), -1);
 				start = line + i;
 				while (line[i] > 0 || line[i] == QUOTES)
 					i++;
@@ -136,7 +136,7 @@ static int _leftchevron(t_env *environment, char *line, t_redirect *redirect)
 				while (line[i] == SEPARATOR)
 					i++;
 				if (!line[i] || line[i] == LEFTCHEVRON || line[i] == RIGHTCHEVRON)
-					return (ft_putstr_fd("minishell: syntax error: expected infile near `<\'\n", 2), -1);
+					return (ft_putstr_fd("minishell: syntax error: expected infile near `<\'\n", 2), ft_syntaxerror(environment, NULL), -1);
 				start = line + i;
 				while (line[i] > 0 || line[i] == QUOTES)
 					i++;
@@ -165,7 +165,7 @@ static int _leftchevron(t_env *environment, char *line, t_redirect *redirect)
 	return (1);
 }
 
-static int _rightchevron(char *line, t_redirect *redirect)
+static int _rightchevron(t_env *environment, char *line, t_redirect *redirect)
 {
 	size_t	old_i;
 	size_t	i;
@@ -194,7 +194,7 @@ static int _rightchevron(char *line, t_redirect *redirect)
 			while (line[i] == SEPARATOR)
 				i++;
 			if (!line[i] || line[i] == LEFTCHEVRON || line[i] == RIGHTCHEVRON)
-				return (ft_putstr_fd("minishell: syntax error: expected outfile near `>\'\n", 2), -1);
+				return (ft_putstr_fd("minishell: syntax error: expected outfile near `>\'\n", 2), ft_syntaxerror(environment, NULL), -1);
 			start = line + i;
 			while (line[i] > 0 || line[i] == QUOTES)
 				i++;
@@ -373,7 +373,7 @@ t_redirect	*redirections(t_env *environment, char *line, int empty)
 			free_heredocs(redirect->heredoc);
 			redirect->heredoc = NULL;
 		}
-		rightreturn = _rightchevron(line, redirect);
+		rightreturn = _rightchevron(environment, line, redirect);
 		if (rightreturn == -1)
 		{
 			g_returnval = 2;

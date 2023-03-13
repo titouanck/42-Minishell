@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 12:48:16 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 14:25:45 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/13 11:41:35 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,7 @@ int	quotes_interpretation(t_env *environment, char **line)
 	while ((*line)[++i])
 		if ((*line)[i] == NOTAVARKEY)
 			(*line)[i] = '$';
-	return \
-	(_detect_missing_quote(single_quote_open, double_quote_open));
+	if (_detect_missing_quote(single_quote_open, double_quote_open) == 0)
+		return(ft_syntaxerror(environment, NULL), 0);
+	return (1);
 }
