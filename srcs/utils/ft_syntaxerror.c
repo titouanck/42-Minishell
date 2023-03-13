@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:15:42 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/13 11:56:01 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/13 11:58:03 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	ft_syntaxerror(t_env *environment, char *err)
 	{
 		if (environment)
 		{
-			ft_putstr_fd("minishell: line", 2);
+			ft_putstr_fd("minishell: line ", 2);
 			ft_putnbr_fd(environment->line_nbr, 2);
 			ft_putstr_fd(": `", 2);
 			ft_putstr_fd(environment->last_input, 2);
