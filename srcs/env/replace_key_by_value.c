@@ -53,7 +53,7 @@ char	*replace_key_by_value(t_env *environment, char *line)
 				var = get_value_by_key(environment, var);
 			if (!var)
 				var = "";
-			tmp = ft_strrjoin(first_part, var, second_part);
+			tmp = db_strrjoin(first_part, var, second_part);
 			if (question_mark)
 				db_free(var);
 			db_free(line);

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 11:34:21 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 15:52:25 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 15:03:05 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static void	_noarg(t_env *environment)
 	r = chdir(home);
 	if (r == -1)
 	{
-		err_str = ft_strjoin("minishell: cd: ", home);
+		err_str = db_strjoin("minishell: cd: ", home);
 		if (!err_str)
 			ft_putstr_fd(ERRALLOC, 2);
 		perror(err_str);
@@ -97,7 +97,7 @@ void	ftbuiltin_cd(t_env *environment, char **args)
 		r = chdir(args[1]);
 		if (r == -1)
 		{
-			errmsg = ft_strjoin("minishell: cd: ", args[1]);
+			errmsg = db_strjoin("minishell: cd: ", args[1]);
 			if (!errmsg)
 				ft_putstr_fd(ERRALLOC, 2);
 			perror(errmsg);

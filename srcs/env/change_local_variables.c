@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/06 17:35:02 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 15:03:05 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ static void	_export_element(t_env *environment, \
 			tmp = elem->value;
 			if (value && append)
 			{
-				elem->value = ft_strjoin(elem->value, value);
+				elem->value = db_strjoin(elem->value, value);
 				db_free(value);
 			}
 			else if (!append)

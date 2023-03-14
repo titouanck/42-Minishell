@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 18:15:33 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/01 14:58:07 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 15:03:12 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	ftbuiltin_unset(t_env *environment, char **args)
 			return ;
 		if (!ft_strinset(arg, VARNAMESET, ft_strlen(arg)))
 		{
-			errmsg = ft_strrjoin("minishell: unset: `", arg, "': not a valid identifier\n");
+			errmsg = db_strrjoin("minishell: unset: `", arg, "': not a valid identifier\n");
 			ft_putstr_fd(errmsg, 2);
 			if (errmsg)
 				db_free(errmsg);

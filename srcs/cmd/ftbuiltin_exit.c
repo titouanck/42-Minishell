@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/02 19:57:29 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 15:03:12 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr
 		i = 1;
 		if (!ft_inset(args[1][0], "-+0123456789"))
 		{
-			errmsg = ft_strrjoin("minishell: exit: ", args[1], ": numeric argument required\n");
+			errmsg = db_strrjoin("minishell: exit: ", args[1], ": numeric argument required\n");
 			if (!errmsg)
 				ft_putstr_fd(ERRALLOC, 2);
 			else
@@ -62,7 +62,7 @@ void	ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr
 			{
 				if (!ft_inset(args[1][i++], "0123456789"))
 				{
-					errmsg = ft_strrjoin("minishell: exit: ", args[1], ": numeric argument required\n");
+					errmsg = db_strrjoin("minishell: exit: ", args[1], ": numeric argument required\n");
 					if (!errmsg)
 						ft_putstr_fd(ERRALLOC, 2);
 					else

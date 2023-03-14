@@ -51,7 +51,7 @@ char	**format_environment(t_env *environment)
 	elem = environment->next;
 	while (i < size && elem)
 	{
-		env[i] = ft_strrjoin(elem->key, "=", elem->value);
+		env[i] = db_strrjoin(elem->key, "=", elem->value);
 		if (!env[i])
 			return (db_freetab(env), ft_putstr_fd(ERRALLOC, 2), NULL);
 		elem = elem->next;
