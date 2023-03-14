@@ -69,12 +69,8 @@ static void	_export_element(t_env *environment, \
 static int	_export_key(char *arg, char *key, size_t i)
 {
 	(void) i;
-	if (!key)
-	{
-		g_returnval = 1;
-		return (0);
-	}
-	if (ft_isdigit(*key) \
+
+	if (!key || ft_isdigit(*key) \
 	|| (!ft_strinset(key, VARNAMESET, ft_strlen(key) - 1)) \
 	|| (*key == '+' || !ft_strinset(key + (ft_strlen(key) - 1), VARNAMESET "+", 1)))
 	{
@@ -128,7 +124,10 @@ void	ftbuiltin_export(t_env *environment, char **args)
 			i = 0;
 			while (arg[i] && arg[i] != '=')
 				i++;
-			key = db_substr(arg, 0, i);
+			if (i > 0)
+				key = db_substr(arg, 0, i);
+			else
+				key = NULL;
 			if (!_export_key(arg, key, i))
 				db_free(key);
 			else

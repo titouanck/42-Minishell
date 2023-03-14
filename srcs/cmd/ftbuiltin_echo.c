@@ -15,6 +15,7 @@
 void	ftbuiltin_echo(char **args)
 {
 	size_t	i;
+	int		j;
 	int		newline;
 
 	g_returnval = 0;
@@ -25,10 +26,23 @@ void	ftbuiltin_echo(char **args)
 		ft_putchar_fd('\n', 1);
 		return ;
 	}
-	if (ft_strcmp(args[i], "-n") == 0)
+	if (ft_strncmp(args[i], "-n", 2) == 0)
 	{
-		newline = FALSE;
-		i++;
+		j = 2;
+		while (args[i][j])
+		{
+			if (args[i][j] != 'n')
+			{
+				j = -1;
+				break ;
+			}
+			j++;
+		}
+		if (j > 0)
+		{
+			newline = FALSE;
+			i++;
+		}
 	}
 	while (args[i])
 	{

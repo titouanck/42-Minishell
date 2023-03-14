@@ -75,7 +75,6 @@ void	closing_the_program(t_env *environment)
 	last_input = NULL;
 	if (environment)
 	{
-		ft_printf("(%s)\n", environment->heredoc_files);
 		db_free(environment->prompt);
 		db_free(environment->line);
 		log = environment->log;
