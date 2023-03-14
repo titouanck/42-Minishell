@@ -66,7 +66,7 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 		}
 		return ;
 	}
-	if (ft_strcmp((cmds[cmdnbr]->args)[0], "exit") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "cd") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "unset") == 0)
+	if (ft_strcmp((cmds[cmdnbr]->args)[0], "cd") == 0 || cmdnbr == 0 && (ft_strcmp((cmds[cmdnbr]->args)[0], "exit") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "export") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "unset") == 0))
 	{
 		if (cmdnbr != 0)
 			close(pipefd[0]);
