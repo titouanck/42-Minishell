@@ -131,7 +131,8 @@ fclean:	clean;
 	@	+$(MAKE) --no-print-directory -s -C libft fclean
 	@	rm -f ${NAME} assets/minishell.log
 	@	rm -rf .minishell-logs assets
-#	@	git clean -f
+	@	git clean -f
+	@	rm -f /tmp/minishell-heredoc_*
 
 re:	fclean ${NAME}
 
