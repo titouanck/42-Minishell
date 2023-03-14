@@ -15,6 +15,14 @@
 static void	_i_want_to_exit(t_env *environment, t_cmd **cmds, \
 unsigned char code, size_t cmdnbr)
 {
+	size_t	size;
+
+	g_returnval = code;
+	size = 0;
+	while (cmds[size])
+		size++;
+	if (size > 1)
+		return ;
 	if (cmds && cmds[cmdnbr] && (cmds[cmdnbr])->redirect->infile)
 	{
 		close((cmds[cmdnbr])->redirect->fd_infile);
@@ -28,7 +36,6 @@ unsigned char code, size_t cmdnbr)
 		close(cmds[cmdnbr]->saved_stdout);
 	}
 	ft_free_cmds_parsed(environment, cmds);
-	g_returnval = code;
 	closing_the_program(environment);
 	if (use_readline())
 		ft_putstr_fd("exit\n", 2);

@@ -33,12 +33,7 @@ int	parse_builtin(t_env *environment, char **args, \
 	else if (ft_strcmp(args[0], "env") == 0)
 		ftbuiltin_env(environment);
 	else if (ft_strcmp(args[0], "exit") == 0)
-	{
-		if (size == 1)
-			ftbuiltin_exit(environment, args, cmds, cmdnbr);
-		else
-			g_returnval = 0;
-	}
+		ftbuiltin_exit(environment, args, cmds, cmdnbr);
 	else if (ft_strcmp(args[0], "dma_db") == 0)
 		ftbuiltin_dma_db();
 	else
