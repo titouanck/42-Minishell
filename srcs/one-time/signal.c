@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:06 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 16:42:29 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 15:50:08 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ static void	_heredoc_sigint(int sig)
 	(void) sig;
 	g_returnval = 130;
 	rl_done = 1;
+	rl_redisplay();
 }
 
 void	heredoc_signal_behavior(void)

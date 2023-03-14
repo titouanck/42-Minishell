@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/13 11:55:13 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 15:49:13 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	main(int argc, char **argv, char *envp[])
 				default_signal_behavior();
 				tty = 1;
 			}
-			line = readline("\033[34;1m" PROMPT ENDCL " ");
+			line = readline("\r\001\033[34;1m\002minishell \001→\002 \001\033[0m\002");
 			dynamic_memory_address_db('+', line);
 		}
 		else

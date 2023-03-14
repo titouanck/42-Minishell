@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 14:20:23 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 13:43:56 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 15:24:07 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,18 @@
 
 	/* Colors */
 
-# define RED "\033[0;31m"
-# define REDBG "\033[37;41m"
-# define GREEN "\033[32m"
-# define GREENBG "\033[37;42m"
-# define BLUE "\033[34m"
-# define BLUEBG "\033[37;44m"
-# define WHITE "\033[37m"
-# define WHITEBG "\033[30;47m"
-# define MAGENTA "\033[35m"
-# define MAGENTABG "\033[37;45m"
-# define CYAN "\033[36m"
-# define CYANBG "\033[37;46m"
-# define ENDCL "\033[0m"
+# define RED "\001\033[0;31m\002"
+# define REDBG "\001\033[37;41m\002"
+# define GREEN "\001\033[32m\002"
+# define GREENBG "\001\033[37;42m\002"
+# define BLUE "\001\033[34m\002"
+# define BLUEBG "\001\033[37;44m\002"
+# define WHITE "\001\033[37m\002"
+# define WHITEBG "\001\033[30;47m\002"
+# define MAGENTA "\001\033[35m\002"
+# define MAGENTABG "\001\033[37;45m\002"
+# define CYAN "\001\033[36m\002"
+# define CYANBG "\001\033[37;46m\002"
+# define ENDCL "\001\033[0m\002"
 
 #endif
