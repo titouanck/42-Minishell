@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/14 15:22:40 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 17:13:56 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,18 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZ\
 
 extern int	g_returnval;
 
+typedef struct s_log
+{
+	char	**args;
+	char	*infile;
+	char	*outfile;
+}			t_log;
+
 typedef struct s_env
 {
+	t_log			log;
 	char			*line;
 	size_t			line_nbr;
-	char			**args;
 	char			*last_input;
 	char			*key;
 	char			*value;
@@ -159,7 +166,7 @@ int		first_child(t_env *environment, int pipefd[2], t_cmd **cmds);
 int		middle_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr);
 void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr);
 // io_open_fds.c
-int		io_open_fds(t_redirect *redirect);
+int	io_open_fds(t_env *environment, t_redirect *redirect);
 
 // PAS CLASSE
 void	ft_free_redirect(t_redirect *redirect);

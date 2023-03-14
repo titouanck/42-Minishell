@@ -110,7 +110,7 @@ help:
 	@	echo -ne "\r\033[2K" $(LIGHTPURPLE)"libft\n"${NC}" Rebuilds libft.\n"
 endif
 
-${OBJS}: ${OBJS_PATH}/%.o: %.c Makefile libft/srcs/*/*.c
+${OBJS}: ${OBJS_PATH}/%.o: %.c Makefile inc/minishell.h libft/srcs/*/*.c
 	@	$(MAKE) --no-print-directory -s -C libft
 	@	mkdir -p ${OBJS_PATH}
 	@	$(COLORCOMPIL)
@@ -130,7 +130,7 @@ clean:
 fclean:	clean;
 	@	+$(MAKE) --no-print-directory -s -C libft fclean
 	@	rm -f ${NAME} assets/minishell.log
-	@	rm -rf .logs assets
+	@	rm -rf .minishell-logs assets
 #	@	git clean -f
 
 re:	fclean ${NAME}
@@ -154,16 +154,15 @@ valgrind:	${NAME}
 		"	...\n" \
 		"	fun:add_history\n" \
 		"}\n" > assets/ignore_readline_leaks.supp
-	@		clear
 	@		echo -ne "\r\033[2K"$(LIGHTBLUE)"Valgrind ./${NAME}: \n--track-fds=yes \n--suppressions=assets/ignore_readline_leaks.supp \n--leak-check=full --show-leak-kinds=all"$(NC)"\n"
 	@		-valgrind --track-fds=yes --suppressions=assets/ignore_readline_leaks.supp --leak-check=full --show-leak-kinds=all ./${NAME}
 	@		${MAKE} --no-print-directory log
 
 log:
-	@	if [ -d .logs ]; then \
+	@	if [ -d .minishell-logs ]; then \
 			rm -f assets/minishell.log; \
-			find .logs -type f -printf "%T@ %p\n" | sort | cut -d' ' -f2- | xargs awk 'FNR==1 && NR!=1 {print "\n----------------------------------------------\n"}{print}' - > assets/minishell.log; \
-			rm -rf .logs; \
+			find .minishell-logs -type f -printf "%T@ %p\n" | sort | cut -d' ' -f2- | xargs awk 'FNR==1 && NR!=1 {print "\n----------------------------------------------\n"}{print}' - > assets/minishell.log; \
+			rm -rf .minishell-logs; \
 			echo -ne "\r\033[2K" $(LIGHTGREEN) "→ assets/$(NAME).log OK!"$(NC)"\n"; \
 		elif [ -f assets/minishell.log ]; then \
 			echo -ne "\r\033[2K" $(ORANGE) "→ Unable to update assets/$(NAME).log, already up-to-date ?"$(NC)"\n"; \

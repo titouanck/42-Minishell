@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 14:02:06 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 18:44:30 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 16:51:22 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,13 @@ t_env *opening(int argc, char **argv, char *envp[])
 	pid = fork();
 	if (pid == 0)
 	{
-		cmd = ft_split("/usr/bin/rm rm -rf .logs", ' ');
+		cmd = ft_split("/usr/bin/rm rm -rf .minishell-logs", ' ');
 		if (cmd)
 		{
 			execve(cmd[0], cmd + 1, NULL);
 			ft_freetab(cmd);
 		}
-		cmd = ft_split("/bin/rm rm -rf .logs", ' ');
+		cmd = ft_split("/bin/rm rm -rf .minishell-logs", ' ');
 		if (cmd)
 		{
 			execve(cmd[0], cmd + 1, NULL);
@@ -66,13 +66,13 @@ t_env *opening(int argc, char **argv, char *envp[])
 	pid = fork();
 	if (pid == 0)
 	{
-		cmd = ft_split("/usr/bin/mkdir mkdir -p .logs", ' ');
+		cmd = ft_split("/usr/bin/mkdir mkdir -p .minishell-logs", ' ');
 		if (cmd)
 		{
 			execve(cmd[0], cmd + 1, NULL);
 			ft_freetab(cmd);
 		}
-		cmd = ft_split("/bin/mkdir mkdir -p .logs", ' ');
+		cmd = ft_split("/bin/mkdir mkdir -p .minishell-logs", ' ');
 		if (cmd)
 		{
 			execve(cmd[0], cmd + 1, NULL);
@@ -88,7 +88,5 @@ t_env *opening(int argc, char **argv, char *envp[])
 	(void) argv;
 	g_returnval = 0;
 	environment = get_environment(envp);
-	if (environment)
-		environment->args = NULL;
 	return (environment);
 }

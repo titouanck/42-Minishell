@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 15:07:46 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 17:13:46 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	middle_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 
 	if (pipe(new_pipefd) == -1)
 		return (perror("minishell: pipe"), close(pipefd[0]), 0);
-	if(!io_open_fds((cmds[cmdnbr])->redirect) || cmds[cmdnbr]->redirect->to_execute == FALSE)
+	if(!io_open_fds(environment, (cmds[cmdnbr])->redirect) || cmds[cmdnbr]->redirect->to_execute == FALSE)
 	{
 		if (!(cmds[cmdnbr]->args) || !(cmds[cmdnbr]->args) || ((cmds[cmdnbr]->args[0]) && !((cmds[cmdnbr]->args[0])[0])))
 		{
@@ -88,6 +88,10 @@ int	middle_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 		close(pipefd[0]);
 		close(new_pipefd[0]);
 		close(new_pipefd[1]);
+		db_free(environment->log.infile);
+		environment->log.infile = NULL;
+		db_free(environment->log.outfile);
+		environment->log.outfile = NULL;
 		return (0);
 	}
 	else if (pid == 0)
@@ -117,7 +121,7 @@ int	middle_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 			close((cmds[cmdnbr])->redirect->fd_outfile);
 		if ((cmds[cmdnbr])->redirect->infile)
 			close((cmds[cmdnbr])->redirect->fd_infile);
-		environment->args = (cmds[cmdnbr])->args;
+		environment->log.args = (cmds[cmdnbr])->args;
 		(cmds[cmdnbr])->args = NULL;
 		ft_free_cmds_parsed(environment, cmds);
 		closing_the_program(environment);
@@ -125,6 +129,10 @@ int	middle_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 	}
 	else
 	{
+		db_free(environment->log.infile);
+		environment->log.infile = NULL;
+		db_free(environment->log.outfile);
+		environment->log.outfile = NULL;
 		close(pipefd[0]);
 		close(new_pipefd[1]);
 		pipefd[0] = new_pipefd[0];

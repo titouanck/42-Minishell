@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/14 15:49:13 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 17:12:56 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ int	main(int argc, char **argv, char *envp[])
 	environment->line = NULL;
 	environment->last_input = NULL;
 	environment->line_nbr = 0;
+	environment->log.args = NULL;
+	environment->log.infile = NULL;
+	environment->log.outfile = NULL;
 	while (++(environment->line_nbr))
 	{
 		tty = -1;

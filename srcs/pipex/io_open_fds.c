@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/06 17:26:28 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 16:33:28 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,14 @@ static int	check_for_stdout(char *output)
 	return (r);
 }
 
-int	io_open_fds(t_redirect *redirect)
+int	io_open_fds(t_env *environment, t_redirect *redirect)
 {
+	environment->log.infile = NULL;
+	environment->log.outfile = NULL;
 	if (!redirect)
 		return (0);
+	environment->log.infile = db_strdup(redirect->infile);
+	environment->log.outfile = db_strdup(redirect->outfile);
 	if (redirect->infile)
 	{
 		redirect->fd_infile = open(redirect->infile, O_RDONLY);
@@ -49,6 +53,7 @@ int	io_open_fds(t_redirect *redirect)
 			redirect->infile = NULL;
 			db_free(redirect->outfile);
 			redirect->outfile = NULL;
+			g_returnval = 1;
 			return (0);
 		}
 	}
@@ -70,6 +75,7 @@ int	io_open_fds(t_redirect *redirect)
 				redirect->infile = NULL;
 				db_free(redirect->outfile);
 				redirect->outfile = NULL;
+				g_returnval = 1;
 				return (0);
 			}
 		}

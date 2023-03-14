@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 15:07:49 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 17:13:35 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	first_child(t_env *environment, int pipefd[2], t_cmd **cmds)
 	cmdnbr = 0;
 	if (pipe(pipefd) == -1)
 		return (perror("minishell: pipe"), 0);
-	if(!io_open_fds((cmds[cmdnbr])->redirect) || cmds[cmdnbr]->redirect->to_execute == FALSE)
+	if(!io_open_fds(environment, (cmds[cmdnbr])->redirect) || cmds[cmdnbr]->redirect->to_execute == FALSE)
 	{
 		if (!(cmds[cmdnbr]->args) || !(cmds[cmdnbr]->args) || ((cmds[cmdnbr]->args[0]) && !((cmds[cmdnbr]->args[0])[0])))
 		{
@@ -74,7 +74,13 @@ int	first_child(t_env *environment, int pipefd[2], t_cmd **cmds)
 	}
 	pid = fork();
 	if (pid == -1)
+	{
+		db_free(environment->log.infile);
+		environment->log.infile = NULL;
+		db_free(environment->log.outfile);
+		environment->log.outfile = NULL;
 		return (perror("minishell: fork"), close(pipefd[1]), 0);
+	}
 	else if (pid == 0)
 	{
 		close(pipefd[0]);
@@ -95,7 +101,7 @@ int	first_child(t_env *environment, int pipefd[2], t_cmd **cmds)
 			close((cmds[cmdnbr])->redirect->fd_outfile);
 		if ((cmds[cmdnbr])->redirect->infile)
 			close((cmds[cmdnbr])->redirect->fd_infile);
-		environment->args = (cmds[cmdnbr])->args;
+		environment->log.args = (cmds[cmdnbr])->args;
 		(cmds[cmdnbr])->args = NULL;
 		ft_free_cmds_parsed(environment, cmds);
 		closing_the_program(environment);
@@ -103,6 +109,10 @@ int	first_child(t_env *environment, int pipefd[2], t_cmd **cmds)
 	}
 	else
 	{
+		db_free(environment->log.infile);
+		environment->log.infile = NULL;
+		db_free(environment->log.outfile);
+		environment->log.outfile = NULL;
 		close(pipefd[1]);
 		if ((cmds[cmdnbr])->redirect->outfile)
 			close((cmds[cmdnbr])->redirect->fd_outfile);

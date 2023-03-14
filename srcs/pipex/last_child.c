@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 16:45:22 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 17:13:40 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 {
 	pid_t	pid;
 
-	if(!io_open_fds((cmds[cmdnbr])->redirect) || cmds[cmdnbr]->redirect->to_execute == FALSE)
+	if(!io_open_fds(environment, (cmds[cmdnbr])->redirect) || cmds[cmdnbr]->redirect->to_execute == FALSE)
 	{
 		if (!(cmds[cmdnbr]->args) || !(cmds[cmdnbr]->args) || ((cmds[cmdnbr]->args[0]) && !((cmds[cmdnbr]->args[0])[0])))
 		{
@@ -71,6 +71,10 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 	pid = fork();
 	if (pid == -1)
 	{
+		db_free(environment->log.infile);
+		environment->log.infile = NULL;
+		db_free(environment->log.outfile);
+		environment->log.outfile = NULL;
 		perror("minishell: fork");
 		if (cmdnbr != 0)
 			close(pipefd[0]);
@@ -95,7 +99,7 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 			close((cmds[cmdnbr])->redirect->fd_outfile);
 		if ((cmds[cmdnbr])->redirect->infile)
 			close((cmds[cmdnbr])->redirect->fd_infile);
-		environment->args = (cmds[cmdnbr])->args;
+		environment->log.args = (cmds[cmdnbr])->args;
 		(cmds[cmdnbr])->args = NULL;
 		ft_free_cmds_parsed(environment, cmds);
 		closing_the_program(environment);
@@ -103,6 +107,10 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 	}
 	else
 	{
+		db_free(environment->log.infile);
+		environment->log.infile = NULL;
+		db_free(environment->log.outfile);
+		environment->log.outfile = NULL;
 		if ((cmds[cmdnbr])->redirect->outfile)
 			close((cmds[cmdnbr])->redirect->fd_outfile);
 		if ((cmds[cmdnbr])->redirect->infile)

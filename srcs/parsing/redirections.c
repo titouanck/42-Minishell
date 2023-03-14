@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/13 11:42:16 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 17:13:29 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,26 +228,13 @@ static int _rightchevron(t_env *environment, char *line, t_redirect *redirect)
 int	heredoc_file(t_redirect *redirect)
 {
 	int				fd;
-	unsigned char	buf[16];
 	char			*filename;
 	size_t			i;
 
-	filename = db_strdup("/tmp/.tmpheredocfile_____.minishell");
+	filename = ft_randomstr("/tmp/minishell-heredoc_", NULL, 16);
 	if (!filename)
 		return (ft_putstr_fd(ERRALLOC, 2), -1);
 	redirect->infile = filename;
-	fd = open("/dev/urandom", O_RDONLY);
-	if (fd != -1 && read(fd, buf, sizeof(buf)) == sizeof(buf))
-	{
-		close(fd);
-		i = -1;
-		while (++i < 16)
-		{
-			while (!ft_isalpha(buf[i]) && !ft_isdigit(buf[i]))
-				buf[i] += 21;
-			filename[i + 9] = buf[i];
-		}
-	}
 	fd = open(redirect->infile, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (fd == -1)
 	{
