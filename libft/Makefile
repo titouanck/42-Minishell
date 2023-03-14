@@ -88,6 +88,8 @@ SRCS += db_free.c
 SRCS += db_freetab.c
 SRCS += db_split.c
 SRCS += db_substr.c
+SRCS += db_strjoin.c
+SRCS += db_strrjoin.c
 
 INC = -I inc
 

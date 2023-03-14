@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 16:26:17 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/06 16:35:26 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 14:59:16 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,9 @@ void	db_freetab(char **tab);
 char	**db_split(char const *s, char c);
 
 char	*db_substr(char const *s, unsigned int start, size_t len);
+
+char	*db_strjoin(char const *s1, char const *s2);
+
+char	*db_strrjoin(char const *s1, char const *s2, char const *s3);
 
 #endif
