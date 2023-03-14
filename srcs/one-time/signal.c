@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:06 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/14 17:39:25 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 18:42:31 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,11 @@ static void	_default_sigint(int sig)
 {
 	(void) sig;
 	g_returnval = 130;
-	rl_done = 1;
+	if (use_readline())
+	{
+		rl_replace_line("", 0);
+		rl_done = 1;
+	}
 } 
 
 void	default_signal_behavior(void)
@@ -83,6 +87,9 @@ static void	_heredoc_sigint(int sig)
 
 void	heredoc_signal_behavior(void)
 {
-	signal(SIGINT, _heredoc_sigint);
+	if (!use_readline())
+		signal(SIGINT, SIG_DFL);
+	else
+		signal(SIGINT, _heredoc_sigint);
 	signal(SIGQUIT, SIG_IGN);
 }

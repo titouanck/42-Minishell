@@ -6,15 +6,38 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/14 17:44:04 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 18:36:10 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int	check_for_sigint(t_cmd **cmds)
+{
+	t_cmd	*cmd;
+	int		status;
+	int		first_iteration;
+
+	if (!cmds || !(*cmds))
+		return (0);
+	cmd = *cmds;
+	status = 0;
+	first_iteration = TRUE;
+	while (waitpid(cmd->pid, &status, WNOHANG) == 0)
+	{
+		if (first_iteration)
+			if (check_for_sigint(cmds + 1))
+				return (1);
+		first_iteration = FALSE;
+	}
+	if (status == 2)
+		return (1);
+	return (0);
+}
+
 void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 {
-	pid_t	pid;
+	int		status;
 
 	if(!io_open_fds(environment, (cmds[cmdnbr])->redirect) || cmds[cmdnbr]->redirect->to_execute == FALSE)
 	{
@@ -72,8 +95,8 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 		}
 		return ;
 	}
-	pid = fork();
-	if (pid == -1)
+	cmds[cmdnbr]->pid = fork();
+	if (cmds[cmdnbr]->pid == -1)
 	{
 		db_free(environment->log.infile);
 		environment->log.infile = NULL;
@@ -83,7 +106,7 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 		if (cmdnbr != 0)
 			close(pipefd[0]);
 	}
-	else if (pid == 0)
+	else if (cmds[cmdnbr]->pid == 0)
 	{
 		if ((cmds[cmdnbr])->redirect->outfile)
 			dup2((cmds[cmdnbr])->redirect->fd_outfile, STDOUT_FILENO);
@@ -119,7 +142,13 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 			close((cmds[cmdnbr])->redirect->fd_outfile);
 		if ((cmds[cmdnbr])->redirect->infile)
 			close((cmds[cmdnbr])->redirect->fd_infile);
-		waitpid(pid, &g_returnval, 0);
+		if (!use_readline() && check_for_sigint(cmds))
+		{
+			g_returnval = 130;
+			closing_the_program(environment);
+			exit(g_returnval);
+		}
+		waitpid(cmds[cmdnbr]->pid, &g_returnval, 0);
 		if (g_returnval == 2)
 			g_returnval = 130;
 		else if (g_returnval > 255)

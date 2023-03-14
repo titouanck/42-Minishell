@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/14 17:44:01 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 18:15:13 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 int	middle_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 {
-	pid_t	pid;
 	int		new_pipefd[2];
 
 	if (pipe(new_pipefd) == -1)
@@ -85,8 +84,8 @@ int	middle_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 		pipefd[1] = new_pipefd[1];
 		return (1);
 	}
-	pid = fork();
-	if (pid == -1)
+	cmds[cmdnbr]->pid = fork();
+	if (cmds[cmdnbr]->pid == -1)
 	{
 		perror("minishell: fork");
 		close(pipefd[0]);
@@ -98,7 +97,7 @@ int	middle_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 		environment->log.outfile = NULL;
 		return (0);
 	}
-	else if (pid == 0)
+	else if (cmds[cmdnbr]->pid == 0)
 	{
 		close(new_pipefd[0]);
 		if ((cmds[cmdnbr])->redirect->outfile)
