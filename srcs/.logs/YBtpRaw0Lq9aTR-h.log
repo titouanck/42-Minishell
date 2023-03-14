@@ -1,0 +1,5 @@
+Child procces terminated with exit code (0)
+cmd:	"echo"
+args:	"0"
+
+All memory addresses seem to have been freed.

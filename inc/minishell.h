@@ -70,6 +70,7 @@ typedef struct s_env
 	char			*value;
 	int				exported;
 	int				limiter_between_quotes;
+	char			*heredoc_files;
 	struct s_env	*next;
 }					t_env;
 
@@ -84,7 +85,6 @@ typedef struct	s_redirect
 	char		*infile;
 	int			fd_infile;
 	t_heredoc	*heredoc;
-	char		*heredocfile;
 	char		*outfile;
 	int			fd_outfile;
 	int			append;

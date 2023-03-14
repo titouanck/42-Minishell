@@ -51,12 +51,6 @@ void	ft_free_redirect(t_redirect *redirect)
 		return ;
 	if (redirect->heredoc)
 		free_heredocs(redirect->heredoc);
-	if (redirect->heredocfile)
-	{
-		fd = open(redirect->heredocfile, O_WRONLY | O_TRUNC);
-		if (fd != -1)
-			close(fd);
-	}
 	db_free(redirect->infile);
 	db_free(redirect->outfile);
 	db_free(redirect);
@@ -225,15 +219,20 @@ static int _rightchevron(t_env *environment, char *line, t_redirect *redirect)
 	return (1);
 }
 
-int	heredoc_file(t_redirect *redirect)
+int	heredoc_file(t_env *environment, t_redirect *redirect)
 {
 	int				fd;
 	char			*filename;
+	char			*tmp;
 	size_t			i;
 
 	filename = ft_randomstr("/tmp/minishell-heredoc_", NULL, 16);
 	if (!filename)
 		return (ft_putstr_fd(ERRALLOC, 2), -1);
+	tmp = environment->heredoc_files;
+	environment->heredoc_files = db_strrjoin(environment->heredoc_files, "|", filename);
+	db_free(tmp);
+	dynamic_memory_address_db('+', filename);
 	redirect->infile = filename;
 	fd = open(redirect->infile, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (fd == -1)
@@ -242,8 +241,6 @@ int	heredoc_file(t_redirect *redirect)
 		db_free(filename);
 		redirect->infile = NULL;
 	}
-	else
-		redirect->heredocfile = filename;
 	return (fd);
 }
 
@@ -259,7 +256,7 @@ int	use_heredoc(t_env *environment, t_redirect *redirect)
 		return (1);
 	fd = -1;
 	if (redirect->infile == NULL && redirect->heredoc)
-		fd = heredoc_file(redirect);
+		fd = heredoc_file(environment, redirect);
 	current = redirect->heredoc;
 	returnval = g_returnval;
 	g_returnval = 0;
@@ -342,7 +339,6 @@ t_redirect	*redirections(t_env *environment, char *line, int empty)
 		return (ft_putstr_fd(ERRALLOC, 2), NULL);
 	redirect->infile = NULL;
 	redirect->heredoc = NULL;
-	redirect->heredocfile = NULL;
 	redirect->outfile = NULL;
 	redirect->append = 0;
 	if (!empty)

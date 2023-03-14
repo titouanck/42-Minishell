@@ -20,6 +20,49 @@ int	use_readline(void)
 		return (FALSE);
 }
 
+void	rm_heredoc_files(t_env *environment)
+{
+	char	**cmd;
+	char	**heredoc_files;
+	char	*tmp;
+	size_t	i;
+	pid_t	pid;
+
+	heredoc_files = ft_split(environment->heredoc_files, '|');
+	if (!heredoc_files)
+		return ;
+	i = 0;
+	while (heredoc_files[i])
+	{
+		pid = fork();
+		if (pid == 0)
+		{
+			tmp = ft_strjoin("/usr/bin/rm rm -f ", heredoc_files[i]);
+			cmd = ft_split(tmp, ' ');
+			free(tmp);
+			if (cmd)
+			{
+				execve(cmd[0], cmd + 1, NULL);
+				ft_freetab(cmd);
+			}
+			tmp = ft_strjoin("/bin/rm rm -f ", heredoc_files[i]);
+			cmd = ft_split(tmp, ' ');
+			free(tmp);
+			if (cmd)
+			{
+				execve(cmd[0], cmd + 1, NULL);
+				ft_freetab(cmd);
+			}
+			ft_freetab(heredoc_files);
+			exit(1);
+		}
+		else
+			wait(NULL);
+		i++;
+	}
+	ft_freetab(heredoc_files);
+}
+
 int	main(int argc, char **argv, char *envp[]) 
 {
 	char	*line;
@@ -45,6 +88,7 @@ int	main(int argc, char **argv, char *envp[])
 	}
 	while (++(environment->line_nbr))
 	{
+		environment->heredoc_files = NULL;
 		if (g_returnval == 0)
 			environment->prompt[6] = '2';
 		else
@@ -80,6 +124,7 @@ int	main(int argc, char **argv, char *envp[])
 		environment->line = line;
 		environment->last_input = db_strdup(line);
 		parsing(environment, &line);
+		rm_heredoc_files(environment);
 	}
 	closing_the_program(environment);
 	if (use_readline())

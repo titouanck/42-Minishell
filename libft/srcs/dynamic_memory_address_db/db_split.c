@@ -75,6 +75,8 @@ char	**db_split(char const *s, char c)
 	size_t	words;
 	char	**tab;
 
+	if (!s)
+		return (NULL);
 	words = count_words(s, c);
 	tab = db_malloc(sizeof(char *) * (words + 1));
 	if (!tab)
