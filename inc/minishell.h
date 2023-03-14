@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/14 17:13:56 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 17:30:33 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_log
 
 typedef struct s_env
 {
+	char			*prompt;
 	t_log			log;
 	char			*line;
 	size_t			line_nbr;

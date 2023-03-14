@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/14 17:13:46 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 17:44:01 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,10 @@ int	middle_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 		return (perror("minishell: pipe"), close(pipefd[0]), 0);
 	if(!io_open_fds(environment, (cmds[cmdnbr])->redirect) || cmds[cmdnbr]->redirect->to_execute == FALSE)
 	{
+		db_free(environment->log.infile);
+		environment->log.infile = NULL;
+		db_free(environment->log.outfile);
+		environment->log.outfile = NULL;
 		if (!(cmds[cmdnbr]->args) || !(cmds[cmdnbr]->args) || ((cmds[cmdnbr]->args[0]) && !((cmds[cmdnbr]->args[0])[0])))
 		{
 			ft_putstr_fd("minishell: : command not found\n", 2);

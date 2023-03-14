@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 10:49:33 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/14 17:13:21 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 17:40:30 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ void	closing_the_program(t_env *environment)
 	last_input = NULL;
 	if (environment)
 	{
+		db_free(environment->prompt);
 		db_free(environment->line);
 		log = environment->log;
 		last_input = environment->last_input;

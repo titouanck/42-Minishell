@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:06 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/14 15:50:08 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/14 17:39:25 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,7 @@ static void	_default_sigint(int sig)
 {
 	(void) sig;
 	g_returnval = 130;
-	ft_putchar_fd('\n', 2);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+	rl_done = 1;
 } 
 
 void	default_signal_behavior(void)
