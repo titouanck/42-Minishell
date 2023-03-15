@@ -1,1 +1,0 @@
-$PWD << (not a here-doc) > (do not redirect) ""<"" (not an infile) >> (not an outfile)

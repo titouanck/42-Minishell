@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/15 14:43:10 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/15 17:44:08 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -375,5 +375,6 @@ t_redirect	*redirections(t_env *environment, char *line, int empty)
 		redirect->to_execute = FALSE;
 		line[0] = '\0';
 	}
+	_remove_quote_token_line(line);
 	return (redirect);
 }
