@@ -51,11 +51,13 @@ def delete_files():
 g_nbr = 0
 g_stdin = 0
 g_stderr = 0
+g_exitcode = 0
 
 def input(instruction):
     global g_nbr
     global g_stdin
     global g_stderr
+    global g_exitcode
     
     g_nbr += 1
     minishell_master_out, minishell_slave_out = pty.openpty()
@@ -66,6 +68,7 @@ def input(instruction):
     os.write(minishell_master_out, instruction.encode())
     os.write(minishell_master_out, "exit\n".encode())
     minishell_process.wait()
+    minishell_exitcode = minishell_process.returncode
     os.close(minishell_slave_out)
 
     bash_master_out, bash_slave_out = pty.openpty()
@@ -76,6 +79,7 @@ def input(instruction):
     os.write(bash_master_out, instruction.encode())
     os.write(bash_master_out, "exit\n".encode())
     bash_process.wait()
+    bash_exitcode = bash_process.returncode
     os.close(bash_master_out)
 
     # instruction
@@ -84,9 +88,9 @@ def input(instruction):
     # Check stdin
     result = subprocess.run(["diff", minishell_stdout, bash_stdout])
     if result.returncode != 0:
-        print(f"{RED}  stdin KO!{NC}")
+        print(f"{RED}  → stdin KO!{NC}")
     else:
-        print(f"{GREEN}  stdin OK!{NC}")
+        print(f"{GREEN}  → stdin OK!{NC}")
         g_stdin += 1
 
     # Check stderr
@@ -108,7 +112,7 @@ def input(instruction):
             if (minishell_contenu == ""):
                 print("(null)")
 
-            print(f"{RED}  [OBJECTIF]{NC} ", end="")
+            print(f"{RED}  [EXPECTED]{NC} ", end="")
             print(bash_contenu, end="")
             if (bash_contenu == ""):
                 print("(null)")
@@ -125,7 +129,14 @@ def input(instruction):
                 print("(null)")
     else:
         g_stderr += 1
-        print(f"{GREEN}  stderr OK!{NC}")
+        print(f"{GREEN}  → stderr OK!{NC}")
+    
+    # Check status
+    if (minishell_exitcode == bash_exitcode):
+        g_exitcode += 1;
+        print(f"{GREEN}  → exit code OK!{NC}")
+    else:
+        print(f"{RED}  → exit code{NC} {minishell_exitcode}, {RED}expected{NC} {bash_exitcode}")
     print("")
                 
 
@@ -133,9 +144,8 @@ def input(instruction):
 delete_files()
 
 print(f"{BLUE}Display a prompt when waiting for a new command.{NC}\n")
-input("\n \
-      printf \"42\\n\"\n \
-")
+input("")
+input("")
 
 # # Have a working history
 # input("printf \"42\\n\"\n \
@@ -150,6 +160,7 @@ input("\"\"\n")
 input("\'\'\n")
 input("\n")
 input("ls -l " + ignore_files + "\n")
+input("ls \'-\'l " + ignore_files + "\n")
 input(ls_path + " -l " + ignore_files + "\n")
 input("   " + ls_path + " -l " + ignore_files + "\n")
 input("./ls\n")
@@ -201,14 +212,19 @@ input(env_path + " | grep \'$HOME\'\n")
 input(env_path + " | grep \"$\"HOM\"E\"\n")
 
 if (g_stdin == g_nbr):
-    print(f"\033[1;37mSTDOUT: {GREENB}{g_stdin}/{g_nbr}: OK!{NC}")
+    print(f"\033[1;37mSTDOUT:    {GREENB}{g_stdin}/{g_nbr}:  OK!{NC}")
 else:
-    print(f"\033[1;37mSTDOUT: {REDB}{g_stdin}/{g_nbr}: KO!{NC}")
+    print(f"\033[1;37mSTDOUT:    {REDB}{g_stdin}/{g_nbr}:  KO!{NC}")
 
 if (g_stderr == g_nbr):
-    print(f"\033[1;37mSTDOUT: {GREENB}{g_stderr}/{g_nbr}: OK!{NC}")
+    print(f"\033[1;37mSTDERR:    {GREENB}{g_stderr}/{g_nbr}:  OK!{NC}")
 else:
-    print(f"\033[1;37mSTDOUT: {REDB}{g_stderr}/{g_nbr}: KO!{NC}")
+    print(f"\033[1;37mSTDERR:    {REDB}{g_stderr}/{g_nbr}:  KO!{NC}")
+
+if (g_exitcode == g_nbr):
+    print(f"\033[1;37mEXIT CODE: {GREENB}{g_exitcode}/{g_nbr}:  OK!{NC}")
+else:
+    print(f"\033[1;37mEXIT CODE: {REDB}{g_exitcode}/{g_nbr}:  KO!{NC}")
 
 # echo '$''PW'D' << (not 'a' here-doc) > (do not redirect) ""<"" (not an infile) >> (not an outfile)'
 delete_files()
