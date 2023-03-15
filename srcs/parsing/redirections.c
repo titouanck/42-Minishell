@@ -25,7 +25,7 @@ void	free_heredocs(t_heredoc *heredoc)
 	}
 }
 
-static void	_remove_quote_token_line(char *line)
+void	_remove_quote_token_line(char *line)
 {
 	size_t	i;
 
@@ -375,6 +375,5 @@ t_redirect	*redirections(t_env *environment, char *line, int empty)
 		redirect->to_execute = FALSE;
 		line[0] = '\0';
 	}
-	_remove_quote_token_line(line);
 	return (redirect);
 }

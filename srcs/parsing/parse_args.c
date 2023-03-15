@@ -50,10 +50,14 @@ static void	_remove_quote_token_tab(char **args)
 	while (args[i])
 	{
 		j = 0;
-		if (args[i][j] == QUOTES)
+		while (args[i][j])
 		{
-			ft_memmove(args[i] + j, args[i] + j + 1, ft_strlen(args[i] + j + 1) + 1);
-			i--;
+			if (args[i][j] == QUOTES)
+			{
+				ft_memmove(args[i] + j, args[i] + j + 1, ft_strlen(args[i] + j + 1) + 1);
+				j--;
+			}
+			j++;
 		}
 		i++;
 	}

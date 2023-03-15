@@ -48,18 +48,16 @@ def delete_files():
     if os.path.exists(bash_stderr):
         os.remove(bash_stderr)
 
-
-global g_printstderr
-g_printstderr = 0
-
-g_tests = 0
-g_tests_ok = 0
+g_nbr = 0
+g_stdin = 0
+g_stderr = 0
 
 def input(instruction):
-    global g_tests
-    global g_tests_ok
+    global g_nbr
+    global g_stdin
+    global g_stderr
     
-    g_tests += 1
+    g_nbr += 1
     minishell_master_out, minishell_slave_out = pty.openpty()
     with open(minishell_stdout, "w") as fd_minishell_stdout:
         with open(minishell_stderr, "w") as fd_minishell_stderr:
@@ -80,49 +78,55 @@ def input(instruction):
     bash_process.wait()
     os.close(bash_master_out)
 
-    print(f"{PURPLE}→ {instruction}{NC}", end="")
+    # instruction
+    print(f"{PURPLE}{instruction}{NC}", end="")
+    
+    # Check stdin
     result = subprocess.run(["diff", minishell_stdout, bash_stdout])
     if result.returncode != 0:
-        print(f"{RED}  Diff KO!{NC}")
+        print(f"{RED}  stdin KO!{NC}")
     else:
-        print(f"{GREEN}  Diff OK!{NC}")
-        g_tests_ok += 1
+        print(f"{GREEN}  stdin OK!{NC}")
+        g_stdin += 1
 
-    if (g_printstderr == 1):
-        with open(minishell_stderr, 'r') as file:
-            minishell_contenu = file.read()
+    # Check stderr
+    with open(minishell_stderr, 'r') as file:
+        minishell_contenu = file.read()
 
-        with open(bash_stderr, 'r') as file:
-            bash_contenu = file.read()
+    with open(bash_stderr, 'r') as file:
+        bash_contenu = file.read()
 
-        expression = r'^bash: line[^:]*:'
-        if bash_contenu.startswith('bash: line'):
-            bash_contenu = re.sub(expression, 'minishell:', bash_contenu, count=1)
-        elif bash_contenu.startswith('bash:'):
-            bash_contenu = 'minishell:' + bash_contenu[5:]
-        if (minishell_contenu != bash_contenu):
-            if (minishell_contenu == "" or bash_contenu == "") and (minishell_contenu != "" or bash_contenu != ""):
-                print(f"{RED}  [STDERR]{NC}   ", end="")
-                print(minishell_contenu, end="")
-                if (minishell_contenu == ""):
-                    print("(null)")
+    expression = r'^bash: line[^:]*:'
+    if bash_contenu.startswith('bash: line'):
+        bash_contenu = re.sub(expression, 'minishell:', bash_contenu, count=1)
+    elif bash_contenu.startswith('bash:'):
+        bash_contenu = 'minishell:' + bash_contenu[5:]
+    if (minishell_contenu != bash_contenu):
+        if (minishell_contenu == "" or bash_contenu == "") and (minishell_contenu != "" or bash_contenu != ""):
+            print(f"{RED}  [STDERR]{NC}   ", end="")
+            print(minishell_contenu, end="")
+            if (minishell_contenu == ""):
+                print("(null)")
 
-                print(f"{RED}  [OBJECTIF]{NC} ", end="")
-                print(bash_contenu, end="")
-                if (bash_contenu == ""):
-                    print("(null)")
-            else:
-                print(f"{ORANGE}  [STDERR]{NC}   ", end="")
-                print(minishell_contenu, end="")
-                if (minishell_contenu == ""):
-                    print("(null)")
+            print(f"{RED}  [OBJECTIF]{NC} ", end="")
+            print(bash_contenu, end="")
+            if (bash_contenu == ""):
+                print("(null)")
+        else:
+            g_stderr += 1
+            print(f"{ORANGE}  [STDERR]{NC}   ", end="")
+            print(minishell_contenu, end="")
+            if (minishell_contenu == ""):
+                print("(null)")
 
-                print(f"{ORANGE}  [OBJECTIF]{NC} ", end="")
-                print(bash_contenu, end="")
-                if (bash_contenu == ""):
-                    print("(null)")
-        
-        print("")
+            print(f"{ORANGE}  [OBJECTIF]{NC} ", end="")
+            print(bash_contenu, end="")
+            if (bash_contenu == ""):
+                print("(null)")
+    else:
+        g_stderr += 1
+        print(f"{GREEN}  stderr OK!{NC}")
+    print("")
                 
 
 
@@ -139,8 +143,6 @@ delete_files()
 #       \n \
 #       \x1b[A\n \
 # ")
-
-g_printstderr = 1
 
 # Search and launch the right executable (based on the PATH variable or using a relative or an absolute path)
 print(f"{BLUE}Search and launch the right executable{NC}\n")
@@ -198,10 +200,15 @@ input("printf \"42\\n\" | cat | printf \"4 8 15 16 23 42\\n\" | cat > /dev/null\
 input(env_path + " | grep \'$HOME\'\n")
 input(env_path + " | grep \"$\"HOM\"E\"\n")
 
-if (g_tests_ok == g_tests):
-    print(f"\033[1;37mSTDOUT: {GREENB}{g_tests_ok}/{g_tests} OK!{NC}")
+if (g_stdin == g_nbr):
+    print(f"\033[1;37mSTDOUT: {GREENB}{g_stdin}/{g_nbr}: OK!{NC}")
 else:
-    print(f"\033[1;37mSTDOUT: {REDB}{g_tests_ok}/{g_tests} OK!{NC}")
+    print(f"\033[1;37mSTDOUT: {REDB}{g_stdin}/{g_nbr}: KO!{NC}")
+
+if (g_stderr == g_nbr):
+    print(f"\033[1;37mSTDOUT: {GREENB}{g_stderr}/{g_nbr}: OK!{NC}")
+else:
+    print(f"\033[1;37mSTDOUT: {REDB}{g_stderr}/{g_nbr}: KO!{NC}")
 
 # echo '$''PW'D' << (not 'a' here-doc) > (do not redirect) ""<"" (not an infile) >> (not an outfile)'
 delete_files()

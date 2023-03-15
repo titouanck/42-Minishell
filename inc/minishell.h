@@ -182,4 +182,6 @@ int		use_readline(void);
 
 void	ft_syntaxerror(t_env *environment, char *err);
 
+// void	_remove_quote_token_line(char *line);
+
 #endif
