@@ -13,7 +13,6 @@ python3 tester/tester.py "minishell"
 python3 tester/tester.py "bash --posix"
 make log
 echo
-clear
 echo ""$RED"Difference between stdout :"$NC
 diff -u tester/bash_stdout tester/minishell_stdout
 
