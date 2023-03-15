@@ -12,11 +12,6 @@
 
 #include "minishell.h"
 
-static void	_command_not_found(char **args)
-{
-	g_returnval = 127;
-}
-
 char	*_locate_file(char **path, char *arg)
 {
 	char	*filepath;
@@ -32,7 +27,11 @@ char	*_locate_file(char **path, char *arg)
 			if (access(filepath, X_OK) == 0)
 				return (filepath);
 			else
+			{
+				if (errno == 13)
+					g_returnval = 126;
 				return (ft_putstr_fd("minishell: ", 2), perror(arg), db_free(filepath), NULL);
+			}
 		}
 		db_free(filepath);
 		return (ft_putstr_fd("minishell: ", 2), ft_putstr_fd(arg, 2), ft_putstr_fd(": No such file or directory\n", 2), NULL);
@@ -55,7 +54,11 @@ char	*_locate_file(char **path, char *arg)
 			if (access(filepath, X_OK) == 0)
 				return (filepath);
 			else
-				return (ft_putstr_fd("minishell: ", 2), perror(arg),db_free(filepath), NULL);
+			{
+				if (errno == 13)
+					g_returnval = 126;
+				return (ft_putstr_fd("minishell: ", 2), perror(arg), db_free(filepath), NULL);
+			}
 		}
 		db_free(filepath);
 		i++;
@@ -73,9 +76,9 @@ int	execute_cmd(t_env *environment, char **args)
 	char	**path;
 	char	*filepath;
 
+	g_returnval = 127;
 	if (!args || !args[0])
-		return (ft_putstr_fd("minishell: : command not found\n", 2), \
-		_command_not_found(args), 0);
+		return (ft_putstr_fd("minishell: : command not found\n", 2), 0);
 	envp = format_environment(environment);
 	path = get_path(envp);
 	filepath = _locate_file(path, args[0]);
@@ -102,5 +105,5 @@ int	execute_cmd(t_env *environment, char **args)
 		db_freetab(envp);
 	if (path)
 		db_freetab(path);
-	return (_command_not_found(args), 0);
+	return (0);
 }
