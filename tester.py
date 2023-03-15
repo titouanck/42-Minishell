@@ -3,6 +3,7 @@ import os
 import subprocess
 import time
 import shutil
+import re
 
 minishell_stdout = "minishell_stdout.txt"
 minishell_stderr = "minishell_stderr.txt"
@@ -18,7 +19,9 @@ env_path = shutil.which('env')
 
 NC = '\033[0m'
 RED = '\033[0;31m'
+REDB = '\033[1;31m'
 GREEN = '\033[0;32m'
+GREENB = '\033[1;32m'
 ORANGE = '\033[0;33m'
 BLUE = '\033[1;34m'
 PURPLE = '\033[0;35m'
@@ -46,10 +49,17 @@ def delete_files():
         os.remove(bash_stderr)
 
 
-# g_printstderr = 0
+global g_printstderr
+g_printstderr = 0
 
+g_tests = 0
+g_tests_ok = 0
 
 def input(instruction):
+    global g_tests
+    global g_tests_ok
+    
+    g_tests += 1
     minishell_master_out, minishell_slave_out = pty.openpty()
     with open(minishell_stdout, "w") as fd_minishell_stdout:
         with open(minishell_stderr, "w") as fd_minishell_stderr:
@@ -70,32 +80,51 @@ def input(instruction):
     bash_process.wait()
     os.close(bash_master_out)
 
-    print(f"{GREEN}→ {instruction}{NC}", end="")
-    print(RED, end="")
+    print(f"{PURPLE}→ {instruction}{NC}", end="")
     result = subprocess.run(["diff", minishell_stdout, bash_stdout])
-    print(NC, end="")
     if result.returncode != 0:
-        print(f"{WHITE}La commande diff a échoué, arrêt du programme.{NC}")
-        print(f"${instruction}")
-        exit(1)
-    # else:
-        # print(f"{GREEN}(Diff OK!){NC}")
+        print(f"{RED}  Diff KO!{NC}")
+    else:
+        print(f"{GREEN}  Diff OK!{NC}")
+        g_tests_ok += 1
 
     if (g_printstderr == 1):
-        print(f"{WHITE}[STDERR]{NC}   ", end="")
         with open(minishell_stderr, 'r') as file:
-            contenu = file.read()
-            print(contenu, end="")
-            if (contenu == ""):
-                print("(null)")
-        
-        print(f"{WHITE}[OBJECTIF]{NC} ", end="")
+            minishell_contenu = file.read()
+
         with open(bash_stderr, 'r') as file:
-            contenu = file.read()
-            print(contenu, end="")
-            if (contenu == ""):
-                print("(null)")
-            print("")
+            bash_contenu = file.read()
+
+        expression = r'^bash: line[^:]*:'
+        if bash_contenu.startswith('bash: line'):
+            bash_contenu = re.sub(expression, 'minishell:', bash_contenu, count=1)
+        elif bash_contenu.startswith('bash:'):
+            bash_contenu = 'minishell:' + bash_contenu[5:]
+        if (minishell_contenu != bash_contenu):
+            if (minishell_contenu == "" or bash_contenu == "") and (minishell_contenu != "" or bash_contenu != ""):
+                print(f"{RED}  [STDERR]{NC}   ", end="")
+                print(minishell_contenu, end="")
+                if (minishell_contenu == ""):
+                    print("(null)")
+
+                print(f"{RED}  [OBJECTIF]{NC} ", end="")
+                print(bash_contenu, end="")
+                if (bash_contenu == ""):
+                    print("(null)")
+            else:
+                print(f"{ORANGE}  [STDERR]{NC}   ", end="")
+                print(minishell_contenu, end="")
+                if (minishell_contenu == ""):
+                    print("(null)")
+
+                print(f"{ORANGE}  [OBJECTIF]{NC} ", end="")
+                print(bash_contenu, end="")
+                if (bash_contenu == ""):
+                    print("(null)")
+        
+        print("")
+                
+
 
 delete_files()
 
@@ -142,14 +171,14 @@ input("echo \' $\'\'PW\'D\' << (not \'a\' here-doc) > (do not redirect) \" \"<\"
 # Implement redirections
 print(f"{BLUE}Implement redirection{NC}\n")
 # <, >, >>
-input("cat < Makefile -e > out\n")
-input("cat out\n")
-input("cat < Makefile -e >> out\n")
-input("cat out\n")
-input("rm out\n")
-input("cat < Makefile -e >> out\n")
-input("cat out\n")
-input("rm out\n")
+input("cat < Makefile -e > out\n"
+      "cat out\n"
+      "cat < Makefile -e >> out\n"
+      "cat out\n"
+      "rm out\n")
+input("cat < Makefile -e >> out\n"
+      "cat out\n"
+      "rm out\n")
 
 # <<
 input("cat << fake < Makefile << \"just a limiter\"\n"
@@ -168,6 +197,11 @@ input("printf \"42\\n\" | cat | printf \"4 8 15 16 23 42\\n\" | cat\n")
 input("printf \"42\\n\" | cat | printf \"4 8 15 16 23 42\\n\" | cat > /dev/null\n")
 input(env_path + " | grep \'$HOME\'\n")
 input(env_path + " | grep \"$\"HOM\"E\"\n")
+
+if (g_tests_ok == g_tests):
+    print(f"\033[1;37mSTDOUT: {GREENB}{g_tests_ok}/{g_tests} OK!{NC}")
+else:
+    print(f"\033[1;37mSTDOUT: {REDB}{g_tests_ok}/{g_tests} OK!{NC}")
 
 # echo '$''PW'D' << (not 'a' here-doc) > (do not redirect) ""<"" (not an infile) >> (not an outfile)'
 delete_files()
