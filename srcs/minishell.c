@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/15 14:47:07 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/15 17:13:52 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,15 @@ int	main(int argc, char **argv, char *envp[])
 			if (line && ft_strlen(line) > 0 && line[ft_strlen(line) - 1] == '\n')
 				line[ft_strlen(line) - 1] = '\0';
 		}
+		// size_t	i;
+		// i = 0;
+		// // dup2(2, 1);
+		// while (line[i])
+		// {
+		// 	printf("line[%d] = (%c) ou (%d)\n", i, line[i], line[i]);
+		// 	i++;
+		// }
+		
 		if (line && *line)
 			add_history(line);
 		if (!line)
