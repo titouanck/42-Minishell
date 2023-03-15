@@ -132,10 +132,10 @@ def input(instruction):
 
 delete_files()
 
-# Display a prompt when waiting for a new command.
-# input("\n \
-#       printf \"42\\n\"\n \
-# ")
+print(f"{BLUE}Display a prompt when waiting for a new command.{NC}\n")
+input("\n \
+      printf \"42\\n\"\n \
+")
 
 # # Have a working history
 # input("printf \"42\\n\"\n \
