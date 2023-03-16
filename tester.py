@@ -174,7 +174,6 @@ def input(instruction):
         os.write(leaks_master_out, instruction.encode())
         os.write(leaks_master_out, "exit\n".encode())
         leaks_process.wait()
-        leaks_exitcode = leaks_process.returncode
         os.close(leaks_master_out)
 
     # instruction
