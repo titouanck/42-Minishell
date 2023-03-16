@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:15:42 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/14 14:56:14 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/16 19:23:37 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_syntaxerror(t_env *environment, char *err)
 
 	if (err)
 	{
-		ft_putstr_fd("minishell: syntax error near unexpected `", 2);
+		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
 		ft_putstr_fd(err, 2);
 		ft_putstr_fd("\'\n", 2);
 	}

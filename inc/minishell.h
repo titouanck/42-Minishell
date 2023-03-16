@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/14 18:13:40 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/16 19:24:17 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@
 # define PROMPT "minishell →"
 # define RL_NEWLINE "\001"
 # define ERRALLOC "minishell: Could not allocate memory.\n"
-# define ERRPIPE "minishell: syntax error near unexpected `|\'\n"
 # define VARNAMESET "abcdefghijklmnopqrstuvwxyz\
 ABCDEFGHIJKLMNOPQRSTUVWXYZ\
 0123456789_"

@@ -137,7 +137,6 @@ fclean:	clean;
 re:	fclean ${NAME}
 
 run:	${NAME}
-	@	clear
 	@	-./${NAME}
 	@	${MAKE} --no-print-directory log
 

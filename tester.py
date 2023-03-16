@@ -64,22 +64,32 @@ if (len(sys.argv) >= 2 and (sys.argv[1] == "-valgrind" or sys.argv[1] == "valgri
     if (len(sys.argv) == 3):
         if (sys.argv[2].isdigit()):
             choice = int(sys.argv[2])
-            if (choice < 1 or choice > 11):
-                print("usage: python3 tester.py [-valgrind] [0 ... 11]")
+            if (choice < 1 or choice > 12):
+                print("usage: python3 tester.py [-valgrind] [0 ... 12]")
                 exit(1)
         else:
-            print("usage: python3 tester.py [-valgrind] [0 ... 11]")
+            print("usage: python3 tester.py [-valgrind] [0 ... 12]")
             exit(1)
     elif len(sys.argv) > 3:
-        print("usage: python3 tester.py [-valgrind] [0 ... 11]")
+        print("usage: python3 tester.py [-valgrind] [0 ... 12]")
         exit(1)
 elif len(sys.argv) == 2 and sys.argv[1].isdigit():
     choice = int(sys.argv[1])
-    if (choice < 1 or choice > 11):
-        print("usage: python3 tester.py [-valgrind] [0 ... 11]")
+    if (choice < 1 or choice > 12):
+        print("usage: python3 tester.py [-valgrind] [0 ... 12]")
+        exit(1)
+elif len(sys.argv) == 3 and sys.argv[1].isdigit():
+    choice = int(sys.argv[1])
+    if (choice < 1 or choice > 12):
+        print("usage: python3 tester.py [-valgrind] [0 ... 12]")
+        exit(1)
+    if (sys.argv[2] == "-valgrind" or sys.argv[2] == "valgrind"):
+        check_valgrind = 1
+    else:
+        print("usage: python3 tester.py [-valgrind] [0 ... 12]")
         exit(1)
 elif (len(sys.argv) > 1):
-    print("usage: python3 tester.py [-valgrind] [0 ... 11]")
+    print("usage: python3 tester.py [-valgrind] [0 ... 12]")
     exit(1)
 
 subprocess.run(["make"])
@@ -117,11 +127,12 @@ g_stderrKO = 0
 
 g_leaks = 0
 
-minishell_readed_motd = None;
+minishell_readed_motd = None
+
 
 def ignore_motd():
     global minishell_readed_motd
-    
+
     minishell_master_out, minishell_slave_out = pty.openpty()
     with open(minishell_stdout, "w") as fd_minishell_stdout:
         with open(minishell_stderr, "w") as fd_minishell_stderr:
@@ -132,7 +143,8 @@ def ignore_motd():
     os.close(minishell_slave_out)
     with open(minishell_stdout, 'r') as file:
         minishell_readed_motd = file.read()
-    
+
+
 def input(instruction):
     global g_nbr
     global g_stdout
@@ -184,7 +196,8 @@ def input(instruction):
         minishell_readed_stdout = file.read()
 
     if minishell_readed_motd is not None:
-       minishell_readed_stdout = minishell_readed_stdout.replace(minishell_readed_motd, "")
+        minishell_readed_stdout = minishell_readed_stdout.replace(
+            minishell_readed_motd, "")
 
     with open(bash_stdout, 'r') as file:
         bash_readed_stdout = file.read()
@@ -216,8 +229,10 @@ def input(instruction):
     if bash_readed_stderr.endswith("exit\n"):
         bash_readed_stderr = bash_readed_stderr.rstrip("exit\n")
 
-    minishell_readed_stderr = re.sub(r'minishell: line \d+:', 'minishell:', minishell_readed_stderr)
-    bash_readed_stderr = re.sub(r'bash: line \d+:', 'minishell:', bash_readed_stderr)
+    minishell_readed_stderr = re.sub(
+        r'minishell: line \d+:', 'minishell:', minishell_readed_stderr)
+    bash_readed_stderr = re.sub(
+        r'bash: line \d+:', 'minishell:', bash_readed_stderr)
     bash_readed_stderr = bash_readed_stderr.replace('bash:', 'minishell:')
     if (minishell_readed_stderr != bash_readed_stderr):
         if (minishell_readed_stderr == "" or bash_readed_stderr == "") and (minishell_readed_stderr != "" or bash_readed_stderr != ""):
@@ -338,21 +353,8 @@ if (choice == 0 or choice == 7):
     input("cat < Makefile -e >> out\n"
           "cat out\n"
           "rm out\n")
-    input("cat << fake < Makefile << \"just a limiter\"\n"
-          "42\n"
-          "fake\n"
-          "42\n"
-          "\"just a limiter\"\n"
-          "\'just a limiter\'\n"
-          "just a limiter\n")
-    input("echo 42 > tester-norights.txt\n"
-          "chmod 000 tester-norights.txt\n"
-          "cat < Makefile > tester-norights.txt >> tester-norights.txt \n"
-          "cat < tester-norights.txt << heredoc-limiter > /dev/null\n"
-          "ls -I \"<inside the heredoc>\"\n"
-          "heredoc-limiter\n")
-    input("rm -f tester-norights.txt\n")
-    input("echo 42 > tester-norights.txt\n"
+    input("rm -f tester-norights.txt\n"
+          "echo 42 > tester-norights.txt\n"
           "chmod 000 tester-norights.txt\n"
           "cat < Makefile > tester-norights.txt >> tester-norights.txt \n"
           "rm -f tester-norights.txt\n")
@@ -363,18 +365,63 @@ if (choice == 0 or choice == 7):
     input("rm -f tmp/a tmp/b\n")
     input("ls>/tmp/a</tmp/b\n")
     input("ls</tmp/a>/tmp/b\n")
+    input("< < > >>\n")
+    input(">> < < <\n")
+    input("> | test\n")
+    input("cat < thisfiledonotexist | echo 42\n")
+    input("cat < thisfiledonotexist < thisfiledonotexist | echo 42\n")
+    input("echo 42 > /dev/stdout | echo 4 8 15 16 23 42\n")
 
 if (choice == 0 or choice == 8):
-    print(f"{BLUE}8. Implement pipes{NC}\n")
+    print(f"{BLUE}8. Implement heredoc{NC}\n")
+    input("cat << fake < Makefile << \"just a limiter\"\n"
+          "42\n"
+          "fake\n"
+          "42\n"
+          "\"just a limiter\"\n"
+          "\'just a limiter\'\n"
+          "just a limiter\n")
+    input("rm -f tester-norights.txt\n"
+          "echo 42 > tester-norights.txt\n"
+          "chmod 000 tester-norights.txt\n"
+          "cat < Makefile > tester-norights.txt >> tester-norights.txt \n"
+          "cat < tester-norights.txt << heredoc-limiter > /dev/null\n"
+          "ls -I \"<inside the heredoc>\"\n"
+          "heredoc-limiter\n")
+    input("rm -f tester-norights.txt\n"
+          "export TESTER=\"ls -I <inside_the_heredoc> " + ignore_files + "\"\n"
+          "<< \'$TESTER\' cat\n"
+          "$HOME\n"
+          "ls -I <inside_the_heredoc> -I /tmp/minishell_stdout.txt -I /tmp/minishell_stderr.txt -I /tmp/bash_stdout.txt -I /tmp/bash_stderr.txt\n"
+          "$TESTER\n")
+    input("export TESTER=\"ls -I <inside_the_heredoc> " + ignore_files + "\"\n"
+          "<< \"$TESTER\" cat\n"
+          "$HOME\n"
+          "ls -I <inside_the_heredoc> -I /tmp/minishell_stdout.txt -I /tmp/minishell_stderr.txt -I /tmp/bash_stdout.txt -I /tmp/bash_stderr.txt\n"
+          "$TESTER\n")
+    input("export TESTER=\"ls -I <inside_the_heredoc> " + ignore_files + "\"\n"
+          "<< $TESTER cat\n"
+          "$HOME\n"
+          "ls -I <inside_the_heredoc> -I /tmp/minishell_stdout.txt -I /tmp/minishell_stderr.txt -I /tmp/bash_stdout.txt -I /tmp/bash_stderr.txt\n"
+          "$TESTER\n")
+    input("<< limiter\n"
+          "42\n"
+          "limiter\n")
+
+if (choice == 0 or choice == 9):
+    print(f"{BLUE}9. Implement pipes{NC}\n")
     input("printf \"42\\n\" | cat | cat | cat\n")
     input("printf \"42\\n\" | cat | cat | cat\n")
     input("printf \"42\\n\" | cat | printf \"4 8 15 16 23 42\\n\" | cat\n")
     input("printf \"42\\n\" | cat | printf \"4 8 15 16 23 42\\n\" | cat > /dev/null\n")
     input(env_path + " | grep \'$HOME\'\n")
     input(env_path + " | grep \"$\"HOM\"E\"\n")
+    input("| ls\n")
+    input(" ls  |||  ls \n")
+    input("\'\'|\'\'|\"\"|\"\"\n")
 
-if (choice == 0 or choice == 9):
-    print(f"{BLUE}9. Handle environment variables and $?{NC}\n")
+if (choice == 0 or choice == 10):
+    print(f"{BLUE}10. Handle environment variables and $?{NC}\n")
     input("unset NONEXISTINGVARIABLE\n"
           "echo $NONEXISTINGVARIABLE\n")
     input("unset NONEXISTINGVARIABLE\n"
@@ -395,12 +442,12 @@ if (choice == 0 or choice == 9):
           "echo $?\n")
     input("echo $\"\"SHELL\n")
 
-if (choice == 0 or choice == 10):
-    print(f"{BLUE}10. Handle ctrl-C, ctrl-D and ctrl-\ which should behave like in bash{NC}\n")
+if (choice == 0 or choice == 11):
+    print(f"{BLUE}11. Handle ctrl-C, ctrl-D and ctrl-\ which should behave like in bash{NC}\n")
     print(f"{ORANGEB}  → Must be check manually.{NC}\n")
 
-if (choice == 0 or choice == 11):
-    print(f"{BLUE}11. Your shell must implement the following builtins{NC}\n")
+if (choice == 0 or choice == 12):
+    print(f"{BLUE}12. Your shell must implement the following builtins{NC}\n")
     input("echo $HOME\n")
     input("echo -n $HOME\n")
     input("echo \"-\'n\" $HOME\n")
@@ -458,7 +505,47 @@ if (choice == 0 or choice == 11):
     input("export Nothing= \n"
           "export | grep Nothing\n"
           "env | grep Nothing\n")
+    input("export +=\n")
     input("export \"\"\n")
+    input("export /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin=42\n")
+    input("unset /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin=42\n")
+    input("unset $PATH\n"
+          "ls\n")
+    input("unset /PATH\n")
+    input("unset =PATH\n")
+    input("unset +=\n")
+    input("unset \"<\"\n")
+    input("unset 42PATH\n")
+    input("unset PATH\n"
+          "ls\n")
+    input("unset\n")
+    input("unset \"\"\n")
+    input("exit 42\n"
+          "test\n")
+    input("exit \"  42  \"\n"
+          "test\n")
+    input("exit Ecole42\n"
+          "test\n")
+    input("exit 42 Ecole42\n"
+          "test\n")
+    input("exit 42Ecole\n"
+          "test\n")
+    input("exit Ecole42 -42\n"
+          "test\n")
+    input("exit -42\n"
+          "test\n")
+    input("exit 9223372036854775807\n"
+          "test\n")
+    input("exit -9223372036854775808\n"
+          "test\n")
+    input("exit 9223371036854775808\n"
+          "test\n")
+    input("exit -9223371036854775809\n"
+          "test\n")
+    input("exit 9223372036854775808\n"
+          "test\n")
+    input("exit -9223372036854775809\n"
+          "test\n")
 
 if (g_stdout == g_nbr):
     print(f"\033[1;37mSTDOUT:    {GREENB}{g_stdout:3d}/{g_nbr}:  OK!{NC}")
@@ -477,11 +564,16 @@ if (g_exitcode == g_nbr):
 else:
     print(f"\033[1;37mEXIT CODE: {REDB}{g_exitcode:3d}/{g_nbr}:  KO!{NC}")
 
-dots = " .."
-# dots = ' ' * (3 - int((g_nbr + 10) / 10))
-# dots += '.' * int((g_nbr + 10) / 10)
+dots = "   "
+if (g_nbr > 99):
+    dots = "..."
+elif (g_nbr > 9):
+    dots = ' ..'
+else:
+    dots = '  .'
 if (check_valgrind == 0):
-    print(f"\n\033[1;37mLEAKS:     {ORANGEB}{dots}/{g_nbr}:  Re-run with -valgrind")
+    print(
+        f"\n\033[1;37mLEAKS:     {ORANGEB}{dots}/{g_nbr}:  Re-run with -valgrind")
 elif (g_leaks == 0):
     print(f"\033[1;37mLEAKS:     {GREENB}{g_leaks:3d}/{g_nbr}:  OK!{NC}")
 else:
@@ -492,4 +584,4 @@ delete_files()
 
 # exit long long
 # exit -(long long)
-# 
+#

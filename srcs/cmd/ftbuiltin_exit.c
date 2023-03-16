@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/14 15:03:12 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/16 19:21:30 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,58 @@ unsigned char code, size_t cmdnbr)
 	exit(g_returnval);
 }
 
+int	my_atoi(const char *str, unsigned char *code)
+{
+	unsigned long long		nbr;
+	unsigned long long		positive_remaining;
+	unsigned long long		negative_remaining;
+	unsigned long long		next;
+	long long				sign;
+	size_t					i;
+
+	nbr = 0;
+	sign = 1;
+	i = 0;
+	while (str[i] == ' ' || ('\t' <= str[i] && str[i] <= '\r'))
+		i++;
+	if (str[i] == '+')
+		i++;
+	else if (str[i] == '-')
+	{
+		sign *= -1;
+		i++;
+	}
+	while ('0' <= str[i] && str[i] <= '9')
+	{
+		next = str[i] - '0';
+		if (sign == 1)
+		{
+			positive_remaining = 9223372036854775807ULL - (nbr * 10);
+			if (next > positive_remaining)
+				return (0);
+			positive_remaining -= next;
+		}
+		else
+		{
+			negative_remaining = 9223372036854775808ULL - (nbr * 10);
+			if (next > negative_remaining)
+				return (0);
+			negative_remaining -= next;
+		}
+		nbr = nbr * 10 + next;
+		i++;
+	}
+	while (str[i])
+	{
+		if (!ft_iswhitespace(str[i]))
+			return (0);
+		i++;
+	}
+	*code = (unsigned char) ((long long)nbr * sign);
+	positive_remaining = 42ULL - nbr;
+	return (1);
+}
+
 void	ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr)
 {
 	unsigned char	code;
@@ -52,7 +104,7 @@ void	ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr
 	if (args && *args && args[1])
 	{
 		i = 1;
-		if (!ft_inset(args[1][0], "-+0123456789"))
+		if (!my_atoi(args[1], &code))
 		{
 			errmsg = db_strrjoin("minishell: exit: ", args[1], ": numeric argument required\n");
 			if (!errmsg)
@@ -63,30 +115,12 @@ void	ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr
 			_i_want_to_exit(environment, cmds, 2, cmdnbr);
 			return ;
 		}
-		else
-		{
-			while (args[1][i])
-			{
-				if (!ft_inset(args[1][i++], "0123456789"))
-				{
-					errmsg = db_strrjoin("minishell: exit: ", args[1], ": numeric argument required\n");
-					if (!errmsg)
-						ft_putstr_fd(ERRALLOC, 2);
-					else
-						ft_putstr_fd(errmsg, 2);
-					db_free(errmsg);
-					_i_want_to_exit(environment, cmds, 2, cmdnbr);
-					return ;
-				}
-			}
-		}
 		if (args[2])
 		{
 			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 			g_returnval = 1;
 			return ;
 		}
-		code = (unsigned char) ft_atoi(args[1]);
 	}
 	_i_want_to_exit(environment, cmds, code, cmdnbr);	
 }

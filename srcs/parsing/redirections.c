@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/16 15:02:49 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/16 19:37:04 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,8 @@ static int _leftchevron(t_env *environment, char *line, t_redirect *redirect)
 					{
 						ft_putstr_fd("minishell: ", 2);
 						perror(redirect->infile);
+						free(redirect->infile);
+						redirect->infile = NULL;
 						return (0);
 					}
 					else
@@ -130,7 +132,7 @@ static int _leftchevron(t_env *environment, char *line, t_redirect *redirect)
 				while (line[i] == SEPARATOR)
 					i++;
 				if (!line[i] || line[i] == LEFTCHEVRON || line[i] == RIGHTCHEVRON)
-					return (ft_putstr_fd("minishell: syntax error: expected infile near `<\'\n", 2), ft_syntaxerror(environment, NULL), -1);
+					return (ft_syntaxerror(environment, "<"), -1);
 				start = line + i;
 				while (line[i] > 0 || line[i] == QUOTES)
 					i++;
@@ -142,6 +144,8 @@ static int _leftchevron(t_env *environment, char *line, t_redirect *redirect)
 					{
 						ft_putstr_fd("minishell: ", 2);
 						perror(redirect->infile);
+						free(redirect->infile);
+						redirect->infile = NULL;
 						return (0);
 					}
 					else
@@ -188,7 +192,7 @@ static int _rightchevron(t_env *environment, char *line, t_redirect *redirect)
 			while (line[i] == SEPARATOR)
 				i++;
 			if (!line[i] || line[i] == LEFTCHEVRON || line[i] == RIGHTCHEVRON)
-				return (ft_putstr_fd("minishell: syntax error: expected outfile near `>\'\n", 2), ft_syntaxerror(environment, NULL), -1);
+				return (ft_syntaxerror(environment, ">"), -1);
 			start = line + i;
 			while (line[i] > 0 || line[i] == QUOTES)
 				i++;
@@ -203,6 +207,8 @@ static int _rightchevron(t_env *environment, char *line, t_redirect *redirect)
 				{
 					ft_putstr_fd("minishell: ", 2);
 					perror(redirect->outfile);
+					free(redirect->outfile);
+					redirect->outfile = NULL;
 					return (0);
 				}
 				else

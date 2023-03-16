@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 17:17:52 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/13 11:43:02 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/16 19:25:45 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char	**split_cmds(t_env *environment, char **ptr)
 	double_quote_open = FALSE;
 	i = 0;
 	if (line[i] == '|')
-		return (ft_putstr_fd(ERRPIPE, 2), ft_syntaxerror(environment, NULL), NULL);
+		return (ft_syntaxerror(environment, "|"), NULL);
 	while (line[i])
 	{
 		if (single_quote_open)
@@ -79,9 +79,9 @@ char	**split_cmds(t_env *environment, char **ptr)
 		i++;
 	}
 	if (i > 0 && line[i - 1] == PIPECHAR)
-		return (ft_putstr_fd(ERRPIPE, 2), ft_syntaxerror(environment, NULL), NULL);
+		return (ft_syntaxerror(environment, "|"), NULL);
 	if (!_check_doublons(line))
-		return (ft_syntaxerror(environment, "||"), NULL);
+		return (ft_syntaxerror(environment, "|"), NULL);
 	cmds = db_split(line, PIPECHAR);
 	if (!cmds)
 		ft_putstr_fd(ERRALLOC, 2);

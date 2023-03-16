@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 13:47:57 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/16 17:08:40 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/16 18:05:50 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,7 @@ char	*_locate_file(char **path, char *arg)
 		return (ft_putstr_fd("minishell: ", 2), ft_putstr_fd(arg, 2), ft_putstr_fd(": No such file or directory\n", 2), NULL);
 	}
 	if (!path)
-	{
-		if (ft_strchr(arg, '/'))
-			return (ft_putstr_fd("minishell: ", 2), ft_putstr_fd(arg, 2), ft_putstr_fd(": No such file or directory\n", 2), NULL);
-		else
-			return (ft_putstr_fd("minishell: ", 2), ft_putstr_fd(arg, 2), ft_putstr_fd(": command not found\n", 2), NULL);
-	}
+		return (ft_putstr_fd("minishell: ", 2), ft_putstr_fd(arg, 2), ft_putstr_fd(": No such file or directory\n", 2), NULL);
 	i = 0;
 	while (path[i])
 	{
