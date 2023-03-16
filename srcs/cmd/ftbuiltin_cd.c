@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 11:34:21 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/14 15:03:05 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/16 14:40:26 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,12 @@ void	ftbuiltin_cd(t_env *environment, char **args)
 
 	key = db_strdup("OLDPWD");
 	value = getcwd(NULL, 0);
+	if (ft_len(args) > 2)
+	{
+		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+		g_returnval = 1;
+		return ;
+	}
 	if (args && args[0] && !args[1])
 		_noarg(environment);
 	else if (args && args[0] && args[1])

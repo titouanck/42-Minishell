@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 16:26:08 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/16 14:26:33 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/16 14:26:34 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	_export_noarg(t_env *environment)
 			write(1, environment->key, ft_strlen(environment->key));
 			write(1, "=\"", 2);
 			write(1, environment->value, ft_strlen(environment->value));
-			write(1, "\"\n", 1);
+			write(1, "\"\n", 2);
 		}
 		environment = environment->next;
 	}

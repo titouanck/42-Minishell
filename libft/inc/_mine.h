@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 14:29:05 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 17:09:50 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/16 14:39:16 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,7 @@ void		ft_swap(int *a, int *b);
 int			ft_isnotnull(void *address);
 
 char		*ft_randomstr(char *prefix, char *suffix, size_t len);
+
+size_t		ft_len(char **tab);
 
 #endif

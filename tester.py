@@ -83,6 +83,7 @@ elif (len(sys.argv) > 1):
     exit(1)
 
 subprocess.run(["make"])
+print("")
 
 if (choice == 0 or check_valgrind == 0):
     print(f"{WHITEB}Tip: {WHITE}You can choose to check a particular part :{NC}")
@@ -409,6 +410,12 @@ if (choice == 0 or choice == 11):
     input("cd /tmp /tmp\n")
     input("cd /tmp /root\n")
     input("cd /root /tmp\n")
+    input("cd /tmp | pwd\n"
+          "pwd\n")
+    input("pwd | cd /tmp\n"
+          "pwd\n")
+    input("pwd | cd /tmp | pwd\n"
+          "pwd\n")
     input("pwd\n")
     input("export PWD=$HOME\n"
           "pwd\n")
@@ -428,6 +435,9 @@ if (choice == 0 or choice == 11):
     input("export a + = 42\n")
     input("export a += 42\n")
     input("export | grep USER\n")
+    input("export Nothing= \n"
+          "export | grep Nothing\n"
+          "env | grep Nothing\n")
     input("export \"\"\n")
 
 if (g_stdout == g_nbr):

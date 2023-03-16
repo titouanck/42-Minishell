@@ -75,6 +75,7 @@ SRCS += ft_strip.c
 SRCS += ft_swap.c
 SRCS += ft_isnotnull.c
 SRCS += ft_randomstr.c
+SRCS += ft_len.c
 
 # dynamic_memory_address_db
 

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/15 14:52:51 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/16 14:36:21 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 		}
 		return ;
 	}
-	if (ft_strcmp((cmds[cmdnbr]->args)[0], "cd") == 0 || cmdnbr == 0 && (ft_strcmp((cmds[cmdnbr]->args)[0], "exit") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "export") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "unset") == 0))
+	if (cmdnbr == 0 && (ft_strcmp((cmds[cmdnbr]->args)[0], "cd") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "exit") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "export") == 0 || ft_strcmp((cmds[cmdnbr]->args)[0], "unset") == 0))
 	{
 		if (cmdnbr != 0)
 			close(pipefd[0]);
