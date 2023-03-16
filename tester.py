@@ -117,7 +117,22 @@ g_stderrKO = 0
 
 g_leaks = 0
 
+minishell_readed_motd = None;
 
+def ignore_motd():
+    global minishell_readed_motd
+    
+    minishell_master_out, minishell_slave_out = pty.openpty()
+    with open(minishell_stdout, "w") as fd_minishell_stdout:
+        with open(minishell_stderr, "w") as fd_minishell_stderr:
+            minishell_process = subprocess.Popen(
+                ['./minishell'], stdin=minishell_slave_out, stdout=fd_minishell_stdout, stderr=fd_minishell_stderr)
+    os.write(minishell_master_out, "exit\n".encode())
+    minishell_process.wait()
+    os.close(minishell_slave_out)
+    with open(minishell_stdout, 'r') as file:
+        minishell_readed_motd = file.read()
+    
 def input(instruction):
     global g_nbr
     global g_stdout
@@ -168,6 +183,9 @@ def input(instruction):
     # CHECK STDOUT
     with open(minishell_stdout, 'r') as file:
         minishell_readed_stdout = file.read()
+
+    if minishell_readed_motd is not None and minishell_readed_stdout.startswith(minishell_readed_motd):
+        minishell_readed_stdout = minishell_readed_stdout.replace(minishell_readed_motd, "", 1)
 
     with open(bash_stdout, 'r') as file:
         bash_readed_stdout = file.read()
@@ -265,6 +283,7 @@ def input(instruction):
 delete_files()
 
 print("")
+ignore_motd()
 
 if (choice == 0 or choice == 1):
     print(f"{BLUE}1. Display a prompt when waiting for a new command.{NC}\n")
@@ -459,8 +478,9 @@ if (g_exitcode == g_nbr):
 else:
     print(f"\033[1;37mEXIT CODE: {REDB}{g_exitcode:3d}/{g_nbr}:  KO!{NC}")
 
-dots = ' ' * (3 - int((g_nbr + 10) / 10))
-dots += '.' * int((g_nbr + 10) / 10)
+dots = " .."
+# dots = ' ' * (3 - int((g_nbr + 10) / 10))
+# dots += '.' * int((g_nbr + 10) / 10)
 if (check_valgrind == 0):
     print(f"\n\033[1;37mLEAKS:     {ORANGEB}{dots}/{g_nbr}:  Re-run with -valgrind")
 elif (g_leaks == 0):
@@ -470,3 +490,7 @@ else:
 
 # echo '$''PW'D' << (not 'a' here-doc) > (do not redirect) ""<"" (not an infile) >> (not an outfile)'
 delete_files()
+
+# exit long long
+# exit -(long long)
+# 
