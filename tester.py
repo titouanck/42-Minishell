@@ -1,12 +1,11 @@
 import pty
+import unicodedata
 import os
 import subprocess
-import time
+import random
 import shutil
 import re
 import sys
-
-subprocess.run(["make"])
 
 minishell_stdout = "/tmp/minishell_stdout.txt"
 minishell_stderr = "/tmp/minishell_stderr.txt"
@@ -44,19 +43,19 @@ WHITE = '\033[0;37m'
 WHITEB = '\033[1;37m'
 
 with open("/tmp/tester-ignore_readline_leaks.supp", 'w') as fd_minishell_leaks:
-    fd_minishell_leaks.write( \
-"{\n"
-"    tester-ignore_readline_leaks\n"
-"    Memcheck:Leak\n"
-"    ...\n"
-"    fun:readline\n"
-"}\n"
-"{\n"
-"    tester-ignore_readline_leaks\n"
-"    Memcheck:Leak\n"
-"    ...\n"
-"    fun:add_history\n"
-"}\n")
+    fd_minishell_leaks.write(
+        "{\n"
+        "    tester-ignore_readline_leaks\n"
+        "    Memcheck:Leak\n"
+        "    ...\n"
+        "    fun:readline\n"
+        "}\n"
+        "{\n"
+        "    tester-ignore_readline_leaks\n"
+        "    Memcheck:Leak\n"
+        "    ...\n"
+        "    fun:add_history\n"
+        "}\n")
 
 choice = 0
 check_valgrind = 0
@@ -83,6 +82,8 @@ elif (len(sys.argv) > 1):
     print("usage: python3 tester.py [-valgrind] [0 ... 11]")
     exit(1)
 
+subprocess.run(["make"])
+
 if (choice == 0 or check_valgrind == 0):
     print(f"{WHITEB}Tip: {WHITE}You can choose to check a particular part :{NC}")
     print(f"python3 tester.py 11\n")
@@ -90,6 +91,7 @@ if (choice == 0 or check_valgrind == 0):
     print(f"python3 tester.py -valgrind\n")
     print(f"{WHITEB}Tip: {WHITE}Or even do both :{NC}")
     print(f"python3 tester.py -valgrind 11\n")
+
 
 def delete_files():
     if os.path.exists(minishell_stdout):
@@ -105,6 +107,7 @@ def delete_files():
     if os.path.exists("/tmp/tester-ignore_readline_leaks.supp"):
         os.remove("/tmp/tester-ignore_readline_leaks.supp")
 
+
 g_nbr = 0
 g_stdout = 0
 g_stderr = 0
@@ -112,6 +115,7 @@ g_exitcode = 0
 g_stderrKO = 0
 
 g_leaks = 0
+
 
 def input(instruction):
     global g_nbr
@@ -121,7 +125,7 @@ def input(instruction):
     global g_exitcode
     global g_leaks
     global check_valgrind
-    
+
     g_nbr += 1
     minishell_master_out, minishell_slave_out = pty.openpty()
     with open(minishell_stdout, "w") as fd_minishell_stdout:
@@ -159,25 +163,23 @@ def input(instruction):
 
     # instruction
     print(f"{PURPLE}{instruction}{NC}", end="")
-    
-    # CHECK STDIN
+
+    # CHECK STDOUT
     with open(minishell_stdout, 'r') as file:
         minishell_readed_stdout = file.read()
 
     with open(bash_stdout, 'r') as file:
         bash_readed_stdout = file.read()
 
-    bash_readed_stdout = re.sub(r'bash: line \d+:', 'minishell:', bash_readed_stdout)
-    bash_readed_stdout = bash_readed_stdout.replace('bash:', 'minishell:')
     if (minishell_readed_stdout != bash_readed_stdout):
         print(f"{REDB}  → stdout KO!{NC}")
         print(f"{WHITEB}MINISHELL{NC}")
         if (minishell_readed_stdout == ""):
-                print("(null)")
+            print("(null)")
         print(f"{RED}{minishell_readed_stdout}{NC}", end="")
         print(f"{WHITEB}EXPECTED{NC}")
         if (bash_readed_stdout == ""):
-                print("(null)")
+            print("(null)")
         print(bash_readed_stdout, end="")
         print("")
     else:
@@ -193,11 +195,15 @@ def input(instruction):
 
     if minishell_readed_stderr.endswith("exit\n"):
         minishell_readed_stderr = minishell_readed_stderr.rstrip("exit\n")
+    if bash_readed_stderr.endswith("exit\n"):
+        bash_readed_stderr = bash_readed_stderr.rstrip("exit\n")
+
+    minishell_readed_stderr = re.sub(r'minishell: line \d+:', 'minishell:', minishell_readed_stderr)
     bash_readed_stderr = re.sub(r'bash: line \d+:', 'minishell:', bash_readed_stderr)
     bash_readed_stderr = bash_readed_stderr.replace('bash:', 'minishell:')
     if (minishell_readed_stderr != bash_readed_stderr):
-        if ((minishell_readed_stderr == "" or bash_readed_stderr == "") and (minishell_readed_stderr != "" or bash_readed_stderr != "") \
-        or minishell_readed_stderr.count('\n') != bash_readed_stderr.count('\n')):
+        if ((minishell_readed_stderr == "" or bash_readed_stderr == "") and (minishell_readed_stderr != "" or bash_readed_stderr != "")
+                or minishell_readed_stderr.count('\n') != bash_readed_stderr.count('\n')):
             g_stderrKO += 1
             print(f"{REDB}  → stderr KO!{NC}")
             print(f"{WHITEB}MINISHELL{NC}")
@@ -218,13 +224,14 @@ def input(instruction):
     else:
         g_stderr += 1
         print(f"{GREEN}  → stderr OK!{NC}")
-    
+
     # CHECK EXIT CODE
     if (minishell_exitcode == bash_exitcode):
-        g_exitcode += 1;
+        g_exitcode += 1
         print(f"{GREEN}  → exit code OK : {NC}{bash_exitcode}")
     else:
-        print(f"{REDB}  → exit code{NC} {minishell_exitcode}, {REDB}expected{NC} {bash_exitcode}")
+        print(
+            f"{REDB}  → exit code{NC} {minishell_exitcode}, {REDB}expected{NC} {bash_exitcode}")
 
     # CHECK LEAKS
     if (check_valgrind == 1):
@@ -233,7 +240,8 @@ def input(instruction):
 
         lines = minishell_readed_leaks.split("\n")
         filtered_lines = []
-        pattern = re.compile("(definitely lost|indirectly lost|possibly lost|still reachable): (?!0 bytes).*")
+        pattern = re.compile(
+            "(definitely lost|indirectly lost|possibly lost|still reachable): (?!0 bytes).*")
         for line in lines:
             if pattern.search(line):
                 filtered_lines.append(line)
@@ -245,13 +253,14 @@ def input(instruction):
             modified_lines.append(line[i:])
         modified_str = "\n".join(modified_lines)
         if (modified_str == ""):
-            print(f"{GREEN}  → leaks OK!{NC}")        
+            print(f"{GREEN}  → leaks OK!{NC}")
         else:
             g_leaks += 1
-            print(f"{REDB}  → leaks KO!{NC}")     
-            print(modified_lines)   
-    
+            print(f"{REDB}  → leaks KO!{NC}")
+            print(modified_lines)
+
     print("")
+
 
 delete_files()
 
@@ -301,36 +310,38 @@ if (choice == 0 or choice == 6):
 if (choice == 0 or choice == 7):
     print(f"{BLUE}7. Implement redirection{NC}\n")
     input("cat < Makefile -e > out\n"
-        "cat out\n"
-        "cat < Makefile -e >> out\n"
-        "cat out\n"
-        "rm out\n"
-        "cat < Makefile -e >> out\n"
-        "cat out\n"
-        "rm out\n")
+          "cat out\n"
+          "cat < Makefile -e >> out\n"
+          "cat out\n"
+          "rm out\n"
+          "cat < Makefile -e >> out\n"
+          "cat out\n"
+          "rm out\n")
     input("cat < Makefile -e >> out\n"
-        "cat out\n"
-        "rm out\n")
+          "cat out\n"
+          "rm out\n")
     input("cat << fake < Makefile << \"just a limiter\"\n"
-        "42\n"
-        "fake\n"
-        "42\n"
-        "\"just a limiter\"\n"
-        "\'just a limiter\'\n"
-        "just a limiter\n")
+          "42\n"
+          "fake\n"
+          "42\n"
+          "\"just a limiter\"\n"
+          "\'just a limiter\'\n"
+          "just a limiter\n")
     input("echo 42 > tester-norights.txt\n"
-            "chmod 000 tester-norights.txt\n"
-            "cat < Makefile > tester-norights.txt >> tester-norights.txt \n"
-            "cat < tester-norights.txt << heredoc-limiter > /dev/null\n"
-            "\"<inside the heredoc>\"\n"
-            "heredoc-limiter\n")
+          "chmod 000 tester-norights.txt\n"
+          "cat < Makefile > tester-norights.txt >> tester-norights.txt \n"
+          "cat < tester-norights.txt << heredoc-limiter > /dev/null\n"
+          "\"<inside the heredoc>\"\n"
+          "heredoc-limiter\n")
     input("rm -f tester-norights.txt\n")
     input("echo 42 > tester-norights.txt\n"
-            "chmod 000 tester-norights.txt\n"
-            "cat < Makefile > tester-norights.txt >> tester-norights.txt \n"
-            "rm -f tester-norights.txt\n")
+          "chmod 000 tester-norights.txt\n"
+          "cat < Makefile > tester-norights.txt >> tester-norights.txt \n"
+          "rm -f tester-norights.txt\n")
     input("< \"\" echo\n")
     input("> \"\" echo\n")
+    input("ls >\n")
+    input("ls > >\n")
 
 if (choice == 0 or choice == 8):
     print(f"{BLUE}8. Implement pipes{NC}\n")
@@ -344,9 +355,9 @@ if (choice == 0 or choice == 8):
 if (choice == 0 or choice == 9):
     print(f"{BLUE}9. Handle environment variables and $?{NC}\n")
     input("unset NONEXISTINGVARIABLE\n"
-            "echo $NONEXISTINGVARIABLE\n")
+          "echo $NONEXISTINGVARIABLE\n")
     input("unset NONEXISTINGVARIABLE\n"
-            "echo $NONEXISTINGVARIABLE$NONEXISTINGVARIABLE\n")
+          "echo $NONEXISTINGVARIABLE$NONEXISTINGVARIABLE\n")
     input("echo $LS_COLORS$LS_COLORS\n")
     input("echo $\"\"LS_COLORS\n")
     input("echo $\" \"LS_COLORS\n")
@@ -355,12 +366,12 @@ if (choice == 0 or choice == 9):
     input("echo \'$\' LS_COLORS\n")
     input("echo \'$\'LS_COLORS\n")
     input("$SHELL\n"
-            "echo -e \"42\\n\"\n"
-            "exit\n")
+          "echo -e \"42\\n\"\n"
+          "exit\n")
     input("$SHELL\n"
-            "echo -e \"42\\n\"\n"
-            "exit\n"
-            "echo $?\n")
+          "echo -e \"42\\n\"\n"
+          "exit\n"
+          "echo $?\n")
     input("echo $\"\"SHELL\n")
 
 if (choice == 0 or choice == 10):
@@ -380,40 +391,44 @@ if (choice == 0 or choice == 11):
     input("echo -nnmnn $HOME\n")
     input("cd to-infinity-and-beyond_donotexist\n")
     input("echo $PWD, $OLDPWD\n"
-            "cd to-infinity-and-beyond_donotexist\n"
-            "echo $PWD, $OLDPWD\n")
+          "cd to-infinity-and-beyond_donotexist\n"
+          "echo $PWD, $OLDPWD\n")
     input("cd ./minishell\n")
     input("cd \'\"\'\n")
     input("echo $PWD, $OLDPWD\n"
-            "cd ./minishell\n"
-            "echo $PWD, $OLDPWD\n")
+          "cd ./minishell\n"
+          "echo $PWD, $OLDPWD\n")
     input("cd /tmp\n")
     input("echo $PWD, $OLDPWD\n"
-            "cd /tmp\n"
-            "echo $PWD, $OLDPWD\n")
+          "cd /tmp\n"
+          "echo $PWD, $OLDPWD\n")
     input("cd /root\n")
     input("echo $PWD, $OLDPWD\n"
-            "cd /root\n"
-            "echo $PWD, $OLDPWD\n")
+          "cd /root\n"
+          "echo $PWD, $OLDPWD\n")
     input("cd /tmp /tmp\n")
     input("cd /tmp /root\n")
     input("cd /root /tmp\n")
     input("pwd\n")
     input("export PWD=$HOME\n"
-            "pwd\n")
+          "pwd\n")
     input("pwd 4815162342\n")
     input("pwd Quarante deux\n")
     input("export 4815162342=4815162342\n"
-            "env | grep 4815162342\n")
+          "env | grep 4815162342\n")
     input("export LOST4815162342=4815162342\n"
-            "env | grep 4815162342\n")
+          "env | grep 4815162342\n")
     input("export +LOST=4815162342\n"
-            "env | grep 4815162342\n")
+          "env | grep 4815162342\n")
     input("export /LOST=4815162342\n")
     input("export School+=42\n"
-            "env | grep School\n"
-            "export School+=42\n"
-            "export School-=42\n")
+          "env | grep School\n"
+          "export School+=42\n"
+          "export School-=42\n")
+    input("export a + = 42\n")
+    input("export a += 42\n")
+    input("export | grep USER\n")
+    input("export \"\"\n")
 
 if (g_stdout == g_nbr):
     print(f"\033[1;37mSTDOUT:    {GREENB}{g_stdout}/{g_nbr}:  OK!{NC}")
@@ -434,7 +449,7 @@ else:
 
 if (check_valgrind == 0):
     print(f"\n\033[1;37mLEAKS:     {ORANGEB}Re-run with -valgrind")
-elif(g_leaks == 0):
+elif (g_leaks == 0):
     print(f"\033[1;37mLEAKS:     {GREENB} 0/{g_nbr}:  OK!{NC}")
 else:
     print(f"\033[1;37mLEAKS:     {REDB}{g_leaks}/{g_nbr}:  KO!{NC}")

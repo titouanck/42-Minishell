@@ -1,12 +1,7 @@
 minishell
-.minishell-logs/
 assets/
 objs/
 libft/objs
 libft/libft.a
 libft/xlibft
 .vscode/
-tester/bash_returnval
-tester/bash_stdout
-tester/minishell_returnval
-tester/minishell_stdout
