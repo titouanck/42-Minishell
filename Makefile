@@ -130,7 +130,7 @@ clean:
 fclean:	clean;
 	@	+$(MAKE) --no-print-directory -s -C libft fclean
 	@	rm -f ${NAME} assets/minishell.log
-	@	rm -rf .minishell-logs assets
+	@	rm -rf /tmp/.minishell-logs assets
 	@	git clean -f
 	@	rm -f /tmp/minishell-heredoc_*
 
@@ -160,10 +160,10 @@ valgrind:	${NAME}
 	@		${MAKE} --no-print-directory log
 
 log:
-	@	if [ -d .minishell-logs ]; then \
+	@	if [ -d /tmp/.minishell-logs ]; then \
 			rm -f assets/minishell.log; \
-			find .minishell-logs -type f -printf "%T@ %p\n" | sort | cut -d' ' -f2- | xargs awk 'FNR==1 && NR!=1 {print "\n----------------------------------------------\n"}{print}' - > assets/minishell.log; \
-			rm -rf .minishell-logs; \
+			find /tmp/.minishell-logs -type f -printf "%T@ %p\n" | sort | cut -d' ' -f2- | xargs awk 'FNR==1 && NR!=1 {print "\n----------------------------------------------\n"}{print}' - > assets/minishell.log; \
+			rm -rf /tmp/.minishell-logs; \
 			echo -ne "\r\033[2K" $(LIGHTGREEN) "→ assets/$(NAME).log OK!"$(NC)"\n"; \
 		elif [ -f assets/minishell.log ]; then \
 			echo -ne "\r\033[2K" $(ORANGE) "→ Unable to update assets/$(NAME).log, already up-to-date ?"$(NC)"\n"; \

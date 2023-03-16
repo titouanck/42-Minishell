@@ -47,13 +47,13 @@ t_env *opening(int argc, char **argv, char *envp[])
 	pid = fork();
 	if (pid == 0)
 	{
-		cmd = ft_split("/usr/bin/rm rm -rf .minishell-logs", ' ');
+		cmd = ft_split("/usr/bin/rm rm -rf /tmp/.minishell-logs", ' ');
 		if (cmd)
 		{
 			execve(cmd[0], cmd + 1, NULL);
 			ft_freetab(cmd);
 		}
-		cmd = ft_split("/bin/rm rm -rf .minishell-logs", ' ');
+		cmd = ft_split("/bin/rm rm -rf /tmp/.minishell-logs", ' ');
 		if (cmd)
 		{
 			execve(cmd[0], cmd + 1, NULL);
@@ -66,13 +66,13 @@ t_env *opening(int argc, char **argv, char *envp[])
 	pid = fork();
 	if (pid == 0)
 	{
-		cmd = ft_split("/usr/bin/mkdir mkdir -p .minishell-logs", ' ');
+		cmd = ft_split("/usr/bin/mkdir mkdir -p /tmp/.minishell-logs", ' ');
 		if (cmd)
 		{
 			execve(cmd[0], cmd + 1, NULL);
 			ft_freetab(cmd);
 		}
-		cmd = ft_split("/bin/mkdir mkdir -p .minishell-logs", ' ');
+		cmd = ft_split("/bin/mkdir mkdir -p /tmp/.minishell-logs", ' ');
 		if (cmd)
 		{
 			execve(cmd[0], cmd + 1, NULL);

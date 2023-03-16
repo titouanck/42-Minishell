@@ -94,6 +94,7 @@ int	execute_cmd(t_env *environment, char **args)
 			ft_putstr_fd("minishell: ", 2);
 			ft_putstr_fd(args[0], 2);
 			ft_putstr_fd(": Is a directory\n", 2);
+			g_returnval = 126;
 		}
 		else
 		{

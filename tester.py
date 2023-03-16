@@ -23,6 +23,7 @@ REDB = '\033[1;31m'
 GREEN = '\033[0;32m'
 GREENB = '\033[1;32m'
 ORANGE = '\033[0;33m'
+ORANGEB = '\033[1;33m'
 BLUE = '\033[1;34m'
 PURPLE = '\033[0;35m'
 CYAN = '\033[0;36m'
@@ -36,6 +37,7 @@ LIGHTPURPLE = '\033[1;35m'
 LIGHTCYAN = '\033[1;36m'
 YELLOW = '\033[1;33m'
 WHITE = '\033[0;37m'
+WHITEB = '\033[1;37m'
 
 
 def delete_files():
@@ -49,14 +51,16 @@ def delete_files():
         os.remove(bash_stderr)
 
 g_nbr = 0
-g_stdin = 0
+g_stdout = 0
 g_stderr = 0
 g_exitcode = 0
+g_stderrKO = 0
 
 def input(instruction):
     global g_nbr
-    global g_stdin
+    global g_stdout
     global g_stderr
+    global g_stderrKO
     global g_exitcode
     
     g_nbr += 1
@@ -85,77 +89,82 @@ def input(instruction):
     # instruction
     print(f"{PURPLE}{instruction}{NC}", end="")
     
-    # Check stdin
-    result = subprocess.run(["diff", minishell_stdout, bash_stdout])
-    if result.returncode != 0:
-        print(f"{RED}  → stdin KO!{NC}")
-    else:
-        print(f"{GREEN}  → stdin OK!{NC}")
-        g_stdin += 1
+    # CHECK STDIN
+    with open(minishell_stdout, 'r') as file:
+        minishell_readed_stdout = file.read()
 
-    # Check stderr
+    with open(bash_stdout, 'r') as file:
+        bash_readed_stdout = file.read()
+
+    bash_readed_stdout = re.sub(r'bash: line \d+:', 'minishell:', bash_readed_stdout)
+    bash_readed_stdout = bash_readed_stdout.replace('bash:', 'minishell:')
+    if (minishell_readed_stdout != bash_readed_stdout):
+        print(f"{REDB}  → stdout KO!{NC}")
+        print(f"{WHITEB}MINISHELL{NC}")
+        print(f"{RED}{minishell_readed_stdout}{NC}", end="")
+        print(f"{WHITEB}EXPECTED{NC}")
+        print(bash_readed_stdout, end="")
+    else:
+        g_stdout += 1
+        print(f"{GREEN}  → stdout OK!{NC}")
+
+    # CHECKSTDR
     with open(minishell_stderr, 'r') as file:
-        minishell_contenu = file.read()
+        minishell_readed_stderr = file.read()
 
     with open(bash_stderr, 'r') as file:
-        bash_contenu = file.read()
+        bash_readed_stderr = file.read()
 
-    expression = r'^bash: line[^:]*:'
-    if bash_contenu.startswith('bash: line'):
-        bash_contenu = re.sub(expression, 'minishell:', bash_contenu, count=1)
-    elif bash_contenu.startswith('bash:'):
-        bash_contenu = 'minishell:' + bash_contenu[5:]
-    if (minishell_contenu != bash_contenu):
-        if (minishell_contenu == "" or bash_contenu == "") and (minishell_contenu != "" or bash_contenu != ""):
-            print(f"{RED}  [STDERR]{NC}   ", end="")
-            print(minishell_contenu, end="")
-            if (minishell_contenu == ""):
+    bash_readed_stderr = re.sub(r'bash: line \d+:', 'minishell:', bash_readed_stderr)
+    bash_readed_stderr = bash_readed_stderr.replace('bash:', 'minishell:')
+    if (minishell_readed_stderr != bash_readed_stderr):
+        if ((minishell_readed_stderr == "" or bash_readed_stderr == "") and (minishell_readed_stderr != "" or bash_readed_stderr != "") \
+        or minishell_readed_stderr.count('\n') != bash_readed_stderr.count('\n')):
+            g_stderrKO += 1
+            print(f"{REDB}  → stderr KO!{NC}")
+            print(f"{WHITEB}MINISHELL{NC}")
+            if (minishell_readed_stderr == ""):
                 print("(null)")
-
-            print(f"{RED}  [EXPECTED]{NC} ", end="")
-            print(bash_contenu, end="")
-            if (bash_contenu == ""):
+            print(f"{RED}{minishell_readed_stderr}{NC}", end="")
+            print(f"{WHITEB}EXPECTED{NC}")
+            if (bash_readed_stderr == ""):
                 print("(null)")
+            print(bash_readed_stderr, end="")
         else:
-            g_stderr += 1
-            print(f"{ORANGE}  [STDERR]{NC}   ", end="")
-            print(minishell_contenu, end="")
-            if (minishell_contenu == ""):
-                print("(null)")
-
-            print(f"{ORANGE}  [OBJECTIF]{NC} ", end="")
-            print(bash_contenu, end="")
-            if (bash_contenu == ""):
-                print("(null)")
+            print(f"{ORANGEB}  → stderr mismatch !{NC}")
+            print(f"{WHITEB}MINISHELL{NC}")
+            print(f"{RED}{minishell_readed_stderr}{NC}", end="")
+            print(f"{WHITEB}EXPECTED{NC}")
+            print(bash_readed_stderr, end="")
     else:
         g_stderr += 1
         print(f"{GREEN}  → stderr OK!{NC}")
     
-    # Check status
+    # CHECK EXIT CODE
     if (minishell_exitcode == bash_exitcode):
         g_exitcode += 1;
-        print(f"{GREEN}  → exit code OK!{NC}")
+        print(f"{GREEN}  → exit code OK : {NC}{bash_exitcode}")
     else:
-        print(f"{RED}  → exit code{NC} {minishell_exitcode}, {RED}expected{NC} {bash_exitcode}")
+        print(f"{REDB}  → exit code{NC} {minishell_exitcode}, {REDB}expected{NC} {bash_exitcode}")
     print("")
                 
 
 
 delete_files()
 
+print(f"{GREENB}green{GREEN} means OK{NC}")
+print(f"{ORANGEB}orange{ORANGE} means manual check needed{NC}")
+print(f"{REDB}red{RED} means KO{NC}\n")
+
 print(f"{BLUE}Display a prompt when waiting for a new command.{NC}\n")
 input("")
+# input("echo -e \"\\n\"\n")
 input("")
 
-# # Have a working history
-# input("printf \"42\\n\"\n \
-#       \x1b[A\n \
-#       \n \
-#       \x1b[A\n \
-# ")
+print(f"{BLUE}Have a working history.{NC}\n")
+print(f"{ORANGEB}  → Must be check manually.{NC}\n")
 
-# Search and launch the right executable (based on the PATH variable or using a relative or an absolute path)
-print(f"{BLUE}Search and launch the right executable{NC}\n")
+print(f"{BLUE}Search and launch the right executable.{NC}\n")
 input("\"\"\n")
 input("\'\'\n")
 input("\n")
@@ -168,41 +177,52 @@ input(".ls\n")
 input("    /ls\n")
 input("/tmp   \n")
 input("./tmp\n")
+input("./srcs\n")
 input("     ./tester.py     \n")
 
+print(f"{BLUE}Not use more than one global variable.{NC}\n")
+print(f"{ORANGEB}  → Must be check manually.{NC}\n")
 
-# Not use more than one global variable : Can't verify that here
-# Not interpret unclosed quotes or special characters which are not required by the subject : Can't verify that here
+print(f"{BLUE}Not interpret unclosed quotes or special characters not required by the subject.{NC}\n")
+print(f"{ORANGEB}  → Must be check manually.{NC}\n")
 
-# Handle ’ (single quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence
 print(f"{BLUE}Handle single quote and double quote{NC}\n")
 input("echo \'$\'\'PW\'D\' << (not \'a\' here-doc) > (do not redirect) \"\"<\"\" (not an infile) >> (not an outfile)\'\n")
 input("echo \"$\"\"PW\'D\' << (not a her\'e\'-doc) \'\'>\'\' (do not redirect) < (not an infile) >> (not an outfile)\"\n")
 input("echo \"$ \"\"PW\'D\' << (not a her\'e\'-doc) \'\'>\'\' (do not redirect) < (not an infile) >> (not an outfile)\"\n")
 input("echo \' $\'\'PW\'D\' << (not \'a\' here-doc) > (do not redirect) \" \"<\"\" (not an infile) >> (not an outfile)\'\n")
 
-# Implement redirections
 print(f"{BLUE}Implement redirection{NC}\n")
-# <, >, >>
 input("cat < Makefile -e > out\n"
       "cat out\n"
+      "cat < Makefile -e >> out\n"
+      "cat out\n"
+      "rm out\n"
       "cat < Makefile -e >> out\n"
       "cat out\n"
       "rm out\n")
 input("cat < Makefile -e >> out\n"
       "cat out\n"
       "rm out\n")
-
-# <<
 input("cat << fake < Makefile << \"just a limiter\"\n"
-      + "42\n"
-      + "fake\n"
-      + "42\n"
-      + "\"just a limiter\"\n"
-      + "\'just a limiter\'\n"
-      + "just a limiter\n")
+      "42\n"
+      "fake\n"
+      "42\n"
+      "\"just a limiter\"\n"
+      "\'just a limiter\'\n"
+      "just a limiter\n")
+input("echo 42 > tester-norights.txt\n"
+        "chmod 000 tester-norights.txt\n"
+        "cat < Makefile > tester-norights.txt >> tester-norights.txt \n"
+        "cat < tester-norights.txt << heredoc-limiter > /dev/null\n"
+        "\"<inside the heredoc>\"\n"
+        "heredoc-limiter\n")
+input("rm -f tester-norights.txt\n")
+input("echo 42 > tester-norights.txt\n"
+        "chmod 000 tester-norights.txt\n"
+        "cat < Makefile > tester-norights.txt >> tester-norights.txt \n"
+        "rm -f tester-norights.txt\n")
 
-# Implement pipes (| character). The output of each command in the pipeline is connected to the input of the next command via a pipe.
 print(f"{BLUE}Implement pipes{NC}\n")
 input("printf \"42\\n\" | cat | cat | cat\n")
 input("printf \"42\\n\" | cat | cat | cat\n")
@@ -211,15 +231,77 @@ input("printf \"42\\n\" | cat | printf \"4 8 15 16 23 42\\n\" | cat > /dev/null\
 input(env_path + " | grep \'$HOME\'\n")
 input(env_path + " | grep \"$\"HOM\"E\"\n")
 
-if (g_stdin == g_nbr):
-    print(f"\033[1;37mSTDOUT:    {GREENB}{g_stdin}/{g_nbr}:  OK!{NC}")
-else:
-    print(f"\033[1;37mSTDOUT:    {REDB}{g_stdin}/{g_nbr}:  KO!{NC}")
+print(f"{BLUE}Handle environment variables and $?{NC}\n")
+input("unset NONEXISTINGVARIABLE\n"
+        "echo $NONEXISTINGVARIABLE\n")
+input("unset NONEXISTINGVARIABLE\n"
+        "echo $NONEXISTINGVARIABLE$NONEXISTINGVARIABLE\n")
+input("echo $LS_COLORS$LS_COLORS\n")
+input("echo $\"\"LS_COLORS\n")
+input("echo $\" \"LS_COLORS\n")
+input("echo $ LS_COLORS\n")
+input("echo $ LS_COLORS\n")
+input("echo \'$\' LS_COLORS\n")
+input("echo \'$\'LS_COLORS\n")
+input("$SHELL\n"
+        "echo -e \"42\\n\"\n"
+        "exit\n")
+input("$SHELL\n"
+        "echo -e \"42\\n\"\n"
+        "exit\n"
+        "echo $?\n")
+input("echo $\"\"SHELL\n")
 
-if (g_stderr == g_nbr):
+print(f"{BLUE}Handle ctrl-C, ctrl-D and ctrl-\ which should behave like in bash{NC}\n")
+print(f"{ORANGEB}  → Must be check manually.{NC}\n")
+
+print(f"{BLUE}Your shell must implement the following builtins{NC}\n")
+input("echo $HOME\n")
+input("echo -n $HOME\n")
+input("echo \"-\'n\" $HOME\n")
+input("echo \'-\"n\' $HOME\n")
+input("echo \'-nnnnn\' $HOME\n")
+input("echo -nnnnn $HOME\n")
+input("echo -mnnnn $HOME\n")
+input("echo -nnnnm $HOME\n")
+input("echo -nnnmnn $HOME\n")
+input("cd to-infinity-and-beyond_donotexist\n")
+input("echo $PWD, $OLDPWD\n"
+        "cd to-infinity-and-beyond_donotexist\n"
+        "echo $PWD, $OLDPWD\n")
+input("cd ./minishell\n")
+input("echo $PWD, $OLDPWD\n"
+        "cd ./minishell\n"
+        "echo $PWD, $OLDPWD\n")
+input("cd /tmp\n")
+input("echo $PWD, $OLDPWD\n"
+        "cd /tmp\n"
+        "echo $PWD, $OLDPWD\n")
+input("cd /root\n")
+input("echo $PWD, $OLDPWD\n"
+        "cd /root\n"
+        "echo $PWD, $OLDPWD\n")
+input("cd /tmp /tmp\n")
+input("cd /tmp /root\n")
+input("cd /root /tmp\n")
+input("pwd\n")
+input("export PWD=$HOME\n"
+        "pwd\n")
+input("pwd 4815162342\n")
+input("pwd Quarante deux\n")
+
+
+if (g_stdout == g_nbr):
+    print(f"\033[1;37mSTDOUT:    {GREENB}{g_stdout}/{g_nbr}:  OK!{NC}")
+else:
+    print(f"\033[1;37mSTDOUT:    {REDB}{g_stdout}/{g_nbr}:  KO!{NC}")
+
+if (g_stderrKO > 0):
+    print(f"\033[1;37mSTDERR:    {REDB}{g_stderr}/{g_nbr}:  KO!{NC}")
+elif (g_stderr == g_nbr):
     print(f"\033[1;37mSTDERR:    {GREENB}{g_stderr}/{g_nbr}:  OK!{NC}")
 else:
-    print(f"\033[1;37mSTDERR:    {REDB}{g_stderr}/{g_nbr}:  KO!{NC}")
+    print(f"\033[1;37mSTDERR:    {ORANGEB}{g_stderr}/{g_nbr}:  OK?{NC}")
 
 if (g_exitcode == g_nbr):
     print(f"\033[1;37mEXIT CODE: {GREENB}{g_exitcode}/{g_nbr}:  OK!{NC}")
