@@ -289,6 +289,12 @@ input("export PWD=$HOME\n"
         "pwd\n")
 input("pwd 4815162342\n")
 input("pwd Quarante deux\n")
+input("export 42=42\n"
+        "env | grep 42\n")
+input("export School+=42\n"
+        "env | grep School\n"
+        "export School+=42\n"
+        "export School-=42\n")
 
 
 if (g_stdout == g_nbr):
