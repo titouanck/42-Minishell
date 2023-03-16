@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/14 16:33:28 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/16 15:08:34 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,10 @@ int	io_open_fds(t_env *environment, t_redirect *redirect)
 		redirect->fd_infile = open(redirect->infile, O_RDONLY);
 		if (redirect->fd_infile == -1)
 		{
-			ft_putstr_fd("minishell: ", 2);
+			if (ft_strlen(redirect->infile) > 0)
+				ft_putstr_fd("minishell: ", 2);
+			else
+				ft_putstr_fd("minishell: : ", 2);
 			perror(redirect->infile);
 			db_free(redirect->infile);
 			redirect->infile = NULL;
@@ -67,7 +70,10 @@ int	io_open_fds(t_env *environment, t_redirect *redirect)
 				redirect->fd_outfile = open(redirect->outfile, O_WRONLY | O_APPEND | O_CREAT, 0644);
 			if (redirect->fd_outfile == -1)
 			{
-				ft_putstr_fd("minishell: ", 2);
+				if (ft_strlen(redirect->outfile) > 0)
+					ft_putstr_fd("minishell: ", 2);
+				else
+					ft_putstr_fd("minishell: : ", 2);
 				perror(redirect->outfile);
 				if (redirect->infile)
 					close(redirect->fd_infile);

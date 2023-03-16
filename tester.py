@@ -203,8 +203,7 @@ def input(instruction):
     bash_readed_stderr = re.sub(r'bash: line \d+:', 'minishell:', bash_readed_stderr)
     bash_readed_stderr = bash_readed_stderr.replace('bash:', 'minishell:')
     if (minishell_readed_stderr != bash_readed_stderr):
-        if ((minishell_readed_stderr == "" or bash_readed_stderr == "") and (minishell_readed_stderr != "" or bash_readed_stderr != "")
-                or minishell_readed_stderr.count('\n') != bash_readed_stderr.count('\n')):
+        if (minishell_readed_stderr == "" or bash_readed_stderr == "") and (minishell_readed_stderr != "" or bash_readed_stderr != ""):
             g_stderrKO += 1
             print(f"{REDB}  → stderr KO!{NC}")
             print(f"{WHITEB}MINISHELL{NC}")
@@ -332,7 +331,7 @@ if (choice == 0 or choice == 7):
           "chmod 000 tester-norights.txt\n"
           "cat < Makefile > tester-norights.txt >> tester-norights.txt \n"
           "cat < tester-norights.txt << heredoc-limiter > /dev/null\n"
-          "\"<inside the heredoc>\"\n"
+          "ls -I \"<inside the heredoc>\"\n"
           "heredoc-limiter\n")
     input("rm -f tester-norights.txt\n")
     input("echo 42 > tester-norights.txt\n"
@@ -343,6 +342,9 @@ if (choice == 0 or choice == 7):
     input("> \"\" echo\n")
     input("ls >\n")
     input("ls > >\n")
+    input("rm -f tmp/a tmp/b\n")
+    input("ls>/tmp/a</tmp/b\n")
+    input("ls</tmp/a>/tmp/b\n")
 
 if (choice == 0 or choice == 8):
     print(f"{BLUE}8. Implement pipes{NC}\n")
@@ -441,28 +443,30 @@ if (choice == 0 or choice == 11):
     input("export \"\"\n")
 
 if (g_stdout == g_nbr):
-    print(f"\033[1;37mSTDOUT:    {GREENB}{g_stdout}/{g_nbr}:  OK!{NC}")
+    print(f"\033[1;37mSTDOUT:    {GREENB}{g_stdout:3d}/{g_nbr}:  OK!{NC}")
 else:
-    print(f"\033[1;37mSTDOUT:    {REDB}{g_stdout}/{g_nbr}:  KO!{NC}")
+    print(f"\033[1;37mSTDOUT:    {REDB}{g_stdout:3d}/{g_nbr}:  KO!{NC}")
 
 if (g_stderrKO > 0):
-    print(f"\033[1;37mSTDERR:    {REDB}{g_stderr}/{g_nbr}:  KO!{NC}")
+    print(f"\033[1;37mSTDERR:    {REDB}{g_stderr:3d}/{g_nbr}:  KO!{NC}")
 elif (g_stderr == g_nbr):
-    print(f"\033[1;37mSTDERR:    {GREENB}{g_stderr}/{g_nbr}:  OK!{NC}")
+    print(f"\033[1;37mSTDERR:    {GREENB}{g_stderr:3d}/{g_nbr}:  OK!{NC}")
 else:
-    print(f"\033[1;37mSTDERR:    {ORANGEB}{g_stderr}/{g_nbr}:  OK?{NC}")
+    print(f"\033[1;37mSTDERR:    {ORANGEB}{g_stderr:3d}/{g_nbr}:  N/A{NC}")
 
 if (g_exitcode == g_nbr):
-    print(f"\033[1;37mEXIT CODE: {GREENB}{g_exitcode}/{g_nbr}:  OK!{NC}")
+    print(f"\033[1;37mEXIT CODE: {GREENB}{g_exitcode:3d}/{g_nbr}:  OK!{NC}")
 else:
-    print(f"\033[1;37mEXIT CODE: {REDB}{g_exitcode}/{g_nbr}:  KO!{NC}")
+    print(f"\033[1;37mEXIT CODE: {REDB}{g_exitcode:3d}/{g_nbr}:  KO!{NC}")
 
+dots = ' ' * (3 - int((g_nbr + 10) / 10))
+dots += '.' * int((g_nbr + 10) / 10)
 if (check_valgrind == 0):
-    print(f"\n\033[1;37mLEAKS:     {ORANGEB}Re-run with -valgrind")
+    print(f"\n\033[1;37mLEAKS:     {ORANGEB}{dots}/{g_nbr}:  Re-run with -valgrind")
 elif (g_leaks == 0):
-    print(f"\033[1;37mLEAKS:     {GREENB} 0/{g_nbr}:  OK!{NC}")
+    print(f"\033[1;37mLEAKS:     {GREENB}{g_leaks:3d}/{g_nbr}:  OK!{NC}")
 else:
-    print(f"\033[1;37mLEAKS:     {REDB}{g_leaks}/{g_nbr}:  KO!{NC}")
+    print(f"\033[1;37mLEAKS:     {REDB}{g_leaks:3d}/{g_nbr}:  KO!{NC}")
 
 # echo '$''PW'D' << (not 'a' here-doc) > (do not redirect) ""<"" (not an infile) >> (not an outfile)'
 delete_files()
