@@ -57,52 +57,37 @@ with open("/tmp/tester-ignore_readline_leaks.supp", 'w') as fd_minishell_leaks:
         "    fun:add_history\n"
         "}\n")
 
-choice = 0
-check_valgrind = 0
-if (len(sys.argv) >= 2 and (sys.argv[1] == "-valgrind" or sys.argv[1] == "valgrind")):
-    check_valgrind = 1
-    if (len(sys.argv) == 3):
-        if (sys.argv[2].isdigit()):
-            choice = int(sys.argv[2])
-            if (choice < 1 or choice > 12):
-                print("usage: python3 tester.py [-valgrind] [0 ... 12]")
-                exit(1)
-        else:
-            print("usage: python3 tester.py [-valgrind] [0 ... 12]")
-            exit(1)
-    elif len(sys.argv) > 3:
-        print("usage: python3 tester.py [-valgrind] [0 ... 12]")
-        exit(1)
-elif len(sys.argv) == 2 and sys.argv[1].isdigit():
-    choice = int(sys.argv[1])
-    if (choice < 1 or choice > 12):
-        print("usage: python3 tester.py [-valgrind] [0 ... 12]")
-        exit(1)
-elif len(sys.argv) == 3 and sys.argv[1].isdigit():
-    choice = int(sys.argv[1])
-    if (choice < 1 or choice > 12):
-        print("usage: python3 tester.py [-valgrind] [0 ... 12]")
-        exit(1)
-    if (sys.argv[2] == "-valgrind" or sys.argv[2] == "valgrind"):
-        check_valgrind = 1
-    else:
-        print("usage: python3 tester.py [-valgrind] [0 ... 12]")
-        exit(1)
-elif (len(sys.argv) > 1):
-    print("usage: python3 tester.py [-valgrind] [0 ... 12]")
+def argv_usage():
+    print(f"tester.py: usage: python3 tester.py [-valgrind] [rules: 1 .. 7 .. 8]")
     exit(1)
 
+rule = 0
+check_rules = []
+check_valgrind = 0
+
+if (len(sys.argv) > 1):
+   for arg in sys.argv[1:]:
+        if (arg.isdigit()):
+            if (int(arg) not in check_rules):
+                check_rules.append(int(arg))
+            else:
+                argv_usage()
+        elif ((arg == "-valgrind" or arg == "valgrind") and check_valgrind == 0):
+            check_valgrind = 1
+        else:
+            argv_usage()
+# else:
+
+    
 subprocess.run(["make"])
 print("")
 
-if (choice == 0 or check_valgrind == 0):
-    print(f"{WHITEB}Tip: {WHITE}You can choose to check a particular part :{NC}")
-    print(f"python3 tester.py 11\n")
-    print(f"{WHITEB}Tip: {WHITE}You can choose to check for memory leaks :{NC}")
-    print(f"python3 tester.py -valgrind\n")
-    print(f"{WHITEB}Tip: {WHITE}Or even do both :{NC}")
-    print(f"python3 tester.py -valgrind 11\n")
-
+print(f"{WHITEB}Tip: {WHITE}You can choose to check a particular part :{NC}")
+print(f"python3 tester.py 11\n")
+print(f"{WHITEB}Tip: {WHITE}You can choose to check for memory leaks :{NC}")
+print(f"python3 tester.py -valgrind\n")
+print(f"{WHITEB}Tip: {WHITE}Or even do both :{NC}")
+print(f"python3 tester.py -valgrind 11\n")
 
 def delete_files():
     if os.path.exists(minishell_stdout):
@@ -118,17 +103,14 @@ def delete_files():
     if os.path.exists("/tmp/tester-ignore_readline_leaks.supp"):
         os.remove("/tmp/tester-ignore_readline_leaks.supp")
 
-
 g_nbr = 0
 g_stdout = 0
 g_stderr = 0
 g_exitcode = 0
 g_stderrKO = 0
-
 g_leaks = 0
 
 minishell_readed_motd = None
-
 
 def ignore_motd():
     global minishell_readed_motd
@@ -299,16 +281,19 @@ delete_files()
 print("")
 ignore_motd()
 
-if (choice == 0 or choice == 1):
+rule = +1
+if (check_rules == [] or rule in check_rules):
     print(f"{BLUE}1. Display a prompt when waiting for a new command.{NC}\n")
     input("")
     input("")
 
-if (choice == 0 or choice == 2):
+rule += 1
+if (check_rules == [] or rule in check_rules):
     print(f"{BLUE}2. Have a working history.{NC}\n")
     print(f"{ORANGEB}  → Must be check manually.{NC}\n")
 
-if (choice == 0 or choice == 3):
+rule += 1
+if (check_rules == [] or rule in check_rules):
     print(f"{BLUE}3. Search and launch the right executable.{NC}\n")
     input("\"\"\n")
     input("\'\'\n")
@@ -324,22 +309,26 @@ if (choice == 0 or choice == 3):
     input("./tmp\n")
     input("     ./tester.py     \n")
 
-if (choice == 0 or choice == 4):
+rule += 1
+if (check_rules == [] or rule in check_rules):
     print(f"{BLUE}4. Not use more than one global variable.{NC}\n")
     print(f"{ORANGEB}  → Must be check manually.{NC}\n")
 
-if (choice == 0 or choice == 5):
+rule += 1
+if (check_rules == [] or rule in check_rules):
     print(f"{BLUE}5. Not interpret unclosed quotes or special characters not required by the subject.{NC}\n")
     print(f"{ORANGEB}  → Must be check manually.{NC}\n")
 
-if (choice == 0 or choice == 6):
+rule += 1
+if (check_rules == [] or rule in check_rules):
     print(f"{BLUE}6. Handle single quote and double quote{NC}\n")
     input("echo \'$\'\'PW\'D\' << (not \'a\' here-doc) > (do not redirect) \"\"<\"\" (not an infile) >> (not an outfile)\'\n")
     input("echo \"$\"\"PW\'D\' << (not a her\'e\'-doc) \'\'>\'\' (do not redirect) < (not an infile) >> (not an outfile)\"\n")
     input("echo \"$ \"\"PW\'D\' << (not a her\'e\'-doc) \'\'>\'\' (do not redirect) < (not an infile) >> (not an outfile)\"\n")
     input("echo \' $\'\'PW\'D\' << (not \'a\' here-doc) > (do not redirect) \" \"<\"\" (not an infile) >> (not an outfile)\'\n")
 
-if (choice == 0 or choice == 7):
+rule += 1
+if (check_rules == [] or rule in check_rules):
     print(f"{BLUE}7. Implement redirection{NC}\n")
     input("cat < Makefile -e > out\n"
           "cat out\n"
@@ -352,16 +341,16 @@ if (choice == 0 or choice == 7):
     input("cat < Makefile -e >> out\n"
           "cat out\n"
           "rm out\n")
-    input("rm -f tester-norights.txt\n"
-          "echo 42 > tester-norights.txt\n"
-          "chmod 000 tester-norights.txt\n"
-          "cat > tester-norights.txt >> tester-norights.txt \n"
-          "rm -f tester-norights.txt\n")
-    input("rm -f tester-norights.txt\n"
-          "echo 42 > tester-norights.txt\n"
-          "chmod 000 tester-norights.txt\n"
-          "cat < Makefile > tester-norights.txt >> tester-norights.txt \n"
-          "rm -f tester-norights.txt\n")
+    input("rm -f /tmp/tester-norights.txt\n"
+          "echo 42 > /tmp/tester-norights.txt\n"
+          "chmod 000 /tmp/tester-norights.txt\n"
+          "cat > /tmp/tester-norights.txt >> /tmp/tester-norights.txt \n"
+          "rm -f /tmp/tester-norights.txt\n")
+    input("rm -f /tmp/tester-norights.txt\n"
+          "echo 42 > /tmp/tester-norights.txt\n"
+          "chmod 000 /tmp/tester-norights.txt\n"
+          "cat < Makefile > /tmp/tester-norights.txt >> /tmp/tester-norights.txt \n"
+          "rm -f /tmp/tester-norights.txt\n")
     input("< \"\" echo\n")
     input("> \"\" echo\n")
     input("ls >\n")
@@ -376,7 +365,8 @@ if (choice == 0 or choice == 7):
     input("cat < thisfiledonotexist < thisfiledonotexist | echo 42\n")
     input("echo 42 > /dev/stdout | echo 4 8 15 16 23 42\n")
 
-if (choice == 0 or choice == 8):
+rule += 1
+if (check_rules == [] or rule in check_rules):
     print(f"{BLUE}8. Implement heredoc{NC}\n")
     input("cat << fake < Makefile << \"just a limiter\"\n"
           "42\n"
@@ -385,13 +375,13 @@ if (choice == 0 or choice == 8):
           "\"just a limiter\"\n"
           "\'just a limiter\'\n"
           "just a limiter\n")
-    input("rm -f tester-norights.txt\n"
-          "echo 42 > tester-norights.txt\n"
-          "chmod 000 tester-norights.txt\n"
-          "cat < tester-norights.txt << heredoc-limiter > /dev/null\n"
+    input("rm -f /tmp/tester-norights.txt\n"
+          "echo 42 > /tmp/tester-norights.txt\n"
+          "chmod 000 /tmp/tester-norights.txt\n"
+          "cat < /tmp/tester-norights.txt << heredoc-limiter > /dev/null\n"
           "ls -I \"<inside the heredoc>\"\n"
           "heredoc-limiter\n")
-    input("rm -f tester-norights.txt\n"
+    input("rm -f /tmp/tester-norights.txt\n"
           "export TESTER=\"ls -I <inside_the_heredoc> " + ignore_files + "\"\n"
           "<< \'$TESTER\' cat\n"
           "$HOME\n"
@@ -411,7 +401,8 @@ if (choice == 0 or choice == 8):
           "42\n"
           "limiter\n")
 
-if (choice == 0 or choice == 9):
+rule += 1
+if (check_rules == [] or rule in check_rules):
     print(f"{BLUE}9. Implement pipes{NC}\n")
     input("printf \"42\\n\" | cat | cat | cat\n")
     input("printf \"42\\n\" | cat | cat | cat\n")
@@ -423,7 +414,8 @@ if (choice == 0 or choice == 9):
     input(" ls  |||  ls \n")
     input("\'\'|\'\'|\"\"|\"\"\n")
 
-if (choice == 0 or choice == 10):
+rule += 1
+if (check_rules == [] or rule in check_rules):
     print(f"{BLUE}10. Handle environment variables and $?{NC}\n")
     input("unset NONEXISTINGVARIABLE\n"
           "echo $NONEXISTINGVARIABLE\n")
@@ -445,11 +437,13 @@ if (choice == 0 or choice == 10):
           "echo $?\n")
     input("echo $\"\"SHELL\n")
 
-if (choice == 0 or choice == 11):
+rule += 1
+if (check_rules == [] or rule in check_rules):
     print(f"{BLUE}11. Handle ctrl-C, ctrl-D and ctrl-\ which should behave like in bash{NC}\n")
     print(f"{ORANGEB}  → Must be check manually.{NC}\n")
 
-if (choice == 0 or choice == 12):
+rule += 1
+if (check_rules == [] or rule in check_rules):
     print(f"{BLUE}12. Your shell must implement the following builtins{NC}\n")
     input("echo $HOME\n")
     input("echo -n $HOME\n")
