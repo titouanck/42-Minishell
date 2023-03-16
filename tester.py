@@ -102,6 +102,8 @@ def delete_files():
         os.remove(bash_stderr)
     if os.path.exists(minishell_leaks):
         os.remove(minishell_leaks)
+    if os.path.exists("/tmp/tester-ignore_readline_leaks.supp"):
+        os.remove("/tmp/tester-ignore_readline_leaks.supp")
 
 g_nbr = 0
 g_stdout = 0
