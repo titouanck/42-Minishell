@@ -123,11 +123,11 @@ char		**split_cmds(t_env *environment, char **ptr);
 // parsing.c
 void		parsing(t_env *environment, char **line);
 // parse_cmd.c
-t_cmd		*parse_cmd(t_env *environment, char **line);
+t_cmd		*parse_cmd(t_env *environment, char **line, int last);
 // parse_args.c
-t_cmd		*parse_args(t_env *environment, char **line);
+t_cmd		*parse_args(t_env *environment, char **line, int last);
 // redirections.c
-t_redirect	*redirections(t_env *environment, char *line, int empty);
+t_redirect	*redirections(t_env *environment, char *line, int last);
 // replace_key_by_value.c
 char		*replace_key_by_value(t_env *environment, char *line);
 // quotes_interpretation.c

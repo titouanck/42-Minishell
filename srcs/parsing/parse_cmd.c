@@ -12,11 +12,11 @@
 
 #include "minishell.h"
 
-t_cmd	*parse_cmd(t_env *environment, char **line)
+t_cmd	*parse_cmd(t_env *environment, char **line, int last)
 {
 	t_cmd	*cmd;
 
-	cmd = parse_args(environment, line);
+	cmd = parse_args(environment, line, last);
 	if (!(cmd))
 		return (NULL);
 	else if (cmd->args && !(cmd->args[0]))

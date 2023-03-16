@@ -63,7 +63,7 @@ static void	_remove_quote_token_tab(char **args)
 	}
 }
 
-t_cmd	*parse_args(t_env *environment, char **line)
+t_cmd	*parse_args(t_env *environment, char **line, int last)
 {
 	t_cmd		*cmd;
 
@@ -75,7 +75,7 @@ t_cmd	*parse_args(t_env *environment, char **line)
 	if (!quotes_interpretation(environment, line))
 		return (db_free(cmd), NULL);
 	else
-		cmd->redirect = redirections(environment, *line, FALSE);
+		cmd->redirect = redirections(environment, *line, last);
 	if (!(cmd->redirect))
 		return (db_free(cmd), NULL);
 	cmd->args = db_split(*line, SEPARATOR);

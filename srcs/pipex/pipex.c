@@ -46,7 +46,10 @@ static t_cmd	**_get_cmds_parsed(t_env *environment, char **cmds)
 	i = 0;
 	while (i < size)
 	{
-		cmds_parsed[i] = parse_cmd(environment, cmds + i);
+		if (i + 1 < size)
+			cmds_parsed[i] = parse_cmd(environment, cmds + i, FALSE);
+		else
+			cmds_parsed[i] = parse_cmd(environment, cmds + i, TRUE);
 		if (!cmds_parsed[i])
 			return (ft_free_cmds_parsed(environment, cmds_parsed), db_freetab(cmds), NULL);
 		if (!cmds_parsed[i]->args || !(cmds_parsed[i]->args[0]) || !(cmds_parsed[i]->args[0][0]))

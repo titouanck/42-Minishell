@@ -322,7 +322,6 @@ if (choice == 0 or choice == 3):
     input("    /ls\n")
     input("/tmp   \n")
     input("./tmp\n")
-    input("./srcs\n")
     input("     ./tester.py     \n")
 
 if (choice == 0 or choice == 4):
@@ -356,6 +355,11 @@ if (choice == 0 or choice == 7):
     input("rm -f tester-norights.txt\n"
           "echo 42 > tester-norights.txt\n"
           "chmod 000 tester-norights.txt\n"
+          "cat > tester-norights.txt >> tester-norights.txt \n"
+          "rm -f tester-norights.txt\n")
+    input("rm -f tester-norights.txt\n"
+          "echo 42 > tester-norights.txt\n"
+          "chmod 000 tester-norights.txt\n"
           "cat < Makefile > tester-norights.txt >> tester-norights.txt \n"
           "rm -f tester-norights.txt\n")
     input("< \"\" echo\n")
@@ -384,7 +388,6 @@ if (choice == 0 or choice == 8):
     input("rm -f tester-norights.txt\n"
           "echo 42 > tester-norights.txt\n"
           "chmod 000 tester-norights.txt\n"
-          "cat < Makefile > tester-norights.txt >> tester-norights.txt \n"
           "cat < tester-norights.txt << heredoc-limiter > /dev/null\n"
           "ls -I \"<inside the heredoc>\"\n"
           "heredoc-limiter\n")
@@ -579,9 +582,4 @@ elif (g_leaks == 0):
 else:
     print(f"\033[1;37mLEAKS:     {REDB}{g_leaks:3d}/{g_nbr}:  KO!{NC}")
 
-# echo '$''PW'D' << (not 'a' here-doc) > (do not redirect) ""<"" (not an infile) >> (not an outfile)'
 delete_files()
-
-# exit long long
-# exit -(long long)
-#

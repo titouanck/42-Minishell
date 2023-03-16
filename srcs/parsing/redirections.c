@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	free_heredocs(t_heredoc *heredoc)
+void	db_free_heredocs(t_heredoc *heredoc)
 {
 	t_heredoc *tmp;
 
@@ -50,7 +50,7 @@ void	ft_free_redirect(t_redirect *redirect)
 	if (!redirect)
 		return ;
 	if (redirect->heredoc)
-		free_heredocs(redirect->heredoc);
+		db_free_heredocs(redirect->heredoc);
 	db_free(redirect->infile);
 	db_free(redirect->outfile);
 	db_free(redirect);
@@ -75,7 +75,7 @@ t_heredoc *lstnew_heredoc(t_heredoc *heredoc, char *limiter)
 	return (heredoc);
 }
 
-static int _leftchevron(t_env *environment, char *line, t_redirect *redirect)
+static int _leftchevron(t_env *environment, char *line, t_redirect *redirect, int last)
 {
 	size_t	old_i;
 	size_t	i;
@@ -98,8 +98,14 @@ static int _leftchevron(t_env *environment, char *line, t_redirect *redirect)
 				i++;
 				while (line[i] == SEPARATOR)
 					i++;
-				if (!line[i] || line[i] == LEFTCHEVRON || line[i] == RIGHTCHEVRON)
-					return (ft_putstr_fd("minishell: syntax error: expected limiter near `<<\'\n", 2), ft_syntaxerror(environment, NULL), -1);
+				if (!line[i] && last)
+					return (ft_syntaxerror(environment, "newline"), -1);
+				else if (!line[i] && !last)
+					return (ft_syntaxerror(environment, "|"), -1);
+				else if (line[i] == LEFTCHEVRON)
+					return (ft_syntaxerror(environment, "<"), -1);
+				else if (line[i] == RIGHTCHEVRON)
+					return (ft_syntaxerror(environment, ">"), -1);
 				start = line + i;
 				while (line[i] > 0 || line[i] == QUOTES)
 					i++;
@@ -111,7 +117,7 @@ static int _leftchevron(t_env *environment, char *line, t_redirect *redirect)
 					{
 						ft_putstr_fd("minishell: ", 2);
 						perror(redirect->infile);
-						free(redirect->infile);
+						db_free(redirect->infile);
 						redirect->infile = NULL;
 						return (0);
 					}
@@ -131,8 +137,14 @@ static int _leftchevron(t_env *environment, char *line, t_redirect *redirect)
 			{
 				while (line[i] == SEPARATOR)
 					i++;
-				if (!line[i] || line[i] == LEFTCHEVRON || line[i] == RIGHTCHEVRON)
+				if (!line[i] && last)
+					return (ft_syntaxerror(environment, "newline"), -1);
+				else if (!line[i] && !last)
+					return (ft_syntaxerror(environment, "|"), -1);
+				else if (line[i] == LEFTCHEVRON)
 					return (ft_syntaxerror(environment, "<"), -1);
+				else if (line[i] == RIGHTCHEVRON)
+					return (ft_syntaxerror(environment, ">"), -1);
 				start = line + i;
 				while (line[i] > 0 || line[i] == QUOTES)
 					i++;
@@ -144,7 +156,7 @@ static int _leftchevron(t_env *environment, char *line, t_redirect *redirect)
 					{
 						ft_putstr_fd("minishell: ", 2);
 						perror(redirect->infile);
-						free(redirect->infile);
+						db_free(redirect->infile);
 						redirect->infile = NULL;
 						return (0);
 					}
@@ -163,7 +175,7 @@ static int _leftchevron(t_env *environment, char *line, t_redirect *redirect)
 	return (1);
 }
 
-static int _rightchevron(t_env *environment, char *line, t_redirect *redirect)
+static int _rightchevron(t_env *environment, char *line, t_redirect *redirect, int last)
 {
 	size_t	old_i;
 	size_t	i;
@@ -191,7 +203,13 @@ static int _rightchevron(t_env *environment, char *line, t_redirect *redirect)
 				redirect->append = 0;
 			while (line[i] == SEPARATOR)
 				i++;
-			if (!line[i] || line[i] == LEFTCHEVRON || line[i] == RIGHTCHEVRON)
+			if (!line[i] && last)
+				return (ft_syntaxerror(environment, "newline"), -1);
+			else if (!line[i] && !last)
+				return (ft_syntaxerror(environment, "|"), -1);
+			else if (line[i] == LEFTCHEVRON)
+				return (ft_syntaxerror(environment, "<"), -1);
+			else if (line[i] == RIGHTCHEVRON)
 				return (ft_syntaxerror(environment, ">"), -1);
 			start = line + i;
 			while (line[i] > 0 || line[i] == QUOTES)
@@ -207,7 +225,7 @@ static int _rightchevron(t_env *environment, char *line, t_redirect *redirect)
 				{
 					ft_putstr_fd("minishell: ", 2);
 					perror(redirect->outfile);
-					free(redirect->outfile);
+					db_free(redirect->outfile);
 					redirect->outfile = NULL;
 					return (0);
 				}
@@ -327,14 +345,14 @@ int	use_heredoc(t_env *environment, t_redirect *redirect)
 		g_returnval = returnval;
 	if (fd != -1)
 		close(fd);
-	free_heredocs(redirect->heredoc);
+	db_free_heredocs(redirect->heredoc);
 	redirect->heredoc = NULL;
 	if (returnval == 130)
 		return (0);
 	return (1);
 }
 
-t_redirect	*redirections(t_env *environment, char *line, int empty)
+t_redirect	*redirections(t_env *environment, char *line, int last)
 {
 	t_redirect	*redirect;
 	int			leftreturn;
@@ -347,39 +365,31 @@ t_redirect	*redirections(t_env *environment, char *line, int empty)
 	redirect->heredoc = NULL;
 	redirect->outfile = NULL;
 	redirect->append = 0;
-	if (!empty)
+	redirect->to_execute = TRUE;
+	leftreturn = _leftchevron(environment, line, redirect, last);
+	if (leftreturn == -1)
 	{
-		redirect->to_execute = TRUE;
-		leftreturn = _leftchevron(environment, line, redirect);
-		if (leftreturn == -1)
-		{
-			g_returnval = 2;
-			return (ft_free_redirect(redirect), NULL);
-		}
-		else if (leftreturn == 0)
-		{
-			redirect->to_execute = FALSE;
-			free_heredocs(redirect->heredoc);
-			redirect->heredoc = NULL;
-		}
-		rightreturn = _rightchevron(environment, line, redirect);
-		if (rightreturn == -1)
-		{
-			g_returnval = 2;
-			return (ft_free_redirect(redirect), NULL);
-		}
-		else if (leftreturn == 0)
-			redirect->to_execute = FALSE;
-		if (!use_heredoc(environment, redirect))
-		{
-			ft_free_redirect(redirect);
-			return (NULL);
-		}
+		g_returnval = 2;
+		return (ft_free_redirect(redirect), NULL);
 	}
-	else
+	else if (leftreturn == 0)
 	{
 		redirect->to_execute = FALSE;
-		line[0] = '\0';
+		db_free_heredocs(redirect->heredoc);
+		redirect->heredoc = NULL;
+	}
+	rightreturn = _rightchevron(environment, line, redirect, last);
+	if (rightreturn == -1)
+	{
+		g_returnval = 2;
+		return (ft_free_redirect(redirect), NULL);
+	}
+	else if (rightreturn == 0)
+		redirect->to_execute = FALSE;
+	if (!use_heredoc(environment, redirect))
+	{
+		ft_free_redirect(redirect);
+		return (NULL);
 	}
 	return (redirect);
 }
