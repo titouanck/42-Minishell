@@ -191,6 +191,8 @@ def input(instruction):
     with open(bash_stderr, 'r') as file:
         bash_readed_stderr = file.read()
 
+    if minishell_readed_stderr.endswith("exit\n"):
+        minishell_readed_stderr = minishell_readed_stderr.rstrip("exit\n")
     bash_readed_stderr = re.sub(r'bash: line \d+:', 'minishell:', bash_readed_stderr)
     bash_readed_stderr = bash_readed_stderr.replace('bash:', 'minishell:')
     if (minishell_readed_stderr != bash_readed_stderr):
