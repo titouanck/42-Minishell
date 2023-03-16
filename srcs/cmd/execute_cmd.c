@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 13:47:57 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/16 14:59:46 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/16 17:08:40 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,15 +91,16 @@ int	execute_cmd(t_env *environment, char **args)
 		filepath = NULL;
 		if (errno == 13)
 		{
+			g_returnval = 126;
 			ft_putstr_fd("minishell: ", 2);
 			ft_putstr_fd(args[0], 2);
 			ft_putstr_fd(": Is a directory\n", 2);
-			g_returnval = 126;
 		}
 		else
 		{
 			ft_putstr_fd("minishell: ", 2);
 			perror(args[0]);
+			g_returnval = errno;
 		}
 	}
 	if (envp)

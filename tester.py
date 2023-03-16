@@ -183,8 +183,8 @@ def input(instruction):
     with open(minishell_stdout, 'r') as file:
         minishell_readed_stdout = file.read()
 
-    if minishell_readed_motd is not None and minishell_readed_stdout.startswith(minishell_readed_motd):
-        minishell_readed_stdout = minishell_readed_stdout.replace(minishell_readed_motd, "", 1)
+    if minishell_readed_motd is not None:
+       minishell_readed_stdout = minishell_readed_stdout.replace(minishell_readed_motd, "")
 
     with open(bash_stdout, 'r') as file:
         bash_readed_stdout = file.read()

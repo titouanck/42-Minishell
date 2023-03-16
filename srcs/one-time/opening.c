@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 14:02:06 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/16 16:10:06 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/16 16:50:01 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void    ft_logo(void)
 	\n|  |__/     |__/|______/|__/  \\__/|______/ \\______/ |__/  |__/|________/|________/|________/  | ";
 	ft_printf("\e[32;1m ---------------------------------------------------------------------------------------------\n|\
 	%s\n|\t\t\t\t\t\t\t\t\t\t\t      |\n ---------------------------------------------------------------------------------------------\n\n\e[0m", logo);
-    
 }
 
 t_env *opening(int argc, char **argv, char *envp[])
@@ -43,7 +42,6 @@ t_env *opening(int argc, char **argv, char *envp[])
 	char	**cmd;
 	pid_t	pid;
 
-	ft_logo();
 	pid = fork();
 	if (pid == 0)
 	{
@@ -107,5 +105,6 @@ t_env *opening(int argc, char **argv, char *envp[])
 	(void) argv;
 	g_returnval = 0;
 	environment = get_environment(envp);
+	ft_logo();
 	return (environment);
 }
