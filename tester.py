@@ -86,22 +86,6 @@ def delete_files():
     if os.path.exists(ignore_readline_leaks):
         os.remove(ignore_readline_leaks)
 
-def ignore_readline_leaks_file(ignore_readline_leaks):
-    with open(ignore_readline_leaks, 'w') as fd_minishell_leaks:
-        fd_minishell_leaks.write(
-            "{\n"
-            "    tester-ignore_readline_leaks\n"
-            "    Memcheck:Leak\n"
-            "    ...\n"
-            "    fun:readline\n"
-            "}\n"
-            "{\n"
-            "    tester-ignore_readline_leaks\n"
-            "    Memcheck:Leak\n"
-            "    ...\n"
-            "    fun:add_history\n"
-            "}\n")
-
 def program_usage():
     print(f"tester.py: usage: python3 tester.py [-valgrind] [rules: 1 .. 7 .. 8]")
     exit(1)
@@ -122,6 +106,22 @@ def parse_argv(argc, argv):
             else:
                 program_usage()
     return check_rules, check_valgrind
+
+def ignore_readline_leaks_file(ignore_readline_leaks):
+    with open(ignore_readline_leaks, 'w') as fd_minishell_leaks:
+        fd_minishell_leaks.write(
+            "{\n"
+            "    tester-ignore_readline_leaks\n"
+            "    Memcheck:Leak\n"
+            "    ...\n"
+            "    fun:readline\n"
+            "}\n"
+            "{\n"
+            "    tester-ignore_readline_leaks\n"
+            "    Memcheck:Leak\n"
+            "    ...\n"
+            "    fun:add_history\n"
+            "}\n")
 
 def compile_minishell():
     subprocess.run(["make"])
@@ -225,6 +225,16 @@ def read_outputs(minishell_stdout, minishell_stderr, bash_stdout, bash_stderr, m
 
     return minishell_readed_stdout, minishell_readed_stderr, bash_readed_stdout, bash_readed_stderr, minishell_readed_leaks
 
+def print_cmd(instruction, minishell_readed_stdout, minishell_readed_stderr, minishell_exitcode, bash_readed_stdout, bash_readed_stderr, bash_exitcode, minishell_readed_leaks):
+    lignes = instruction.split("\n")
+    instruction = "\n     ".join(lignes[:-1]) + "\n" + lignes[-1]
+    status = compare_outputs(minishell_readed_stdout, minishell_readed_stderr, minishell_exitcode, bash_readed_stdout, bash_readed_stderr, bash_exitcode, minishell_readed_leaks)
+    if (status == "OK"):
+        print(f"{BOLDGREEN}[OK]{NC} {instruction}", end=NC)
+    else:
+        print(f"{BOLDRED}[KO]{BOLDWHITE} {instruction}{NC}")
+    return (status)
+
 def compare_outputs(minishell_readed_stdout, minishell_readed_stderr, minishell_exitcode, bash_readed_stdout, bash_readed_stderr, bash_exitcode, minishell_readed_leaks):
     if (minishell_readed_stdout != bash_readed_stdout):
         return ("KO")
@@ -235,16 +245,6 @@ def compare_outputs(minishell_readed_stdout, minishell_readed_stderr, minishell_
     elif (minishell_exitcode != bash_exitcode):
         return ("KO")
     return ("OK")
-    
-def print_cmd(instruction, minishell_readed_stdout, minishell_readed_stderr, minishell_exitcode, bash_readed_stdout, bash_readed_stderr, bash_exitcode, minishell_readed_leaks):
-    lignes = instruction.split("\n")
-    instruction = "\n     ".join(lignes[:-1]) + "\n" + lignes[-1]
-    status = compare_outputs(minishell_readed_stdout, minishell_readed_stderr, minishell_exitcode, bash_readed_stdout, bash_readed_stderr, bash_exitcode, minishell_readed_leaks)
-    if (status == "OK"):
-        print(f"{BOLDGREEN}[OK]{NC} {instruction}", end=NC)
-    else:
-        print(f"{BOLDRED}[KO]{BOLDWHITE} {instruction}{NC}")
-    return (status)
 
 def print_stdout(minishell_readed_stdout, bash_readed_stdout):
     global correct_stdout_nbr
