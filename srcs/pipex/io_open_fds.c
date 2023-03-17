@@ -51,6 +51,8 @@ void	error_on_open(t_env *environment, t_redirect *redirect, char *file)
 	redirect->infile = NULL;
 	db_free(redirect->outfile);
 	redirect->outfile = NULL;
+	redirection_lstclear(redirect->lst);
+	redirect->lst = NULL;
 	g_returnval = 1;
 }
 
@@ -109,10 +111,12 @@ int	io_open_fds(t_env *environment, t_redirect *redirect)
 	{
 		if (redirect->fd_infile != -1)
 			close(redirect->fd_infile);
-		redirect->fd_infile = open(current->str, O_RDONLY);
+		redirect->fd_infile = open(redirect->infile, O_RDONLY);
 		if (redirect->fd_infile == -1)
 			return (error_on_open(environment, redirect, redirect->infile), 0);
 	}
+	redirection_lstclear(redirect->lst);
+	redirect->lst = NULL;
 	environment->log.infile = db_strdup(redirect->infile);
 	environment->log.outfile = db_strdup(redirect->outfile);
 	// if (redirect->infile)

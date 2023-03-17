@@ -75,6 +75,8 @@ void	closing_the_program(t_env *environment)
 	last_input = NULL;
 	if (environment)
 	{
+		db_free(environment->heredoc_files);
+		environment->heredoc_files = NULL;
 		db_free(environment->prompt);
 		db_free(environment->line);
 		log = environment->log;

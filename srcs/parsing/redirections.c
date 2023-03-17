@@ -51,6 +51,8 @@ void	ft_free_redirect(t_redirect *redirect)
 		return ;
 	if (redirect->heredoc)
 		db_free_heredocs(redirect->heredoc);
+	if (redirect->lst)
+		redirection_lstclear(redirect->lst);
 	db_free(redirect->infile);
 	db_free(redirect->outfile);
 	db_free(redirect);
@@ -83,13 +85,18 @@ t_heredoc *lstnew_heredoc(t_heredoc *heredoc, char *limiter)
 static int	check_syntax_error(t_env *environment, char c, t_redirect *redirect)
 {
 	if (c == LEFTCHEVRON)
-		return (ft_syntaxerror(environment, "<"), 0);
+		ft_syntaxerror(environment, "<");
 	else if (c == RIGHTCHEVRON)
-		return (ft_syntaxerror(environment, ">"), 0);
+		ft_syntaxerror(environment, ">");
 	else if (!c && redirect->last)
-		return (ft_syntaxerror(environment, "newline"), 0);
+		ft_syntaxerror(environment, "newline");
 	else if (!c && !redirect->last)
-		return (ft_syntaxerror(environment, "|"), 0);
+		ft_syntaxerror(environment, "|");
+	else
+		return (1);
+	redirection_lstclear(redirect->lst);
+	redirect->lst = NULL;
+	return (0);
 }
 
 static int	new_redirection(t_env *environment, char *line, t_redirect *redirect, int redirection_type)
@@ -554,14 +561,11 @@ t_redirect	*redirections(t_env *environment, char *line, int last)
 	if (!redirect->lst)
 		return (ft_free_redirect(redirect), NULL);
 	redirect->to_execute = TRUE;
-	ft_printf(BLUE "line: (%s)" ENDCL "\n", line);
 	if (!detect_redirections(environment, line, redirect))
 		return (ft_free_redirect(redirect), NULL);
-	redirection_lstprint(redirect->lst);
 	if (!open_heredoc(environment, redirect))
 		return (ft_free_redirect(redirect), NULL);
 	// redirection_lstprint(redirect->lst);
-	ft_printf("\n");
 	// ft_printf("infile=(%s); outfile=(%s);\n", redirect->infile, redirect->outfile);
 	// leftreturn = _leftchevron(environment, line, redirect, last);
 	// if (leftreturn == -1)

@@ -83,7 +83,6 @@ static void	_noarg(t_env *environment)
 void	ftbuiltin_cd(t_env *environment, char **args)
 {
 	char	*cwd;
-	char	*errmsg;
 	char	*key;
 	char	*value;
 	int		r;
@@ -93,6 +92,8 @@ void	ftbuiltin_cd(t_env *environment, char **args)
 	if (ft_len(args) > 2)
 	{
 		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+		db_free(key);
+		db_free(value);
 		g_returnval = 1;
 		return ;
 	}
@@ -103,11 +104,8 @@ void	ftbuiltin_cd(t_env *environment, char **args)
 		r = chdir(args[1]);
 		if (r == -1)
 		{
-			errmsg = db_strjoin("minishell: cd: ", args[1]);
-			if (!errmsg)
-				ft_putstr_fd(ERRALLOC, 2);
-			perror(errmsg);
-			db_free(errmsg);
+			ft_putstr_fd("minishell: cd: ", 2);
+			perror(args[1]);
 			g_returnval = 1;
 		}
 		else

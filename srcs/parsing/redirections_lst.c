@@ -50,6 +50,24 @@ t_redirectionlst	*redirection_lstdel(t_redirectionlst *lst_elem, char *str)
 	return (NULL);
 }
 
+void	redirection_lstclear(t_redirectionlst *lst)
+{
+	t_redirectionlst	*lst_elem;
+	t_redirectionlst	*next;
+
+	if (!lst)
+		return ;
+	lst_elem = lst;
+	while (lst_elem)
+	{
+		next = lst_elem->next;
+		db_free(lst_elem->str);
+		db_free(lst_elem);
+		lst_elem = next;
+	}
+}
+
+
 t_redirectionlst	*redirection_lstaddback(t_redirectionlst *lst, char *str, int redirection_type)
 {
 	t_redirectionlst	*new;

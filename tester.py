@@ -100,8 +100,6 @@ def delete_files():
         os.remove(bash_stderr)
     if os.path.exists(minishell_leaks):
         os.remove(minishell_leaks)
-    if os.path.exists("/tmp/tester-ignore_readline_leaks.supp"):
-        os.remove("/tmp/tester-ignore_readline_leaks.supp")
 
 g_nbr = 0
 g_stdout = 0
@@ -164,7 +162,9 @@ def input(instruction):
         with open("/dev/null", "w") as fd_leaks_stdout:
             with open(minishell_leaks, "w") as fd_leaks_stderr:
                 leaks_process = subprocess.Popen(
+                    # ['valgrind', '-q', '--suppressions=/tmp/tester-ignore_readline_leaks.supp', '--leak-check=full', '--show-leak-kinds=all', './minishell'], stdin=leaks_slave_out, stdout=fd_leaks_stdout, stderr=fd_leaks_stderr)
                     ['valgrind', '--suppressions=/tmp/tester-ignore_readline_leaks.supp', './minishell'], stdin=leaks_slave_out, stdout=fd_leaks_stdout, stderr=fd_leaks_stderr)
+        # --leak-check=full --show-leak-kinds=all
         os.write(leaks_master_out, instruction.encode())
         os.write(leaks_master_out, "exit\n".encode())
         leaks_process.wait()
@@ -252,6 +252,8 @@ def input(instruction):
         with open(minishell_leaks, 'r') as file:
             minishell_readed_leaks = file.read()
 
+        # print(minishell_readed_leaks)
+        
         lines = minishell_readed_leaks.split("\n")
         filtered_lines = []
         pattern = re.compile(

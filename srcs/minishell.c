@@ -29,6 +29,8 @@ void	rm_heredoc_files(t_env *environment)
 	pid_t	pid;
 
 	heredoc_files = ft_split(environment->heredoc_files, '|');
+	db_free(environment->heredoc_files);
+	environment->heredoc_files = NULL;
 	if (!heredoc_files)
 		return ;
 	i = 0;

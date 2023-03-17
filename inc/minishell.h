@@ -191,9 +191,11 @@ int		use_readline(void);
 void	ft_syntaxerror(t_env *environment, char *err);
 
 // void	_remove_quote_token_line(char *line);
-void	redirection_lstclear(t_redirectionlst **lst);
 t_redirectionlst	*redirection_lstaddback(t_redirectionlst *lst, char *str, int redirection_type);
 t_redirectionlst	*redirection_lstdel(t_redirectionlst *lst_elem, char *str);
 void		redirection_lstprint(t_redirectionlst *lst);
+void	redirection_lstclear(t_redirectionlst *lst);
+
+void	rm_heredoc_files(t_env *environment);
 
 #endif
