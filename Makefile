@@ -27,6 +27,7 @@ SRCS += parse_cmd.c
 SRCS += parsing.c
 SRCS += quotes_interpretation.c
 SRCS += redirections.c
+SRCS += redirections_lst.c
 SRCS += split_cmds.c
 
 SRCS += first_child.c
@@ -131,7 +132,7 @@ fclean:	clean;
 	@	+$(MAKE) --no-print-directory -s -C libft fclean
 	@	rm -f ${NAME} assets/minishell.log
 	@	rm -rf /tmp/.minishell-logs assets
-	@	git clean -f
+# @	git clean -f
 	@	rm -f /tmp/minishell-heredoc_*
 
 re:	fclean ${NAME}
