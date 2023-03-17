@@ -85,18 +85,24 @@ static void	_actions_default(char *line, \
 	if (line[(*i)] == '\'')
 	{
 		*single_quote_open = TRUE;
-		if (*i > 0 && !ft_iswhitespace(line[(*i) - 1]))
-		{
-			ft_memmove(line + (*i), line + (*i) + 1, ft_strlen(line + (*i)));
-			(*i)--;	
-		}
-		else
+		// if (*i > 0 && !ft_iswhitespace(line[(*i) - 1]))
+		// {
+		// 	ft_memmove(line + (*i), line + (*i) + 1, ft_strlen(line + (*i)));
+		// 	(*i)--;	
+		// }
+		// else
 			line[*i] = QUOTES;
 	}
 	else if (line[(*i)] == '\"')
 	{
 		*double_quote_open = TRUE;
-		line[*i] = QUOTES;
+		// if (*i > 0 && !ft_iswhitespace(line[(*i) - 1]))
+		// {
+		// 	ft_memmove(line + (*i), line + (*i) + 1, ft_strlen(line + (*i)));
+		// 	(*i)--;	
+		// }
+		// else
+			line[*i] = QUOTES;
 	}
 	else if (ft_iswhitespace(line[(*i)]))
 		line[(*i)] = SEPARATOR;

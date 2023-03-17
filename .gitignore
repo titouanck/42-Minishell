@@ -5,3 +5,4 @@ libft/objs
 libft/libft.a
 libft/xlibft
 .vscode/
+minishell_tester

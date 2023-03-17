@@ -70,7 +70,7 @@ int	main(int argc, char **argv, char *envp[])
 	char	*line;
 	t_env	*environment;
 	int		tty;
-
+	
 	environment = opening(argc, argv, envp);
 	if (!environment)
 		return (closing_the_program(NULL), 42);
@@ -88,54 +88,57 @@ int	main(int argc, char **argv, char *envp[])
 		ft_putstr_fd(ERRALLOC, 2);
 		return (g_returnval);
 	}
-	while (++(environment->line_nbr))
+	if (argc >= 3 && !ft_strncmp(argv[1], "-c", 3))
 	{
 		environment->heredoc_files = NULL;
-		if (g_returnval == 0)
-			environment->prompt[6] = '2';
-		else
-			environment->prompt[6] = '1';
-		tty = -1;
-		if (use_readline())
-		{
-			if (tty != 1)
-			{
-				default_signal_behavior();
-				tty = 1;
-			}
-			line = readline(environment->prompt);
-			dynamic_memory_address_db('+', line);
-		}
-		else
-		{
-			if (tty != 0)
-			{
-				notatty_signal_behavior();
-				tty = 0;
-			}
-			line = get_next_line(0);
-			if (line && ft_strlen(line) > 0 && line[ft_strlen(line) - 1] == '\n')
-				line[ft_strlen(line) - 1] = '\0';
-		}
-		// size_t	i;
-		// i = 0;
-		// // dup2(2, 1);
-		// while (line[i])
-		// {
-		// 	printf("line[%d] = (%c) ou (%d)\n", i, line[i], line[i]);
-		// 	i++;
-		// }
-		
-		if (line && *line)
-			add_history(line);
-		if (!line)
-			break ;
-		db_free(environment->line);
-		db_free(environment->last_input);
+		line = db_strdup(argv[2]);
 		environment->line = line;
 		environment->last_input = db_strdup(line);
 		parsing(environment, &line);
 		rm_heredoc_files(environment);
+	}
+	else
+	{
+		while (++(environment->line_nbr))
+		{
+			environment->heredoc_files = NULL;
+			if (g_returnval == 0)
+				environment->prompt[6] = '2';
+			else
+				environment->prompt[6] = '1';
+			tty = -1;
+			if (use_readline())
+			{
+				if (tty != 1)
+				{
+					default_signal_behavior();
+					tty = 1;
+				}
+				line = readline(environment->prompt);
+				dynamic_memory_address_db('+', line);
+			}
+			else
+			{
+				if (tty != 0)
+				{
+					notatty_signal_behavior();
+					tty = 0;
+				}
+				line = get_next_line(0);
+				if (line && ft_strlen(line) > 0 && line[ft_strlen(line) - 1] == '\n')
+					line[ft_strlen(line) - 1] = '\0';
+			}
+			if (line && *line)
+				add_history(line);
+			if (!line)
+				break ;
+			db_free(environment->line);
+			db_free(environment->last_input);
+			environment->line = line;
+			environment->last_input = db_strdup(line);
+			parsing(environment, &line);
+			rm_heredoc_files(environment);
+		}
 	}
 	closing_the_program(environment);
 	if (use_readline())
