@@ -80,19 +80,12 @@ typedef struct s_env
 	struct s_env	*next;
 }					t_env;
 
-typedef	struct	s_heredoc
-{
-	char				*limiter;
-	struct s_heredoc	*next;
-}						t_heredoc;
-
 typedef struct	s_redirect
 {
 	char		*infile;
 	int			fd_infile;
 	char		*outfile;
 	int			fd_outfile;
-	t_heredoc	*heredoc;
 	int			append;
 	int			to_execute;
 	int			last;

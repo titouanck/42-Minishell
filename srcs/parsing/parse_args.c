@@ -12,33 +12,6 @@
 
 #include "minishell.h"
 
-void	print_redirection(char *line, t_redirect *redirect)
-{
-	t_heredoc *heredoc;
-
-	printf("line: ");
-	for (size_t i = 0; line[i]; i++)
-	{
-		if (line[i] > 0)
-			printf(RED"%c"ENDCL, line[i]);
-		else if (line[i + 1] > 0)
-			printf(RED" "ENDCL);
-	}
-	printf("\ninfile: "RED"%s"ENDCL"\n", redirect->infile);
-	printf("outfile: "RED"%s"ENDCL"\n", redirect->outfile);
-	printf("append: "RED"%d"ENDCL"\n", redirect->append);
-	printf("Heredocs: ");
-	heredoc = redirect->heredoc;
-	while (heredoc)
-	{
-		printf(RED"%s"ENDCL, heredoc->limiter);
-		if (heredoc->next)
-			printf(" -> ");
-		heredoc = heredoc->next;
-	}
-	printf("\n");
-}
-
 static void	_remove_quote_token_tab(char **args)
 {
 	size_t	i;
