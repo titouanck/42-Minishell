@@ -367,10 +367,10 @@ if (check_rules == [] or rule in check_rules):
     input("cat < thisfiledonotexist < thisfiledonotexist | echo 42\n")
     input("echo 42 > /dev/stdout | echo 4 8 15 16 23 42\n")
     input("touch /tmp/tester-norights.txt\n"
-        "cat < wefhoe > norights.txt\n"
+        "cat < wefhoe > /tmp/tester-norights.txt\n"
         "rm -f /tmp/tester-norights.txt\n")
     input("touch /tmp/tester-norights.txt\n"
-        "cat > norights.txt < wefhoe\n"
+        "cat > /tmp/tester-norights.txt < wefhoe\n"
         "rm -f /tmp/tester-norights.txt\n")
 
 rule += 1
