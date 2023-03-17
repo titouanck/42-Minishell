@@ -97,7 +97,7 @@ def parse_argv(argc, argv):
     if (argc > 1):
         for arg in argv[1:]:
             if (arg.isdigit()):
-                if (int(arg) not in check_rules):
+                if (int(arg) not in check_rules and int(arg) >= 1 and int(arg) <= 14):
                     check_rules.append(int(arg))
                 else:
                     program_usage()
@@ -344,18 +344,18 @@ def send_instructions(check_rules):
     rule = 0
     rule = +1
     if (check_rules == [] or rule in check_rules):
-        print(f"\n{BLUE}1. Display a prompt when waiting for a new command.{NC}\n")
+        print(f"\n{BLUE}{rule}. Display a prompt when waiting for a new command.{NC}\n")
         input("\n")
         input("\n")
 
     rule += 1
     if (check_rules == [] or rule in check_rules):
-        print(f"\n{BLUE}2. Have a working history.{NC}\n")
+        print(f"\n{BLUE}{rule}. Have a working history.{NC}\n")
         print(f"{BOLDORANGE}  → Must be check manually.{NC}\n")
 
     rule += 1
     if (check_rules == [] or rule in check_rules):
-        print(f"\n{BLUE}3. Search and launch the right executable.{NC}\n")
+        print(f"\n{BLUE}{rule}. Search and launch the right executable.{NC}\n")
         input("\"\"\n")
         input("\'\'\n")
         input("ls -l " + ignore_files + "\n")
@@ -371,17 +371,17 @@ def send_instructions(check_rules):
 
     rule += 1
     if (check_rules == [] or rule in check_rules):
-        print(f"\n{BLUE}4. Not use more than one global variable.{NC}\n")
+        print(f"\n{BLUE}{rule}. Not use more than one global variable.{NC}\n")
         print(f"{BOLDORANGE}  → Must be check manually.{NC}\n")
 
     rule += 1
     if (check_rules == [] or rule in check_rules):
-        print(f"\n{BLUE}5. Not interpret unclosed quotes or special characters not required by the subject.{NC}\n")
+        print(f"\n{BLUE}{rule}. Not interpret unclosed quotes or special characters not required by the subject.{NC}\n")
         print(f"{BOLDORANGE}  → Must be check manually.{NC}\n")
 
     rule += 1
     if (check_rules == [] or rule in check_rules):
-        print(f"\n{BLUE}6. Handle single quote and double quote{NC}\n")
+        print(f"\n{BLUE}{rule}. Handle single quote and double quote{NC}\n")
         input("echo \'$\'\'PW\'D\' << (not \'a\' here-doc) > (do not redirect) \"\"<\"\" (not an infile) >> (not an outfile)\'\n")
         input("echo \"$\"\"PW\'D\' << (not a her\'e\'-doc) \'\'>\'\' (do not redirect) < (not an infile) >> (not an outfile)\"\n")
         input("echo \"$ \"\"PW\'D\' << (not a her\'e\'-doc) \'\'>\'\' (do not redirect) < (not an infile) >> (not an outfile)\"\n")
@@ -389,7 +389,7 @@ def send_instructions(check_rules):
 
     rule += 1
     if (check_rules == [] or rule in check_rules):
-        print(f"\n{BLUE}7. Implement redirection{NC}\n")
+        print(f"\n{BLUE}{rule}. Implement redirection{NC}\n")
         input("cat < Makefile -e > out\n"
             "cat out\n"
             "cat < Makefile -e >> out\n"
@@ -433,7 +433,7 @@ def send_instructions(check_rules):
 
     rule += 1
     if (check_rules == [] or rule in check_rules):
-        print(f"\n{BLUE}8. Implement heredoc{NC}\n")
+        print(f"\n{BLUE}{rule}. Implement heredoc{NC}\n")
         input("cat << fake < Makefile << \"just a limiter\"\n"
             "42\n"
             "fake\n"
@@ -478,7 +478,7 @@ def send_instructions(check_rules):
 
     rule += 1
     if (check_rules == [] or rule in check_rules):
-        print(f"\n{BLUE}9. Implement pipes{NC}\n")
+        print(f"\n{BLUE}{rule}. Implement pipes{NC}\n")
         input("printf \"42\\n\" | cat | cat | cat\n")
         input("printf \"42\\n\" | cat | cat | cat\n")
         input("printf \"42\\n\" | cat | printf \"4 8 15 16 23 42\\n\" | cat\n")
@@ -491,7 +491,7 @@ def send_instructions(check_rules):
 
     rule += 1
     if (check_rules == [] or rule in check_rules):
-        print(f"\n{BLUE}10. Handle environment variables and $?{NC}\n")
+        print(f"\n{BLUE}{rule}. Handle environment variables and $?{NC}\n")
         input("unset NONEXISTINGVARIABLE\n"
             "echo $NONEXISTINGVARIABLE\n")
         input("unset NONEXISTINGVARIABLE\n"
@@ -514,12 +514,12 @@ def send_instructions(check_rules):
 
     rule += 1
     if (check_rules == [] or rule in check_rules):
-        print(f"\n{BLUE}11. Handle ctrl-C, ctrl-D and ctrl-\ which should behave like in bash{NC}\n")
+        print(f"\n{BLUE}{rule}. Handle ctrl-C, ctrl-D and ctrl-\ which should behave like in bash{NC}\n")
         print(f"{BOLDORANGE}  → Must be check manually.{NC}\n")
 
     rule += 1
     if (check_rules == [] or rule in check_rules):
-        print(f"\n{BLUE}12. Your shell must implement the following builtins{NC}\n")
+        print(f"\n{BLUE}{rule}. Your shell must implement echo, cd and PWD :{NC}\n")
         input("echo $HOME\n")
         input("echo -n -n -n Hmmm..\n")
         input("echo -n $HOME\n")
@@ -530,6 +530,7 @@ def send_instructions(check_rules):
         input("echo -mn $HOME\n")
         input("echo -nm $HOME\n")
         input("echo -nnmnn $HOME\n")
+        input("echo \" \" \" \"\"\" \'\'\n")
         input("cd to-infinity-and-beyond_donotexist\n")
         input("echo $PWD, $OLDPWD\n"
             "cd to-infinity-and-beyond_donotexist\n"
@@ -561,6 +562,10 @@ def send_instructions(check_rules):
             "pwd\n")
         input("pwd 4815162342\n")
         input("pwd Quarante deux\n")
+
+    rule += 1
+    if (check_rules == [] or rule in check_rules):
+        print(f"\n{BLUE}{rule}. Your shell must implement export, unset and env :{NC}\n")
         input("export 4815162342=4815162342\n"
             "env | grep 4815162342\n")
         input("export LOST4815162342=4815162342\n"
@@ -593,6 +598,10 @@ def send_instructions(check_rules):
             "ls\n")
         input("unset\n")
         input("unset \"\"\n")
+
+    rule += 1
+    if (check_rules == [] or rule in check_rules):
+        print(f"\n{BLUE}{rule}. Your shell must implement exit:{NC}\n")
         input("exit 42\n"
             "test\n")
         input("exit \"  42  \"\n"
