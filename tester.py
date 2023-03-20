@@ -48,6 +48,7 @@ env_path = shutil.which('env')
 cmd_nbr = 0
 correct_stdout_nbr = 0
 correct_stderr_nbr = 0
+diff_stderr_nbr = 0
 correct_exitcode_nbr = 0
 wrong_stderr_nbr = 0
 leaks_nbr = 0
@@ -279,6 +280,7 @@ def print_stdout(minishell_readed_stdout, bash_readed_stdout):
 
 def print_stderr(minishell_readed_stderr, bash_readed_stderr):
     global correct_stderr_nbr
+    global diff_stderr_nbr
     global wrong_stderr_nbr
 
     if (minishell_readed_stderr != bash_readed_stderr):        
@@ -287,6 +289,8 @@ def print_stderr(minishell_readed_stderr, bash_readed_stderr):
             wrong_stderr_nbr += 1
         elif (bash_readed_stderr == ""):
             wrong_stderr_nbr += 1
+        else:
+            diff_stderr_nbr += 1
         
         print(f"{BOLDWHITE}stderr{NC}")
 
