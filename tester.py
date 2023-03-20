@@ -54,7 +54,7 @@ wrong_stderr_nbr = 0
 leaks_nbr = 0
 
 columns, _ = os.get_terminal_size()
-dash_line = "-" * columns
+dash_line = "_" * columns + '\n'
 
 minishell_readed_motd = None
 
