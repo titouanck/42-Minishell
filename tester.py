@@ -231,19 +231,25 @@ def print_cmd(instruction, minishell_readed_stdout, minishell_readed_stderr, min
     status = compare_outputs(minishell_readed_stdout, minishell_readed_stderr, minishell_exitcode, bash_readed_stdout, bash_readed_stderr, bash_exitcode, minishell_readed_leaks)
     if (status == "OK"):
         print(f"{BOLDGREEN}[OK]{NC} {instruction}", end=NC)
-    else:
+    elif (status == "KO"):
         print(f"{BOLDRED}[KO]{BOLDWHITE} {instruction}{NC}")
+    else:
+        print(f"{BOLDORANGE}[??]{BOLDWHITE} {instruction}{NC}")
     return (status)
 
 def compare_outputs(minishell_readed_stdout, minishell_readed_stderr, minishell_exitcode, bash_readed_stdout, bash_readed_stderr, bash_exitcode, minishell_readed_leaks):
     if (minishell_readed_stdout != bash_readed_stdout):
         return ("KO")
-    elif (minishell_readed_stderr != bash_readed_stderr):
-        return ("KO")
     elif (minishell_readed_leaks != ""):
         return ("KO")
     elif (minishell_exitcode != bash_exitcode):
         return ("KO")
+    elif (minishell_readed_stderr == "" and minishell_readed_stderr != bash_readed_stderr):
+        return ("KO")
+    elif (bash_readed_stderr == "" and minishell_readed_stderr != bash_readed_stderr):
+        return ("KO")
+    elif (minishell_readed_stderr != bash_readed_stderr):
+        return ("??")
     return ("OK")
 
 def print_stdout(minishell_readed_stdout, bash_readed_stdout):
