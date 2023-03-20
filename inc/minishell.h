@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/16 19:24:17 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/20 17:38:29 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # define PROMPT "minishell →"
 # define RL_NEWLINE "\001"
 # define ERRALLOC "minishell: Could not allocate memory.\n"
+# define INVALIDOPTION 2
 # define VARNAMESET "abcdefghijklmnopqrstuvwxyz\
 ABCDEFGHIJKLMNOPQRSTUVWXYZ\
 0123456789_"
@@ -105,7 +106,7 @@ typedef struct s_cmd
 
 void		ftbuiltin_echo(char **args);
 void		ftbuiltin_cd(t_env *environment, char **args);
-void		ftbuiltin_pwd(t_env *environment);
+void		ftbuiltin_pwd(t_env *environment, char **args);
 void		ftbuiltin_export(t_env *environment, char **args);
 void		ftbuiltin_unset(t_env *environment, char **args);
 void		ftbuiltin_env(t_env *environment);

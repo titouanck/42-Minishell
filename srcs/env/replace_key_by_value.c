@@ -38,7 +38,10 @@ char	*replace_key_by_value(t_env *environment, char *line)
 			else
 			{
 				second_part = line + i + 1;
-				while (*second_part && ft_strinset(second_part, VARNAMESET, 1))
+				if (!ft_isdigit(*second_part))
+					while (*second_part && ft_strinset(second_part, VARNAMESET, 1))
+						second_part++;
+				else
 					second_part++;
 			}
 			var = second_part;
