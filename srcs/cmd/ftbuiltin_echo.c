@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 18:15:33 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/01 14:58:07 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/20 13:31:38 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,29 +20,36 @@ void	ftbuiltin_echo(char **args)
 
 	g_returnval = 0;
 	newline = TRUE;
-	i = 1;
 	if (!args[1])
 	{
 		ft_putchar_fd('\n', 1);
 		return ;
 	}
-	if (ft_strncmp(args[i], "-n", 2) == 0)
+	i = 1;
+	while (args[i])
 	{
-		j = 2;
-		while (args[i][j])
+		if (ft_strncmp(args[i], "-n", 2) == 0)
 		{
-			if (args[i][j] != 'n')
+			j = 2;
+			while (args[i][j])
 			{
-				j = -1;
-				break ;
+				if (args[i][j] != 'n')
+				{
+					j = -1;
+					break ;
+				}
+				j++;
 			}
-			j++;
+			if (j > 0)
+			{
+				newline = FALSE;
+				i++;
+			}
+			else
+				break ;
 		}
-		if (j > 0)
-		{
-			newline = FALSE;
-			i++;
-		}
+		else
+			break ;
 	}
 	while (args[i])
 	{

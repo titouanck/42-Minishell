@@ -368,6 +368,9 @@ def send_instructions(check_rules):
         input("/tmp   \n")
         input("./tmp\n")
         input("     ./tester.py     \n")
+        input("./\n")
+        input("../\n")
+        input("..\n")
 
     rule += 1
     if (check_rules == [] or rule in check_rules):

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/16 13:44:21 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/20 14:18:55 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,14 +88,33 @@ int	main(int argc, char **argv, char *envp[])
 		ft_putstr_fd(ERRALLOC, 2);
 		return (g_returnval);
 	}
+	char	*tab[3];
+	tab[0] = "export";
+	tab[1] = "_=minishell/env";
+	tab[2] = NULL;
+	ftbuiltin_export(environment, tab);
 	if (argc >= 3 && !ft_strncmp(argv[1], "-c", 3))
 	{
-		environment->heredoc_files = NULL;
-		line = db_strdup(argv[2]);
-		environment->line = line;
-		environment->last_input = db_strdup(line);
-		parsing(environment, &line);
-		rm_heredoc_files(environment);
+		int	fd;
+
+		fd = open("/dev/null", O_RDONLY);
+		if (fd == -1)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			perror("open");
+			g_returnval = errno;
+		}
+		else
+		{
+			dup2(fd, 0);
+			(environment->line_nbr)++;
+			environment->heredoc_files = NULL;
+			line = db_strdup(argv[2]);
+			environment->line = line;
+			environment->last_input = db_strdup(line);
+			parsing(environment, &line);
+			rm_heredoc_files(environment);
+		}
 	}
 	else
 	{
