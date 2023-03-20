@@ -648,12 +648,14 @@ def print_results():
     else:
         print(f"\033[1;37mstdout:    {BOLDRED}{correct_stdout_nbr:3d}/{cmd_nbr}:  KO!{NC}")
 
-    if (wrong_stderr_nbr > 0):
+    if (wrong_stderr_nbr > 0 and diff_stderr_nbr == 0):
         print(f"\033[1;37mstderr:    {BOLDRED}{correct_stderr_nbr:3d}/{cmd_nbr}:  KO!{NC}")
+    elif (wrong_stderr_nbr > 0):
+        print(f"\033[1;37mstderr:    {BOLDRED}{correct_stderr_nbr:3d}/{cmd_nbr}:  KO! {ORANGE}(+ {diff_stderr_nbr} requiring manual verification){NC}")
     elif (correct_stderr_nbr == cmd_nbr):
         print(f"\033[1;37mstderr:    {BOLDGREEN}{correct_stderr_nbr:3d}/{cmd_nbr}:  OK!{NC}")
     else:
-        print(f"\033[1;37mstderr:    {BOLDORANGE}{correct_stderr_nbr:3d}/{cmd_nbr}:  N/A{NC}")
+        print(f"\033[1;37mstderr:    {BOLDORANGE}{correct_stderr_nbr:3d}/{cmd_nbr}:  N/A {ORANGE}(+ {diff_stderr_nbr} requiring manual verification){NC}")
 
     if (correct_exitcode_nbr == cmd_nbr):
         print(f"\033[1;37mEXIT CODE: {BOLDGREEN}{correct_exitcode_nbr:3d}/{cmd_nbr}:  OK!{NC}")
