@@ -7,9 +7,6 @@ import shutil
 import re
 import sys
 
-columns, _ = os.get_terminal_size()
-dash_line = "-" * columns
-
 def main():
     global  check_valgrind
     global  minishell_readed_motd
@@ -55,6 +52,9 @@ diff_stderr_nbr = 0
 correct_exitcode_nbr = 0
 wrong_stderr_nbr = 0
 leaks_nbr = 0
+
+columns, _ = os.get_terminal_size()
+dash_line = "-" * columns
 
 minishell_readed_motd = None
 
