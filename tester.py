@@ -13,7 +13,7 @@ def main():
 
     delete_files()
 
-    check_rules, check_valgrind = parse_argv(len(sys.argv), sys.argv)
+    check_rules, ignore_rules, check_valgrind = parse_argv(len(sys.argv), sys.argv)
 
     if (check_valgrind):
         ignore_readline_leaks_file(ignore_readline_leaks)
@@ -24,7 +24,7 @@ def main():
 
     ignore_motd()
 
-    send_instructions(check_rules)
+    send_instructions(check_rules, ignore_rules)
 
     print_results()
 
@@ -91,15 +91,22 @@ def delete_files():
         os.remove(ignore_readline_leaks)
 
 def program_usage():
-    print(f"tester.py: usage: python3 tester.py [-valgrind] [rules: 1 .. 7 .. 8]")
+    print_tips()
+    print(f"tester.py: usage: python3 tester.py [-valgrind] [-i] [rules...] [1] [7] [14]")
     exit(1)
 
 def parse_argv(argc, argv):
     check_rules = []
+    ignore_rules = []
     check_valgrind = 0
 
     if (argc > 1):
-        for arg in argv[1:]:
+        i = 1
+        while (i < argc):
+            arg = argv[i]
+            next_arg = None
+            if (i + 1 < argc):
+                next_arg = argv[i + 1]
             if (arg.isdigit()):
                 if (int(arg) not in check_rules and int(arg) >= 1 and int(arg) <= 14):
                     check_rules.append(int(arg))
@@ -107,9 +114,15 @@ def parse_argv(argc, argv):
                     program_usage()
             elif ((arg == "-valgrind" or arg == "valgrind") and check_valgrind == 0):
                 check_valgrind = 1
+            elif ((arg == '-i' or arg == '-I') and next_arg is not None):
+                if (next_arg.isdigit()):
+                    ignore_rules.append(int(next_arg))
+                    i += 1
             else:
                 program_usage()
-    return check_rules, check_valgrind
+            i += 1;
+
+    return check_rules, ignore_rules, check_valgrind
 
 def ignore_readline_leaks_file(ignore_readline_leaks):
     with open(ignore_readline_leaks, 'w') as fd_minishell_leaks:
@@ -133,12 +146,14 @@ def compile_minishell():
 
 
 def print_tips():
-    print(f"{BOLDWHITE}Tip: {WHITE}You can choose to check a particular part :{NC}")
-    print(f"python3 tester.py 11\n")
-    print(f"{BOLDWHITE}Tip: {WHITE}You can choose to check for memory leaks :{NC}")
+    print(f"{BOLDGREEN}Tip: {GREEN}You can choose to ignore a particular part with -i or -I :{NC}")
+    print(f" python3 tester.py -i 8 -i 14\n")
+    print(f"{BOLDGREEN}Tip: {GREEN}You can choose to check a particular part :{NC}")
+    print(f"python3 tester.py 1 11\n")
+    print(f"{BOLDGREEN}Tip: {GREEN}You can choose to check for memory leaks :{NC}")
     print(f"python3 tester.py -valgrind\n")
-    print(f"{BOLDWHITE}Tip: {WHITE}Or even do both :{NC}")
-    print(f"python3 tester.py -valgrind 11")
+    print(f"{BOLDGREEN}Tip: {GREEN}Or even do both :{NC}")
+    print(f"python3 tester.py -valgrind 11\n")
 
 def ignore_motd():
     global minishell_readed_motd
@@ -211,6 +226,8 @@ def read_outputs(minishell_stdout, minishell_stderr, bash_stdout, bash_stderr, m
         bash_readed_stderr = file.read()
         bash_readed_stderr = re.sub(r'bash: line \d+:', 'minishell:', bash_readed_stderr)
         bash_readed_stderr = bash_readed_stderr.replace('bash:', 'minishell:')
+        bash_readed_stderr = bash_readed_stderr.replace('export: usage: export [-fn] [name[=value] ...] or export -p\n', '')
+        bash_readed_stderr = bash_readed_stderr.replace('unset: usage: unset [-f] [-v] [-n] [name ...]\n', '')
         if bash_readed_stderr.endswith("exit\n"):
             bash_readed_stderr = bash_readed_stderr.rstrip("exit\n")
 
@@ -229,17 +246,24 @@ def read_outputs(minishell_stdout, minishell_stderr, bash_stdout, bash_stderr, m
 
     return minishell_readed_stdout, minishell_readed_stderr, bash_readed_stdout, bash_readed_stderr, minishell_readed_leaks
 
+dash_line_printed = 0
+
 def print_cmd(instruction, minishell_readed_stdout, minishell_readed_stderr, minishell_exitcode, bash_readed_stdout, bash_readed_stderr, bash_exitcode, minishell_readed_leaks):
+    global  dash_line_printed
+
     lignes = instruction.split("\n")
     instruction = "\n     ".join(lignes[:-1]) + "\n" + lignes[-1]
     status = compare_outputs(minishell_readed_stdout, minishell_readed_stderr, minishell_exitcode, bash_readed_stdout, bash_readed_stderr, bash_exitcode, minishell_readed_leaks)
     if (status == "OK"):
         print(f"{BOLDGREEN}[OK]{NC} {instruction}", end=NC)
+        dash_line_printed = 0
     elif (status == "KO"):
-        print(dash_line)
+        if (dash_line_printed == 0):
+            print(dash_line)
         print(f"{BOLDRED}[KO]{BOLDWHITE} {instruction}{NC}")
     else:
-        print(dash_line)
+        if (dash_line_printed == 0):
+            print(dash_line)
         print(f"{BOLDORANGE}[??]{BOLDWHITE} {instruction}{NC}")
     return (status)
 
@@ -265,13 +289,13 @@ def print_stdout(minishell_readed_stdout, bash_readed_stdout):
         if (minishell_readed_stdout == ""):
             minishell_readed_stdout = "(null)\n"
         
-        print(f"{BOLDWHITE}stdout{NC}")
+        print(f"{RED}YOUR STDOUT (Sortie standard){NC}")
         if not (minishell_readed_stdout).endswith('\n'):
-            print(f"{ORANGE}{minishell_readed_stdout}{NC}$")
+            print(f"{NC}{minishell_readed_stdout}{NC}$")
         else:
-            print(f"{ORANGE}{minishell_readed_stdout}{NC}", end="")
+            print(f"{NC}{minishell_readed_stdout}{NC}", end="")
         
-        print(f"{BOLDWHITE}expected{NC}")
+        print(f"{RED}EXPECTED{NC}")
         if (bash_readed_stdout == ""):
             print("(null)")
         elif not (bash_readed_stdout).endswith('\n'):
@@ -292,19 +316,22 @@ def print_stderr(minishell_readed_stderr, bash_readed_stderr):
         if (minishell_readed_stderr == ""):
             minishell_readed_stderr = "(null)\n"
             wrong_stderr_nbr += 1
+            color = RED;
         elif (bash_readed_stderr == ""):
+            color = RED;
             wrong_stderr_nbr += 1
         else:
+            color = ORANGE;
             diff_stderr_nbr += 1
         
-        print(f"{BOLDWHITE}stderr{NC}")
+        print(f"{color}YOUR STDERR (Sortie d'erreur){NC}")
 
         if not (minishell_readed_stderr).endswith('\n'):
-            print(f"{ORANGE}{minishell_readed_stderr}{NC}$")
+            print(f"{NC}{minishell_readed_stderr}{NC}$")
         else:
-            print(f"{ORANGE}{minishell_readed_stderr}{NC}", end="")
+            print(f"{NC}{minishell_readed_stderr}{NC}", end="")
     
-        print(f"{BOLDWHITE}expected{NC}")
+        print(f"{color}EXPECTED{NC}")
         if (bash_readed_stderr == ""):
             print("(null)")
         print(bash_readed_stderr, end="")
@@ -331,6 +358,7 @@ def print_leaks(minishell_readed_leaks):
 def input(instruction):
     global cmd_nbr
     global check_valgrind
+    global dash_line_printed
 
     cmd_nbr += 1
     minishell_stdout, minishell_stderr, minishell_exitcode, \
@@ -354,22 +382,25 @@ def input(instruction):
 
     if (status == "OK"):
         print("")
+    else:
+        print(dash_line)
+        dash_line_printed = 1
 
-def send_instructions(check_rules):
+def send_instructions(check_rules, ignore_rules):
     rule = 0
     rule = +1
-    if (check_rules == [] or rule in check_rules):
+    if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
         print(f"\n{BLUE}{rule}. Display a prompt when waiting for a new command.{NC}\n")
         input("\n")
         input("\n")
 
     rule += 1
-    if (check_rules == [] or rule in check_rules):
+    if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
         print(f"\n{BLUE}{rule}. Have a working history.{NC}\n")
         print(f"{BOLDORANGE}  → Must be check manually.{NC}\n")
 
     rule += 1
-    if (check_rules == [] or rule in check_rules):
+    if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
         print(f"\n{BLUE}{rule}. Search and launch the right executable.{NC}\n")
         input("\"\"\n")
         input("\'\'\n")
@@ -388,17 +419,17 @@ def send_instructions(check_rules):
         input("..\n")
 
     rule += 1
-    if (check_rules == [] or rule in check_rules):
+    if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
         print(f"\n{BLUE}{rule}. Not use more than one global variable.{NC}\n")
         print(f"{BOLDORANGE}  → Must be check manually.{NC}\n")
 
     rule += 1
-    if (check_rules == [] or rule in check_rules):
+    if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
         print(f"\n{BLUE}{rule}. Not interpret unclosed quotes or special characters not required by the subject.{NC}\n")
         print(f"{BOLDORANGE}  → Must be check manually.{NC}\n")
 
     rule += 1
-    if (check_rules == [] or rule in check_rules):
+    if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
         print(f"\n{BLUE}{rule}. Handle single quote and double quote{NC}\n")
         input("echo \'$\'\'PW\'D\' << (not \'a\' here-doc) > (do not redirect) \"\"<\"\" (not an infile) >> (not an outfile)\'\n")
         input("echo \"$\"\"PW\'D\' << (not a her\'e\'-doc) \'\'>\'\' (do not redirect) < (not an infile) >> (not an outfile)\"\n")
@@ -406,7 +437,7 @@ def send_instructions(check_rules):
         input("echo \' $\'\'PW\'D\' << (not \'a\' here-doc) > (do not redirect) \" \"<\"\" (not an infile) >> (not an outfile)\'\n")
 
     rule += 1
-    if (check_rules == [] or rule in check_rules):
+    if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
         print(f"\n{BLUE}{rule}. Implement redirection{NC}\n")
         input("cat < Makefile -e > out\n"
             "cat out\n"
@@ -450,7 +481,7 @@ def send_instructions(check_rules):
             "rm -f /tmp/tester-norights.txt\n")
 
     rule += 1
-    if (check_rules == [] or rule in check_rules):
+    if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
         print(f"\n{BLUE}{rule}. Implement heredoc{NC}\n")
         input("cat << fake < Makefile << \"just a limiter\"\n"
             "42\n"
@@ -495,7 +526,7 @@ def send_instructions(check_rules):
             "limiter\n")
 
     rule += 1
-    if (check_rules == [] or rule in check_rules):
+    if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
         print(f"\n{BLUE}{rule}. Implement pipes{NC}\n")
         input("printf \"42\\n\" | cat | cat | cat\n")
         input("printf \"42\\n\" | cat | cat | cat\n")
@@ -508,7 +539,7 @@ def send_instructions(check_rules):
         input("\'\'|\'\'|\"\"|\"\"\n")
 
     rule += 1
-    if (check_rules == [] or rule in check_rules):
+    if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
         print(f"\n{BLUE}{rule}. Handle environment variables and $?{NC}\n")
         input("unset NONEXISTINGVARIABLE\n"
             "echo $NONEXISTINGVARIABLE\n")
@@ -531,15 +562,14 @@ def send_instructions(check_rules):
         input("echo $\"\"SHELL\n")
 
     rule += 1
-    if (check_rules == [] or rule in check_rules):
+    if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
         print(f"\n{BLUE}{rule}. Handle ctrl-C, ctrl-D and ctrl-\ which should behave like in bash{NC}\n")
         print(f"{BOLDORANGE}  → Must be check manually.{NC}\n")
 
     rule += 1
-    if (check_rules == [] or rule in check_rules):
+    if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
         print(f"\n{BLUE}{rule}. Your shell must implement echo, cd and PWD :{NC}\n")
         input("echo $HOME\n")
-        input("echo -n -n -n Hmmm..\n")
         input("echo -n $HOME\n")
         input("echo \"-\'n\" $HOME\n")
         input("echo \'-\"n\' $HOME\n")
@@ -548,7 +578,20 @@ def send_instructions(check_rules):
         input("echo -mn $HOME\n")
         input("echo -nm $HOME\n")
         input("echo -nnmnn $HOME\n")
-        input("echo \" \" \" \"\"\" \'\'\n")
+        
+        if (True):
+		    # Tests from https://github.com/thallard/minishell_tester :
+            input("echo -n -n -n Hmmm..\n")
+            input("echo \" \" \" \"\"\" \'\'\n")
+            input("echo $USER$12USER$USER=4$USER12\n")
+            input("echo $USER $123456789USER $USER123456789\n")
+            input("echo $USER $9999USER $8888USER $7777USER\n")
+            input("echo $USER $USER9999 $USER8888 $USER7777\n")
+            input("echo $USER $USER9999 $USER8888 $USER7777 \"$USER\"\n")
+            input("echo \"$USER=12$USER\"\n")
+            input("echo \"$9USER\" \"\'$USER=12$SOMETHING\'\"\n")
+            input("echo \"text\" \"text$USER\" ... \"$USER\"\n")
+
         input("cd to-infinity-and-beyond_donotexist\n")
         input("echo $PWD, $OLDPWD\n"
             "cd to-infinity-and-beyond_donotexist\n"
@@ -582,7 +625,7 @@ def send_instructions(check_rules):
         input("pwd Quarante deux\n")
 
     rule += 1
-    if (check_rules == [] or rule in check_rules):
+    if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
         print(f"\n{BLUE}{rule}. Your shell must implement export, unset and env :{NC}\n")
         input("export 4815162342=4815162342\n"
             "env | grep 4815162342\n")
@@ -611,6 +654,17 @@ def send_instructions(check_rules):
         input("unset =PATH\n")
         input("unset +=\n")
         input("unset \"<\"\n")
+        
+        if (True):
+		    # Tests from https://github.com/thallard/minishell_tester :
+            input("export | grep \"OLDPWD\"\n")
+            input("export | grep \"PWD\"\n")
+            input("export --TEST=123\n")
+            input("export -TEST=42\n")
+            input("export | grep \"SHLVL\"\n")
+            input("unset \"NI;CO\"\n")
+            input("unset -TEST\n")
+        
         input("unset 42PATH\n")
         input("unset PATH\n"
             "ls\n")
@@ -618,7 +672,7 @@ def send_instructions(check_rules):
         input("unset \"\"\n")
 
     rule += 1
-    if (check_rules == [] or rule in check_rules):
+    if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
         print(f"\n{BLUE}{rule}. Your shell must implement exit:{NC}\n")
         input("exit 42\n"
             "test\n")
