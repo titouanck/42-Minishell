@@ -623,6 +623,10 @@ def send_instructions(check_rules, ignore_rules):
             "pwd\n")
         input("pwd 4815162342\n")
         input("pwd Quarante deux\n")
+        input("echo -wrongoption -wrongoption\n")
+        input("cd -wrongoption /notanexistingfolder\n")
+        input("pwd -wrongoption -wrongoption\n")
+
 
     rule += 1
     if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
@@ -653,23 +657,25 @@ def send_instructions(check_rules, ignore_rules):
         input("unset /PATH\n")
         input("unset =PATH\n")
         input("unset +=\n")
-        input("unset \"<\"\n")
-        
-        if (True):
-		    # Tests from https://github.com/thallard/minishell_tester :
-            input("export | grep \"OLDPWD\"\n")
-            input("export | grep \"PWD\"\n")
-            input("export --TEST=123\n")
-            input("export -TEST=42\n")
-            input("export | grep \"SHLVL\"\n")
-            input("unset \"NI;CO\"\n")
-            input("unset -TEST\n")
-        
+        input("unset \"<\"\n")        
         input("unset 42PATH\n")
         input("unset PATH\n"
             "ls\n")
         input("unset\n")
         input("unset \"\"\n")
+        input("export | grep \"OLDPWD\"\n")
+        input("export | grep \"PWD\"\n")
+        input("export --wrongoption=123 --wrongoption=123\n")
+        input("export --wrongoption --wrongoption\n")
+        input("export -wrongoption=42 -wrongoption=42\n")
+        input("export | grep \"SHLVL\"\n")
+        input("export -\n")
+        input("unset -\n")
+        input("unset -wrongoption -wrongoption\n")
+        input("env -wrongoption -wrongoption\n")
+        input("env --wrongoption\n")
+        input("env -\n")
+
 
     rule += 1
     if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
@@ -700,6 +706,9 @@ def send_instructions(check_rules, ignore_rules):
             "test\n")
         input("exit -9223372036854775809\n"
             "test\n")
+        input("exit -wrongoption -wrongoption\n")
+        input("exit --\n")
+        input("exit -\n")
 
 def print_results():
     if (correct_stdout_nbr == cmd_nbr):
