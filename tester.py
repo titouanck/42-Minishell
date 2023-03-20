@@ -7,6 +7,9 @@ import shutil
 import re
 import sys
 
+columns, _ = os.get_terminal_size()
+dash_line = "-" * columns
+
 def main():
     global  check_valgrind
     global  minishell_readed_motd
@@ -233,8 +236,10 @@ def print_cmd(instruction, minishell_readed_stdout, minishell_readed_stderr, min
     if (status == "OK"):
         print(f"{BOLDGREEN}[OK]{NC} {instruction}", end=NC)
     elif (status == "KO"):
+        print(dash_line)
         print(f"{BOLDRED}[KO]{BOLDWHITE} {instruction}{NC}")
     else:
+        print(dash_line)
         print(f"{BOLDORANGE}[??]{BOLDWHITE} {instruction}{NC}")
     return (status)
 
