@@ -534,9 +534,6 @@ def send_instructions(check_rules, ignore_rules):
         input("rm -f tmp/a tmp/b\n")
         input("ls>/tmp/a</tmp/b\n")
         input("ls</tmp/a>/tmp/b\n")
-        input("< < > >>\n")
-        input(">> < < <\n")
-        input("> | test\n")
         input("cat < thisfiledonotexist | echo 42\n")
         input("cat < thisfiledonotexist < thisfiledonotexist | echo 42\n")
         input("echo 42 > /dev/stdout | echo 4 8 15 16 23 42\n")
@@ -546,6 +543,13 @@ def send_instructions(check_rules, ignore_rules):
         input("touch /tmp/tester-norights.txt\n"
               "cat > /tmp/tester-norights.txt < wefhoe\n"
               "rm -f /tmp/tester-norights.txt\n")
+        input("< < > >>\n")
+        input(">> < < <\n")
+        input("> | test\n")
+        input("<<\n")
+        input(">>\n")
+        input(">\n")
+        input("<\n")
 
     rule += 1
     if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
@@ -639,6 +643,7 @@ def send_instructions(check_rules, ignore_rules):
         print(f"\n{BLUE}{rule}. Your shell must implement echo, cd and PWD :{NC}\n")
         input("echo $HOME\n")
         input("echo -n $HOME\n")
+        input("echo -n 42\n")
         input("echo \"-\'n\" $HOME\n")
         input("echo \'-\"n\' $HOME\n")
         input("echo \'-nnnnn\' $HOME\n")
@@ -659,6 +664,7 @@ def send_instructions(check_rules, ignore_rules):
             input("echo \"$USER=12$USER\"\n")
             input("echo \"$9USER\" \"\'$USER=12$SOMETHING\'\"\n")
             input("echo \"text\" \"text$USER\" ... \"$USER\"\n")
+            input("cd \'/////\'\n")
 
         input("cd to-infinity-and-beyond_donotexist\n")
         input("echo $PWD, $OLDPWD\n"
@@ -810,7 +816,7 @@ def print_results():
         dots = '  .'
     if (check_valgrind == 0):
         print(
-            f"\n\033[1;37mLEAKS:     {BOLDORANGE}{dots}/{cmd_nbr}:  Re-run with -valgrind")
+            f"\n\033[1;37mLEAKS:     {BOLDORANGE}{dots}/{cmd_nbr}:  Re-run with -valgrind{NC}")
     elif (leaks_nbr == 0):
         print(
             f"\033[1;37mLEAKS:     {BOLDGREEN}{leaks_nbr:3d}/{cmd_nbr}:  OK!{NC}")
