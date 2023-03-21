@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 10:49:33 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 14:17:18 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 14:21:46 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ static void	_logfile(int fd, t_log log, char *last_input)
 				ft_putchar_fd('\"', fd);
 				ft_putstr_fd(log.args[i++], fd);
 				ft_putchar_fd('\"', fd);
-				ft_printf("\"%s\"", log.args[i++]);
 				// ft_printf("\"%s\"", log.args[i++]);
 				if (log.args[i])
 					ft_putstr_fd(", ", fd);
