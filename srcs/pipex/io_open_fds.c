@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/16 15:08:34 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 18:51:41 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	check_for_stdout(char *output)
 	return (r);
 }
 
-void	error_on_open(t_env *environment, t_redirect *redirect, char *file)
+void	error_on_open(t_redirect *redirect, char *file)
 {
 	if (ft_strlen(file) > 0)
 		ft_putstr_fd("minishell: ", 2);
@@ -88,7 +88,7 @@ int	io_open_fds(t_env *environment, t_redirect *redirect)
 				}
 				redirect->fd_infile = open(current->str, O_RDONLY);
 				if (redirect->fd_infile == -1)
-					return (error_on_open(environment, redirect, current->str), 0);
+					return (error_on_open(redirect, current->str), 0);
 			}
 			else if (!check_for_stdout(current->str))
 			{
@@ -102,7 +102,7 @@ int	io_open_fds(t_env *environment, t_redirect *redirect)
 				else if (current->redirection_type == 'a')
 					redirect->fd_outfile = open(current->str, O_WRONLY | O_APPEND | O_CREAT, 0644);
 				if (redirect->fd_outfile == -1)
-					return (error_on_open(environment, redirect, current->str), 0);
+					return (error_on_open(redirect, current->str), 0);
 			}
 		}
 		current = current->next;
@@ -113,7 +113,7 @@ int	io_open_fds(t_env *environment, t_redirect *redirect)
 			close(redirect->fd_infile);
 		redirect->fd_infile = open(redirect->infile, O_RDONLY);
 		if (redirect->fd_infile == -1)
-			return (error_on_open(environment, redirect, redirect->infile), 0);
+			return (error_on_open(redirect, redirect->infile), 0);
 	}
 	redirection_lstclear(redirect->lst);
 	redirect->lst = NULL;

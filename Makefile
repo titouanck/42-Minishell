@@ -60,8 +60,8 @@ CC = cc
 
 vpath %.c ${SRCS_PATH}
 
-# CFLAGS +=  -Wall -Wextra -Werror 
 CFLAGS += -g 
+CFLAGS += -Wall -Wextra -Werror 
 
 NAME = minishell
 

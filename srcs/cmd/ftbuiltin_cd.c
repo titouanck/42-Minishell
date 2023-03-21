@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 11:34:21 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 17:28:32 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 18:47:49 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ static void	_noarg(t_env *environment)
 		g_returnval = 0;
 }
 
-int	_too_many_args(char **args, int i)
+int	_too_many_args(char **args, size_t i)
 {
 	if (ft_len(args) > i + 1)
 	{

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 17:04:21 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 18:53:15 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,6 @@ int	check_for_sigint(t_cmd **cmds)
 
 void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 {
-	int		status;
-
 	if(!io_open_fds(environment, (cmds[cmdnbr])->redirect) || cmds[cmdnbr]->redirect->to_execute == FALSE)
 	{
 		db_free(environment->log.infile);
@@ -131,7 +129,7 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 			close((cmds[cmdnbr])->redirect->fd_infile);
 		environment->log.args = (cmds[cmdnbr])->args;
 		(cmds[cmdnbr])->args = NULL;
-		ft_free_cmds_parsed(environment, cmds);
+		ft_free_cmds_parsed(cmds);
 		closing_the_program(environment);
 		exit(g_returnval);
 	}

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 10:49:33 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 15:51:57 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 18:49:26 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,17 @@ static void	_logfile(int fd, t_log log, char *last_input)
 	if (log.infile || log.outfile)
 		ft_putchar_fd('\n', fd);
 	if (log.infile)
+	{
 		ft_putstr_fd("in  :\t\"", fd);
 		ft_putstr_fd(log.infile, fd);
 		ft_putstr_fd("\"\n", fd);
+	}
 	if (log.outfile)
+	{
 		ft_putstr_fd("out :\t\"", fd);
 		ft_putstr_fd(log.outfile, fd);
 		ft_putstr_fd("\"\n", fd);
+	}
 	db_free(log.infile);
 	db_free(log.outfile);
 	db_size = dynamic_memory_address_db(ADDRESSDB_SIZE, NULL);

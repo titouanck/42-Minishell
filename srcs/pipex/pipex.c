@@ -6,13 +6,13 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 15:07:04 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 17:22:35 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 18:53:15 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_free_cmds_parsed(t_env *environment, t_cmd **tab)
+void	ft_free_cmds_parsed(t_cmd **tab)
 {
 	size_t	i;
 
@@ -51,7 +51,7 @@ static t_cmd	**_get_cmds_parsed(t_env *environment, char **cmds)
 		else
 			cmds_parsed[i] = parse_cmd(environment, cmds + i, TRUE);
 		if (!cmds_parsed[i])
-			return (ft_free_cmds_parsed(environment, cmds_parsed), db_freetab(cmds), NULL);
+			return (ft_free_cmds_parsed(cmds_parsed), db_freetab(cmds), NULL);
 		if (!cmds_parsed[i]->args || !(cmds_parsed[i]->args[0]) || !(cmds_parsed[i]->args[0][0]))
 			cmds_parsed[i]->redirect->to_execute = FALSE;
 		cmds_parsed[i]->pid = -1;
@@ -88,7 +88,7 @@ int	pipex(t_env *environment, char **cmds)
 			while (1)
 				if (wait(NULL) <= 0)
 					break ;
-			return (ft_free_cmds_parsed(environment, cmds_parsed), 0);
+			return (ft_free_cmds_parsed(cmds_parsed), 0);
 		}	
 		cmdnbr++;
 	}
@@ -96,5 +96,5 @@ int	pipex(t_env *environment, char **cmds)
 	while (1)
 		if (wait(NULL) <= 0)
 			break ;
-	return (ft_free_cmds_parsed(environment, cmds_parsed), 1);
+	return (ft_free_cmds_parsed(cmds_parsed), 1);
 }

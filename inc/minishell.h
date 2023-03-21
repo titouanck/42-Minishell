@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 17:19:15 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 18:53:32 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ typedef struct s_cmd
 
 void		ftbuiltin_echo(char **args);
 void		ftbuiltin_cd(t_env *environment, char **args);
-void		ftbuiltin_pwd(t_env *environment, char **args);
+void		ftbuiltin_pwd(char **args);
 void		ftbuiltin_export(t_env *environment, char **args);
 void		ftbuiltin_unset(t_env *environment, char **args);
 void		ftbuiltin_env(t_env *environment, char **args);
@@ -174,7 +174,7 @@ int	io_open_fds(t_env *environment, t_redirect *redirect);
 
 // PAS CLASSE
 void	ft_free_redirect(t_redirect *redirect);
-void	ft_free_cmds_parsed(t_env *environment, t_cmd **tab);
+void	ft_free_cmds_parsed(t_cmd **tab);
 
 					/* Utils */
 void	heredoc_signal_behavior(void);

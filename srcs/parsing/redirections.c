@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 17:22:24 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 18:50:22 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ void	_remove_quote_token_line(char *line)
 
 void	ft_free_redirect(t_redirect *redirect)
 {
-	int	fd;
-
 	if (!redirect)
 		return ;
 	if (redirect->lst)
@@ -145,7 +143,6 @@ int	heredoc_file(t_env *environment, t_redirect *redirect)
 	int				fd;
 	char			*filename;
 	char			*tmp;
-	size_t			i;
 
 	filename = ft_randomstr("/tmp/minishell-heredoc_", NULL, 16);
 	if (!filename)
@@ -260,8 +257,6 @@ int	open_heredoc(t_env *environment, t_redirect *redirect)
 t_redirect	*redirections(t_env *environment, char *line, int last)
 {
 	t_redirect	*redirect;
-	int			leftreturn;
-	int			rightreturn;
 
 	redirect = db_malloc(sizeof(t_redirect));
 	if (!redirect)

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 17:29:44 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 18:53:15 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ unsigned char code, size_t cmdnbr)
 		dup2(cmds[cmdnbr]->saved_stdout, STDOUT_FILENO);
 		close(cmds[cmdnbr]->saved_stdout);
 	}
-	ft_free_cmds_parsed(environment, cmds);
+	ft_free_cmds_parsed(cmds);
 	closing_the_program(environment);
 	if (use_readline())
 		ft_putstr_fd("exit\n", 2);
