@@ -12,9 +12,8 @@
 
 #include "minishell.h"
 
-void	ftbuiltin_env(t_env *environment, char **args)
+static int	_error_handling(char **args)
 {
-	g_returnval = 0;
 	if (args && args[0] && args[1] && ft_strncmp(args[1], "-", 1) == 0)
 	{
 		if (ft_strncmp(args[1], "--", 2) == 0)
@@ -22,8 +21,6 @@ void	ftbuiltin_env(t_env *environment, char **args)
 			ft_putstr_fd("env: unrecognized option \'", 2);
 			ft_putstr_fd(args[1], 2);
 			ft_putstr_fd("\'\n", 2);
-			g_returnval = 125;
-			return ;
 		}
 		else if (ft_strncmp(args[1], "-", 1) == 0)
 		{
@@ -32,10 +29,19 @@ void	ftbuiltin_env(t_env *environment, char **args)
 			ft_putstr_fd("env: invalid option -- \'", 2);
 			ft_putstr_fd(args[1] + 1, 2);
 			ft_putstr_fd("\'\n", 2);
-			g_returnval = 125;
-			return ;
 		}
+		g_returnval = 125;
+		return (0);
 	}
+	else
+		return (1);
+}
+
+void	ftbuiltin_env(t_env *environment, char **args)
+{
+	g_returnval = 0;
+	if (!_error_handling(args))
+		return ;
 	while (environment)
 	{
 		if (environment->key && environment->exported)

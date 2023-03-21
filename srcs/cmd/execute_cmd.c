@@ -69,7 +69,7 @@ static char	*_find_with_path(char **path, char *arg)
 		return (minishell_error(arg, ": command not found\n"), NULL);
 }
 
-char	*_find_cmd_pathname(char **path, char *arg)
+static char	*_find_cmd_pathname(char **path, char *arg)
 {
 	if (ft_strcmp(arg, ".") == 0 || ft_strcmp(arg, "..") == 0)
 		return (minishell_error(arg, ": command not found\n"), NULL);

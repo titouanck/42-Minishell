@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	_error_handling(char **args, char *value)
+static int	_error_handling(char **args, char *value)
 {
 	if (args && args[0] && args[1] && ft_strncmp(args[1], "-", 1) == 0)
 	{
@@ -23,16 +23,16 @@ int	_error_handling(char **args, char *value)
 		ft_putstr_fd(": invalid option\n", 2);
 		g_returnval = 2;
 		db_free(value);
-		return (1);
+		return (0);
 	}
 	else if (ft_len(args) > 2)
 	{
 		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
 		g_returnval = 1;
 		db_free(value);
-		return (1);
+		return (0);
 	}
-	return (0);
+	return (1);
 }
 
 static void	_without_arg(t_env *environment)
@@ -90,7 +90,7 @@ void	ftbuiltin_cd(t_env *environment, char **args)
 
 	value = getcwd(NULL, 0);
 	dynamic_memory_address_db('+', value);
-	if (_error_handling(args, value))
+	if (!_error_handling(args, value))
 		return ;
 	else if (args && args[0] && !args[1])
 		_without_arg(environment);
