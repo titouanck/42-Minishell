@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 16:26:08 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 14:36:16 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 17:31:02 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,12 +94,7 @@ static char	*_export_value(t_env *environment, char *arg, char **key, int append
 	{
 		value = db_substr(arg, 1, ft_strlen(arg + 1));
 		if (!value)
-		{
-			db_free(*key);
-			*key = NULL;
-			g_returnval = 1;
-			return (NULL);
-		}
+			exit_erralloc(environment);
 		_export_element(environment, *key, value, append);
 	}
 	return (value);

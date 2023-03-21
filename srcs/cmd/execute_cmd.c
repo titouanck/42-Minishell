@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 13:47:57 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 17:20:53 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 17:25:19 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*_locate_file(char **path, char *arg)
 
 	filepath = NULL;
 	if (ft_strcmp(arg, ".") == 0 || ft_strcmp(arg, "..") == 0)
-		return (ft_putstr_fd("minishell: ", 2), ft_putstr_fd(arg, 2), ft_putstr_fd(": command not found\n", 2), db_free(filepath), NULL);
+		return (ft_putstr_fd("minishell: ", 2), ft_putstr_fd(arg, 2), ft_putstr_fd(": command not found\n", 2), NULL);
 	else if (ft_strncmp(arg, "/", 1) == 0 || ft_strncmp(arg, "./", 2) == 0 || ft_strncmp(arg, "../", 3) == 0)
 	{
 		filepath = db_strdup(arg);

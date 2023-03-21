@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 11:34:21 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 17:20:23 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 17:28:32 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,9 @@ void	ftbuiltin_cd(t_env *environment, char **args)
 	i = 1;
 	key = db_strdup("OLDPWD");
 	value = getcwd(NULL, 0);
+	dynamic_memory_address_db('+', value);
+	if (!key || !value)
+		exit_erralloc(environment);
 	if (args && args[0] && args[i] && ft_strncmp(args[i], "-", 1) == 0)
 	{
 		if (ft_strlen(args[i]) >= 2)
@@ -147,5 +150,8 @@ void	ftbuiltin_cd(t_env *environment, char **args)
 	db_free(cwd);
 	key = db_strdup("PWD");
 	value = getcwd(NULL, 0);
+	if (!key || !value)
+		exit_erralloc(environment);
+	dynamic_memory_address_db('+', value);
 	_export_element(environment, key, value);
 }

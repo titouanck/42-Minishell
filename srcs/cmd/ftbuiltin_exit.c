@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 17:21:04 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 17:29:44 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ int	my_atoi(const char *str, unsigned char *code)
 void	ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr)
 {
 	unsigned char	code;
-	char			*errmsg;
 	size_t			i;
 
 	code = g_returnval;
@@ -106,12 +105,9 @@ void	ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr
 		i = 1;
 		if (!my_atoi(args[1], &code))
 		{
-			errmsg = db_strrjoin("minishell: exit: ", args[1], ": numeric argument required\n");
-			if (!errmsg)
-				exit_erralloc(environment);
-			else
-				ft_putstr_fd(errmsg, 2);
-			db_free(errmsg);
+			ft_putstr_fd("minishell: exit: ", 2);
+			ft_putstr_fd(args[1], 2);
+			ft_putstr_fd(": numeric argument required\n", 2);
 			_i_want_to_exit(environment, cmds, 2, cmdnbr);
 			return ;
 		}

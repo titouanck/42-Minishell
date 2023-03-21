@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 17:19:44 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 17:24:59 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,6 @@ int	main(int argc, char **argv, char *envp[])
 			environment->last_input = db_strdup(line);
 			parsing(environment, &line);
 			rm_heredoc_files(environment);
-			// ft_putstr(" w   ");
 		}
 	}
 	closing_the_program(environment);
