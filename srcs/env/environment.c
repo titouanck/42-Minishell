@@ -46,14 +46,14 @@ char	**format_environment(t_env *environment)
 	}
 	env = db_malloc(sizeof(char *) * (size + 1));
 	if (!env)
-		return (ft_putstr_fd(ERRALLOC, 2), NULL);
+		exit_erralloc(environment);
 	i = 0;
 	elem = environment->next;
 	while (i < size && elem)
 	{
 		env[i] = db_strrjoin(elem->key, "=", elem->value);
 		if (!env[i])
-			return (db_freetab(env), ft_putstr_fd(ERRALLOC, 2), NULL);
+			exit_erralloc(environment);
 		elem = elem->next;
 		i++;
 	}
@@ -86,7 +86,7 @@ int		env_lstaddback(t_env *env, char *key, char *value, int exported)
 		env = env->next;
 	env->next = db_malloc(sizeof(t_env));
 	if (!(env->next))
-		return (ft_putstr_fd(ERRALLOC, 2), 0);
+		exit_erralloc(NULL);
 	env = env->next;
 	env->key = key;
 	env->value = value;

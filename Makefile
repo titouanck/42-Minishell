@@ -37,6 +37,7 @@ SRCS += middle_child.c
 SRCS += pipex.c
 
 SRCS += ft_syntaxerror.c
+SRCS += exit_erralloc.c
 
 SRCS += minishell.c
 

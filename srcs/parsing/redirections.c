@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/20 13:27:15 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 17:22:24 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ int	heredoc_file(t_env *environment, t_redirect *redirect)
 
 	filename = ft_randomstr("/tmp/minishell-heredoc_", NULL, 16);
 	if (!filename)
-		return (ft_putstr_fd(ERRALLOC, 2), -1);
+		exit_erralloc(environment);
 	tmp = environment->heredoc_files;
 	environment->heredoc_files = db_strrjoin(environment->heredoc_files, "|", filename);
 	db_free(tmp);
@@ -265,7 +265,7 @@ t_redirect	*redirections(t_env *environment, char *line, int last)
 
 	redirect = db_malloc(sizeof(t_redirect));
 	if (!redirect)
-		return (ft_putstr_fd(ERRALLOC, 2), NULL);
+		exit_erralloc(environment);
 	redirect->infile = NULL;
 	redirect->outfile = NULL;
 	redirect->append = 0;

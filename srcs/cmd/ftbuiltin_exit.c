@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/16 19:21:30 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 17:21:04 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void	ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr
 		{
 			errmsg = db_strrjoin("minishell: exit: ", args[1], ": numeric argument required\n");
 			if (!errmsg)
-				ft_putstr_fd(ERRALLOC, 2);
+				exit_erralloc(environment);
 			else
 				ft_putstr_fd(errmsg, 2);
 			db_free(errmsg);

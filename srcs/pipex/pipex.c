@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 15:07:04 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/14 18:20:57 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 17:22:35 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static t_cmd	**_get_cmds_parsed(t_env *environment, char **cmds)
 		size++;
 	cmds_parsed = db_malloc(sizeof(t_cmd *) * (size + 1));
 	if (!cmds_parsed)
-		return (ft_putstr_fd(ERRALLOC, 2), db_freetab(cmds), NULL);
+		exit_erralloc(environment);
 	i = 0;
 	while (i < size)
 	{

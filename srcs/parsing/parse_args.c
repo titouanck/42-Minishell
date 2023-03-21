@@ -42,7 +42,7 @@ t_cmd	*parse_args(t_env *environment, char **line, int last)
 
 	cmd = db_malloc(sizeof(t_cmd));
 	if (!cmd)
-		return (ft_putstr_fd(ERRALLOC, 2), NULL);
+		exit_erralloc(environment);
 	cmd->args = NULL;
 	cmd->redirect = NULL;
 	if (!quotes_interpretation(environment, line))
@@ -54,7 +54,7 @@ t_cmd	*parse_args(t_env *environment, char **line, int last)
 	cmd->args = db_split(*line, SEPARATOR);
 	if (!(cmd->args))
 	{
-		ft_putstr_fd(ERRALLOC, 2);
+		exit_erralloc(environment);
 		g_returnval = 12;
 		db_free(*line);
 		ft_free_redirect(cmd->redirect);

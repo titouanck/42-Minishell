@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/20 14:09:33 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 17:04:21 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,14 @@ int	check_for_sigint(t_cmd **cmds)
 	{
 		waitpid(cmds[i]->pid, &status, 0);
 		if (status == 2)
-			return (status);
+		{
+			write(1, "\n", 1);
+			rl_on_new_line();
+			rl_replace_line("", 0);
+			rl_done = 1;
+			if (!use_readline())
+				return (status);
+		}
 		i++;
 	}
 	return (status);
@@ -130,6 +137,8 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 	}
 	else
 	{
+		if (cmdnbr != 0)
+			close(pipefd[0]);
 		db_free(environment->log.infile);
 		environment->log.infile = NULL;
 		db_free(environment->log.outfile);
@@ -138,29 +147,19 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr)
 			close((cmds[cmdnbr])->redirect->fd_outfile);
 		if ((cmds[cmdnbr])->redirect->infile)
 			close((cmds[cmdnbr])->redirect->fd_infile);
-		if (!use_readline())
+		g_returnval = check_for_sigint(cmds);
+		if (g_returnval == 2)
 		{
-			g_returnval = check_for_sigint(cmds);
-			if (g_returnval == 2)
+			g_returnval = 130;
+			if (!use_readline())
 			{
-				g_returnval = 130;
 				if (cmdnbr != 0)
 					close(pipefd[0]);
 				closing_the_program(environment);
 				exit(g_returnval);
 			}
-			else if (g_returnval > 255)
-				g_returnval = WEXITSTATUS(g_returnval);
 		}
-		else
-		{
-			waitpid(cmds[cmdnbr]->pid, &g_returnval, 0);
-			if (g_returnval == 2)
-				g_returnval = 130;
-			else if (g_returnval > 255)
-				g_returnval = WEXITSTATUS(g_returnval);
-		}
-		if (cmdnbr != 0)
-			close(pipefd[0]);
+		else if (g_returnval > 255)
+			g_returnval = WEXITSTATUS(g_returnval);
 	}
 }

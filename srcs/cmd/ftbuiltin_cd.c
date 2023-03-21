@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 11:34:21 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 13:14:52 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 17:20:23 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static void	_noarg(t_env *environment)
 	{
 		err_str = db_strjoin("minishell: cd: ", home);
 		if (!err_str)
-			ft_putstr_fd(ERRALLOC, 2);
+			exit_erralloc(environment);
 		perror(err_str);
 		db_free(err_str);
 		g_returnval = 1;

@@ -292,7 +292,7 @@ def read_outputs(minishell_stdout, minishell_stderr, bash_stdout, bash_stderr, m
                 minishell_readed_leaks = "".join(minishell_readed_leaks)
                 minishell_readed_leaks = minishell_readed_leaks.rstrip(" \n")
                 if (minishell_readed_leaks != ""):
-                    minishell_readed_leaks += '\n'
+                    minishell_readed_leaks = minishell_readed_leaks.rstrip(" \n")	
 
     return minishell_readed_stdout, minishell_readed_stderr, bash_readed_stdout, bash_readed_stderr, minishell_readed_leaks
 
@@ -308,8 +308,10 @@ def print_cmd(instruction, minishell_readed_stdout, minishell_readed_stderr, min
     status = compare_outputs(minishell_readed_stdout, minishell_readed_stderr, minishell_exitcode,
                              bash_readed_stdout, bash_readed_stderr, bash_exitcode, minishell_readed_leaks)
     if (status == "OK"):
-        print(f"{BOLDGREEN}[OK]{NC} {instruction}", end=NC)
+        if (dash_line_printed == 0 and minishell_readed_leaks != ""):
+            print(dash_line)
         dash_line_printed = 0
+        print(f"{BOLDGREEN}[OK]{NC} {instruction}", end=NC)
     elif (status == "KO"):
         if (dash_line_printed == 0):
             print(dash_line)
@@ -414,7 +416,6 @@ def print_leaks(minishell_readed_leaks):
             leaks_nbr += 1
         else:
             print(f"\n{BOLDORANGE}VALGRIND WARNINGS{NC}")
-        minishell_readed_leaks = minishell_readed_leaks.rstrip(" \n")
         print(f"{minishell_readed_leaks}")
 
 
@@ -445,7 +446,7 @@ def input(instruction):
     if (check_valgrind):
         print_leaks(minishell_readed_leaks)
 
-    if (status == "OK"):
+    if (status == "OK" and minishell_readed_leaks == ""):
         print("")
     else:
         print(dash_line)
@@ -599,6 +600,7 @@ def send_instructions(check_rules, ignore_rules):
     rule += 1
     if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
         print(f"\n{BLUE}{rule}. Implement pipes{NC}\n")
+        print(f"{BOLDORANGE}  → cat | cat | ls must be check manually.{NC}\n")
         input("printf \"42\\n\" | cat | cat | cat\n")
         input("printf \"42\\n\" | cat | cat | cat\n")
         input("printf \"42\\n\" | cat | printf \"4 8 15 16 23 42\\n\" | cat\n")

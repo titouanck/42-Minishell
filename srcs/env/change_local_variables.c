@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/14 15:03:05 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 17:21:30 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static int	_parse_key(char **line, char **key)
 	append = 0;
 	*key = db_strndup(key_start, key_end - key_start);
 	if (!(*key))
-		ft_putstr_fd(ERRALLOC, 2);
+		exit_erralloc(NULL);
 	if ((*line)[i] == '+' && (*line)[i + 1] == '=')
 	{
 		*line = key_end + 2;
@@ -93,7 +93,7 @@ static int	_parse_value(t_env *environment, char **line, char **value)
 	*line = value_end;
 	*value = db_strndup(value_start, value_end - value_start);
 	if (!(*value))
-		ft_putstr_fd(ERRALLOC, 2);
+		exit_erralloc(environment);
 	if (!quotes_interpretation(environment, value))
 		return (db_free(*value), 0);
 	return (1);
@@ -155,7 +155,7 @@ int	change_local_variables(t_env *environment, char *line, size_t size)
 	if (!value)
 		value = db_strdup("");
 	if (!value)
-		return (ft_putstr_fd(ERRALLOC, 2),db_free(key), -1);
+		exit_erralloc(environment);
 	ft_memmove(ptr, line, ft_strlen(line) + 1);
 	if (size > 1)
 	{

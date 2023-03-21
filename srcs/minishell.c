@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 14:44:30 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 17:19:44 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,7 @@ int	main(int argc, char **argv, char *envp[])
 	environment->log.outfile = NULL;
 	environment->prompt = db_strdup("\r\r\001"GREEN"●"ENDCL"\002 \001\033[34;1m\002minishell \001→\002 \001\033[0m\002");
 	if (!environment->prompt)
-	{
-		g_returnval = 1;
-		closing_the_program(environment);
-		ft_putstr_fd(ERRALLOC, 2);
-		return (g_returnval);
-	}
+		exit_erralloc(environment);
 	char	*tab[3];
 	tab[0] = "export";
 	tab[1] = "_=minishell/env";

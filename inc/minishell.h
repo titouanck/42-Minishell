@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 12:14:29 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 17:19:15 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,5 +191,7 @@ void		redirection_lstprint(t_redirectionlst *lst);
 void	redirection_lstclear(t_redirectionlst *lst);
 
 void	rm_heredoc_files(t_env *environment);
+
+void	exit_erralloc(t_env *environment);
 
 #endif

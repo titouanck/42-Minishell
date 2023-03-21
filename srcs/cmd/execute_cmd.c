@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 13:47:57 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/20 14:09:29 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 17:20:53 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*_locate_file(char **path, char *arg)
 	{
 		filepath = db_strdup(arg);
 		if (!filepath)
-			return (ft_putstr_fd(ERRALLOC, 2), NULL);
+			exit_erralloc(NULL);
 		if (access(filepath, F_OK) == 0)
 		{
 			if (access(filepath, X_OK) == 0)
@@ -49,7 +49,7 @@ char	*_locate_file(char **path, char *arg)
 	{
 		filepath = db_strrjoin(path[i], "/", arg);
 		if (!filepath)
-			return (ft_putstr_fd(ERRALLOC, 2), NULL);
+			exit_erralloc(NULL);
 		if (access(filepath, F_OK) == 0)
 		{
 			if (access(filepath, X_OK) == 0)

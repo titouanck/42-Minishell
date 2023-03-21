@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 17:17:52 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/16 19:25:45 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 17:22:30 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,6 @@ char	**split_cmds(t_env *environment, char **ptr)
 		return (ft_syntaxerror(environment, "|"), NULL);
 	cmds = db_split(line, PIPECHAR);
 	if (!cmds)
-		ft_putstr_fd(ERRALLOC, 2);
+		exit_erralloc(environment);
 	return (cmds);
 }
