@@ -274,9 +274,12 @@ def read_outputs(minishell_stdout, minishell_stderr, bash_stdout, bash_stderr, m
                         minishell_readed_leaks[i] = ""
                         minishell_readed_leaks[i - 1] = ""
                     i += 1
-                minishell_readed_leaks = "".join(minishell_readed_leaks)
+                minishell_readed_leaks = "\n".join(minishell_readed_leaks)
+                minishell_readed_leaks = minishell_readed_leaks.rstrip(" \n")
                 if ('\n' not in minishell_readed_leaks and "FILE DESCRIPTORS:" in minishell_readed_leaks):
                     minishell_readed_leaks = ""
+                else:
+                    minishell_readed_leaks += '\n'
 
     return minishell_readed_stdout, minishell_readed_stderr, bash_readed_stdout, bash_readed_stderr, minishell_readed_leaks
 
