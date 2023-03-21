@@ -1,0 +1,7 @@
+print(f"{RED}Lors du lancement de votre minishell, on constate que {ORANGE}STDOUT{RED} et {ORANGE}STDERR{RED} contiennent tout deux des sequences de caracteres inattendus.")
+print("Si vous affichez un message au lancement de minishell, enlevez le le temps du test, et verifiez que vous n'avez pas laissé trainer de printf de debug.")
+print(f"Le programme ne pourra donc verifier ni {ORANGE}STDOUT{RED} ni {ORANGE}STDERR{RED}.")
+print(dash_line)
+print(f"{RED}When launching your minishell, we notice that {ORANGE}STDOUT{RED} and {ORANGE}STDERR{RED} both contain unexpected character sequences.")
+print("If you display a message when launching minishell, take the time out of the test, and check that you haven't left a debug printf lying around.")
+print(f"The program will therefore not be able to check either {ORANGE}STDOUT{RED} or {ORANGE}STDERR{RED}.")

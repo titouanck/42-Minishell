@@ -4,13 +4,13 @@ import os
 import subprocess
 import random
 import shutil
+import time
 import re
 import sys
 
 
 def main():
     global check_valgrind
-    global minishell_readed_motd
 
     delete_files()
 
@@ -22,13 +22,14 @@ def main():
 
     compile_minishell()
 
-    print_tips()
-
-    ignore_motd()
+    if (check_motd() == 0):
+        print_tips()
 
     send_instructions(check_rules, ignore_rules)
 
     print_results()
+
+    motd_warning()
 
     delete_files()
 
@@ -60,7 +61,8 @@ leaks_nbr = 0
 columns, _ = os.get_terminal_size()
 dash_line = "_" * columns + '\n'
 
-minishell_readed_motd = None
+motd_stdout = 0
+motd_stderr = 0
 
 # Define colors
 NC = '\033[0m'
@@ -170,19 +172,65 @@ def print_tips():
     print(f"python3 tester.py -valgrind 11\n")
 
 
-def ignore_motd():
-    global minishell_readed_motd
+def motd_warning():
+    if (motd_stdout == 1 and motd_stderr == 1):
+        print(f"{RED}Lors du lancement de votre minishell, on constate que {ORANGE}STDOUT{RED} et {ORANGE}STDERR{RED} contiennent tout deux des sequences de caracteres inattendus.")
+        print("Si vous affichez un message au lancement de minishell, enlevez le le temps du test, et verifiez que vous n'avez pas laissé trainer de printf de debug.")
+        print(f"Le programme ne pourra donc verifier ni {ORANGE}STDOUT{RED} ni {ORANGE}STDERR{RED}.")
+        print(dash_line)
+        print(f"{RED}When launching your minishell, we notice that {ORANGE}STDOUT{RED} and {ORANGE}STDERR{RED} both contain unexpected character sequences.")
+        print("If you display a message when launching minishell, take the time out of the test, and check that you haven't left a debug printf lying around.")
+        print(f"The program will therefore not be able to check either {ORANGE}STDOUT{RED} or {ORANGE}STDERR{RED}.")
+    elif (motd_stdout == 1):
+        print(f"{RED}Vous utilisez readline() sur {ORANGE}STDOUT{RED} malgré les redirections de l'entree standard et de la sortie d'erreur sur minishell, ou vous affichez un message au lancement.")
+        print("Penchez-vous vers la function isatty().")
+        print(f"Le programme ne pourra donc pas vérifier votre {ORANGE}STDOUT{RED}.{NC}")
+        print(dash_line)
+        print(f"{RED}You use readline() on {ORANGE}STDOUT{RED} despite redirecting standard input and error output on minishell, or you print a message on launch.")
+        print("Check out the isatty() function.")
+        print(f"The program will therefore not be able to check your {ORANGE}STDOUT{RED}.{NC}")
+    elif (motd_stderr == 1):
+        print(f"{RED}Vous utilisez readline() sur {ORANGE}STDERR{RED} malgré les redirections de l'entree standard et de la sortie d'erreur sur minishell, ou vous affichez un message au lancement.")
+        print("Penchez-vous vers la function isatty().")
+        print(f"Le programme ne pourra donc pas vérifier votre {ORANGE}STDERR{RED}.{NC}")
+        print(dash_line)
+        print(f"{RED}You use readline() on {ORANGE}STDERR{RED} despite redirecting standard input and error output on minishell, or you print a message on launch.")
+        print("Check out the isatty() function.")
+        print(f"The program will therefore not be able to check your {ORANGE}STDERR{RED}.{NC}")
+
+    if (motd_stdout == 1 or motd_stderr == 1):
+        print()
+
+def check_motd():
+    global  motd_stdout
+    global  motd_stderr
+    minishell_readed_motd_stdout = ""
+    minishell_readed_motd_stderr = ""
 
     minishell_master_out, minishell_slave_out = pty.openpty()
     with open(minishell_stdout, "w") as fd_minishell_stdout:
         with open(minishell_stderr, "w") as fd_minishell_stderr:
             minishell_process = subprocess.Popen(
                 ['./minishell'], stdin=minishell_slave_out, stdout=fd_minishell_stdout, stderr=fd_minishell_stderr)
-    os.write(minishell_master_out, "exit\n".encode())
-    minishell_process.wait()
+    time.sleep(0.125)
     os.close(minishell_slave_out)
     with open(minishell_stdout, 'r') as file:
-        minishell_readed_motd = file.read()
+        minishell_readed_motd_stdout = file.read()
+    with open(minishell_stderr, 'r') as file:
+        minishell_readed_motd_stderr = file.read()
+
+    if (minishell_readed_motd_stdout != "" and minishell_readed_motd_stderr != ""):
+        motd_stderr = 1
+        motd_stdout = 1
+    elif (minishell_readed_motd_stdout != ""):
+        motd_stdout = 1
+    elif (minishell_readed_motd_stderr != ""):
+        motd_stderr = 1
+
+    if (motd_stdout == 1 or motd_stderr == 1):
+        motd_warning()
+        return (1)
+    return (0)
 
 
 def run_process(instruction):
@@ -227,9 +275,6 @@ def read_outputs(minishell_stdout, minishell_stderr, bash_stdout, bash_stderr, m
 
     with open(minishell_stdout, 'r') as file:
         minishell_readed_stdout = file.read()
-        if minishell_readed_motd is not None:
-            minishell_readed_stdout = minishell_readed_stdout.replace(
-                minishell_readed_motd, "")
 
     with open(bash_stdout, 'r') as file:
         bash_readed_stdout = file.read()
@@ -328,24 +373,27 @@ def print_cmd(instruction, minishell_readed_stdout, minishell_readed_stderr, min
 
 
 def compare_outputs(minishell_readed_stdout, minishell_readed_stderr, minishell_exitcode, bash_readed_stdout, bash_readed_stderr, bash_exitcode, minishell_readed_leaks):
-    if (minishell_readed_stdout != bash_readed_stdout):
+    if (motd_stdout == 0 and minishell_readed_stdout != bash_readed_stdout):
         return ("KO")
-    elif ("in loss record" in minishell_readed_leaks):
+    if ("in loss record" in minishell_readed_leaks):
         return ("KO")
-    elif (minishell_exitcode != bash_exitcode):
+    if (minishell_exitcode != bash_exitcode):
         return ("KO")
-    elif (minishell_readed_stderr == "" and minishell_readed_stderr != bash_readed_stderr):
-        return ("KO")
-    elif (bash_readed_stderr == "" and minishell_readed_stderr != bash_readed_stderr):
-        return ("KO")
-    elif (minishell_readed_stderr != bash_readed_stderr):
-        return ("??")
+    if (motd_stderr == 0):
+        if (minishell_readed_stderr == "" and minishell_readed_stderr != bash_readed_stderr):
+            return ("KO")
+        if (bash_readed_stderr == "" and minishell_readed_stderr != bash_readed_stderr):
+            return ("KO")
+        if (minishell_readed_stderr != bash_readed_stderr):
+            return ("??")
     return ("OK")
 
 
 def print_stdout(minishell_readed_stdout, bash_readed_stdout):
     global correct_stdout_nbr
 
+    if (motd_stdout == 1):
+        return
     if (minishell_readed_stdout != bash_readed_stdout):
         if (minishell_readed_stdout == ""):
             minishell_readed_stdout = "(null)\n"
@@ -374,6 +422,8 @@ def print_stderr(minishell_readed_stderr, bash_readed_stderr):
     global diff_stderr_nbr
     global wrong_stderr_nbr
 
+    if (motd_stderr == 1):
+        return
     if (minishell_readed_stderr != bash_readed_stderr):
         if (minishell_readed_stderr == ""):
             minishell_readed_stderr = "(null)\n"
@@ -786,25 +836,41 @@ def send_instructions(check_rules, ignore_rules):
 
 
 def print_results():
-    if (correct_stdout_nbr == cmd_nbr):
-        print(
-            f"\033[1;37mstdout:    {BOLDGREEN}{correct_stdout_nbr:3d}/{cmd_nbr}:  OK!{NC}")
+    
+    dots = "   "
+    if (cmd_nbr > 99):
+        dots = "..."
+    elif (cmd_nbr > 9):
+        dots = ' ..'
     else:
-        print(
-            f"\033[1;37mstdout:    {BOLDRED}{correct_stdout_nbr:3d}/{cmd_nbr}:  KO!{NC}")
+        dots = '  .' 
 
-    if (wrong_stderr_nbr > 0 and diff_stderr_nbr == 0):
-        print(
-            f"\033[1;37mstderr:    {BOLDRED}{correct_stderr_nbr:3d}/{cmd_nbr}:  KO!{NC}")
-    elif (wrong_stderr_nbr > 0):
-        print(
-            f"\033[1;37mstderr:    {BOLDRED}{correct_stderr_nbr:3d}/{cmd_nbr}:  KO! {ORANGE}(+ {diff_stderr_nbr} requiring manual verification){NC}")
-    elif (correct_stderr_nbr == cmd_nbr):
-        print(
-            f"\033[1;37mstderr:    {BOLDGREEN}{correct_stderr_nbr:3d}/{cmd_nbr}:  OK!{NC}")
+    if (motd_stdout == 0):
+        if (correct_stdout_nbr == cmd_nbr):
+            print(
+                f"\033[1;37mstdout:    {BOLDGREEN}{correct_stdout_nbr:3d}/{cmd_nbr}:  OK!{NC}")
+        else:
+            print(
+                f"\033[1;37mstdout:    {BOLDRED}{correct_stdout_nbr:3d}/{cmd_nbr}:  KO!{NC}")
     else:
         print(
-            f"\033[1;37mstderr:    {BOLDORANGE}{correct_stderr_nbr:3d}/{cmd_nbr}:  N/A {ORANGE}(+ {diff_stderr_nbr} requiring manual verification){NC}")
+                f"\033[1;37mstdout:    {BOLDORANGE}{dots}/{cmd_nbr}:  N/A{NC}")
+    if (motd_stderr == 0):
+        if (wrong_stderr_nbr > 0 and diff_stderr_nbr == 0):
+            print(
+                f"\033[1;37mstderr:    {BOLDRED}{correct_stderr_nbr:3d}/{cmd_nbr}:  KO!{NC}")
+        elif (wrong_stderr_nbr > 0):
+            print(
+                f"\033[1;37mstderr:    {BOLDRED}{correct_stderr_nbr:3d}/{cmd_nbr}:  KO! {ORANGE}(+ {diff_stderr_nbr} requiring manual verification){NC}")
+        elif (correct_stderr_nbr == cmd_nbr):
+            print(
+                f"\033[1;37mstderr:    {BOLDGREEN}{correct_stderr_nbr:3d}/{cmd_nbr}:  OK!{NC}")
+        else:
+            print(
+                f"\033[1;37mstderr:    {BOLDORANGE}{correct_stderr_nbr:3d}/{cmd_nbr}:  N/A {ORANGE}(+ {diff_stderr_nbr} requiring manual verification){NC}")
+    else:
+        print(
+                f"\033[1;37mstderr:    {BOLDORANGE}{dots}/{cmd_nbr}:  N/A{NC}")
 
     if (correct_exitcode_nbr == cmd_nbr):
         print(
@@ -813,13 +879,6 @@ def print_results():
         print(
             f"\033[1;37mEXIT CODE: {BOLDRED}{correct_exitcode_nbr:3d}/{cmd_nbr}:  KO!{NC}")
 
-    dots = "   "
-    if (cmd_nbr > 99):
-        dots = "..."
-    elif (cmd_nbr > 9):
-        dots = ' ..'
-    else:
-        dots = '  .'
     if (check_valgrind == 0):
         print(
             f"\n\033[1;37mLEAKS:     {BOLDORANGE}{dots}/{cmd_nbr}:  Re-run with -valgrind{NC}")
@@ -829,6 +888,7 @@ def print_results():
     else:
         print(
             f"\033[1;37mLEAKS:     {BOLDRED}{leaks_nbr:3d}/{cmd_nbr}:  KO!{NC}")
-
+    if (motd_stdout == 1 or motd_stderr == 1):
+        print()
 
 main()
