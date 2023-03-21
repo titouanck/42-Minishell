@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 18:53:32 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 19:52:12 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,6 @@ void	ft_free_cmds_parsed(t_cmd **tab);
 void	heredoc_signal_behavior(void);
 void	cmd_signal_behavior_parent(void);
 void	notatty_signal_behavior(void);
-int		use_readline(void);
 
 void	ft_syntaxerror(t_env *environment, char *err);
 
@@ -190,8 +189,24 @@ t_redirectionlst	*redirection_lstdel(t_redirectionlst *lst_elem, char *str);
 void		redirection_lstprint(t_redirectionlst *lst);
 void	redirection_lstclear(t_redirectionlst *lst);
 
-void	rm_heredoc_files(t_env *environment);
-
 void	exit_erralloc(t_env *environment);
+
+
+// NEW
+
+/* routine*/
+void	rm_heredoc_files(t_env *environment);
+int		use_argv(t_env *environment, int argc, char **argv);
+char	*new_prompt(t_env *environment);
+
+/* open */
+void	init_logs(void);
+
+/* utils*/
+int		event(void);
+void	exit_erralloc(t_env *environment);
+void	ft_syntaxerror(t_env *environment, char *err);
+int		use_readline(void);
+
 
 #endif

@@ -1,31 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   opening.c                                          :+:      :+:    :+:   */
+/*   init_logs.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/22 14:02:06 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/16 17:10:24 by tchevrie         ###   ########.fr       */
+/*   Created: 2023/03/21 19:06:39 by tchevrie          #+#    #+#             */
+/*   Updated: 2023/03/21 19:20:54 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	g_returnval;
-
-int	event(void)
+static void	_remove_logfile(void)
 {
-	return (42);
-}
-
-
-t_env *opening(int argc, char **argv, char *envp[])
-{
-	t_env	*environment;
-	char	**cmd;
 	pid_t	pid;
-
+	char	**cmd;
+	
 	pid = fork();
 	if (pid == 0)
 	{
@@ -41,10 +32,18 @@ t_env *opening(int argc, char **argv, char *envp[])
 			execve(cmd[0], cmd + 1, NULL);
 			ft_freetab(cmd);
 		}
-		exit(4);
+		closing_the_program(NULL);
+		exit(127);
 	}
 	else
 		wait(NULL);
+}
+
+static void	_remove_logfolder(void)
+{
+	pid_t	pid;
+	char	**cmd;
+	
 	pid = fork();
 	if (pid == 0)
 	{
@@ -60,10 +59,18 @@ t_env *opening(int argc, char **argv, char *envp[])
 			execve(cmd[0], cmd + 1, NULL);
 			ft_freetab(cmd);
 		}
-		exit(8);
+		closing_the_program(NULL);
+		exit(127);
 	}
 	else
 		wait(NULL);
+}
+
+static void	_create_logfolder(void)
+{
+	pid_t	pid;
+	char	**cmd;
+
 	pid = fork();
 	if (pid == 0)
 	{
@@ -79,15 +86,16 @@ t_env *opening(int argc, char **argv, char *envp[])
 			execve(cmd[0], cmd + 1, NULL);
 			ft_freetab(cmd);
 		}
-		exit(15);
+		closing_the_program(NULL);
+		exit(127);;
 	}
 	else
 		wait(NULL);
-	rl_event_hook = event;
-	rl_outstream = stderr;
-	(void) argc;
-	(void) argv;
-	g_returnval = 0;
-	environment = get_environment(envp);
-	return (environment);
+}
+
+void	init_logs(void)
+{
+	_remove_logfile();
+	_remove_logfolder();
+	_create_logfolder();
 }

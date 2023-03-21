@@ -1,6 +1,7 @@
 TERM_WIDTH := $(shell tput cols)
 SHELL = /bin/bash
 
+SRCS_PATH += ./srcs/cmd/
 SRCS += execute_cmd.c
 SRCS += ftbuiltin_cd.c
 SRCS += ftbuiltin_echo.c
@@ -11,16 +12,20 @@ SRCS += ftbuiltin_pwd.c
 SRCS += ftbuiltin_unset.c
 SRCS += ftbuiltin_dma_db.c
 
+SRCS_PATH += ./srcs/env/
 SRCS += change_local_variables.c
 SRCS += environment.c
 SRCS += get_environnement.c
 SRCS += path.c
 SRCS += replace_key_by_value.c
 
+SRCS_PATH += ./srcs/open/
 SRCS += closing.c
 SRCS += opening.c
 SRCS += signal.c
+SRCS += init_logs.c
 
+SRCS_PATH += ./srcs/parsing/
 SRCS += parse_args.c
 SRCS += parse_builtin.c
 SRCS += parse_cmd.c
@@ -30,28 +35,27 @@ SRCS += redirections.c
 SRCS += redirections_lst.c
 SRCS += split_cmds.c
 
+SRCS_PATH += ./srcs/pipex/
 SRCS += first_child.c
 SRCS += io_open_fds.c
 SRCS += last_child.c
 SRCS += middle_child.c
 SRCS += pipex.c
 
+SRCS_PATH += ./srcs/utils/
 SRCS += ft_syntaxerror.c
 SRCS += exit_erralloc.c
+SRCS += event.c
+SRCS += use_readline.c
 
+SRCS_PATH += ./srcs/routine
 SRCS += minishell.c
+SRCS += rm_heredoc_files.c
+SRCS += new_prompt.c
+SRCS += use_argv.c
 
 INC = -I inc/ -I libft/inc
 LIBS = -L libft -lft -lreadline
-
-SRCS_PATH += ./srcs/
-SRCS_PATH += ./srcs/cmd/
-SRCS_PATH += ./srcs/env/
-SRCS_PATH += ./srcs/one-time/
-SRCS_PATH += ./srcs/parsing/
-SRCS_PATH += ./srcs/pipex/
-SRCS_PATH += ./srcs/utils/
-
 
 OBJS = ${patsubst %.c, ${OBJS_PATH}/%.o, ${SRCS}}
 OBJS_PATH = ./objs/
