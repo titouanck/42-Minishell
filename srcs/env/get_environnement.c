@@ -40,6 +40,26 @@ static t_env	*env_nextelement(char *envp[], size_t i, size_t j)
 	return (element);
 }
 
+static void	increment_shlvl(t_env *environment)
+{
+	int	shlvl;
+
+	while (1)
+	{
+		if (!environment)
+			break ;
+		if (ft_strcmp(environment->key, "SHLVL") == 0)
+		{
+			shlvl = ft_atoi(environment->value);
+			db_free(environment->value);
+			shlvl += 1;
+			environment->value = ft_itoa(shlvl);
+			break ;
+		}
+		environment = environment->next;
+	}
+}
+
 t_env	*get_environment(char *envp[])
 {
 	size_t	i;
@@ -64,5 +84,6 @@ t_env	*get_environment(char *envp[])
 		}
 		i++;
 	}
+	increment_shlvl(environment);
 	return (environment);
 }

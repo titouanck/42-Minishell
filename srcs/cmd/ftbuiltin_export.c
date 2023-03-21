@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 16:26:08 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/16 14:26:34 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 14:36:16 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,16 @@ void	ftbuiltin_export(t_env *environment, char **args)
 	g_returnval = 0;
 	if (!args[1])
 		_export_noarg(environment);
+	else if (args && args[0] && args[1] && ft_strncmp(args[1], "-", 1) == 0)
+	{
+		if (ft_strlen(args[1]) >= 2)
+			args[1][2] = '\0';
+		ft_putstr_fd("minishell: export: ", 2);
+		ft_putstr_fd(args[1], 2);
+		ft_putstr_fd(": invalid option\n", 2);
+		g_returnval = 2;
+		return ;
+	}
 	else
 	{
 		j = 1;
