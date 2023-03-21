@@ -273,12 +273,25 @@ def read_outputs(minishell_stdout, minishell_stderr, bash_stdout, bash_stderr, m
                     if ("<inherited from parent>" in minishell_readed_leaks[i]):
                         minishell_readed_leaks[i] = ""
                         minishell_readed_leaks[i - 1] = ""
+                    elif ("FILE DESCRIPTORS:" in  minishell_readed_leaks[i]):
+                        minishell_readed_leaks[i] = ""
+                    elif (minishell_readed_leaks[i].rstrip(" \n") != "" and "by 0x" not in minishell_readed_leaks[i] and "at 0x" not in minishell_readed_leaks[i]):
+                        # print(f"ONE |{minishell_readed_leaks[i]}|" + "\n")
+                        minishell_readed_leaks[i] = minishell_readed_leaks[i].lstrip(" ")
+                        if (i > 1):
+                           minishell_readed_leaks[i] = "\n " + minishell_readed_leaks[i]
+                        else:
+                           minishell_readed_leaks[i] = " " + minishell_readed_leaks[i]
+                    elif (minishell_readed_leaks[i].rstrip(" \n") != ""):
+                        if ("at 0x" in minishell_readed_leaks[i]):
+                            minishell_readed_leaks[i] = "\n" + minishell_readed_leaks[i]
+                        # print(f"TWO |{minishell_readed_leaks[i]}|" + "\n")
+                        minishell_readed_leaks[i] += '\n'
                     i += 1
-                minishell_readed_leaks = "\n".join(minishell_readed_leaks)
+
+                minishell_readed_leaks = "".join(minishell_readed_leaks)
                 minishell_readed_leaks = minishell_readed_leaks.rstrip(" \n")
-                if ('\n' not in minishell_readed_leaks and "FILE DESCRIPTORS:" in minishell_readed_leaks):
-                    minishell_readed_leaks = ""
-                else:
+                if (minishell_readed_leaks != ""):
                     minishell_readed_leaks += '\n'
 
     return minishell_readed_stdout, minishell_readed_stderr, bash_readed_stdout, bash_readed_stderr, minishell_readed_leaks
@@ -397,12 +410,12 @@ def print_leaks(minishell_readed_leaks):
 
     if (minishell_readed_leaks != ""):
         if ("in loss record" in minishell_readed_leaks):
-            print(f"\n{BOLDRED}LEAKS{NC}")
+            print(f"{BOLDRED}LEAKS{NC}")
+            leaks_nbr += 1
         else:
             print(f"\n{BOLDORANGE}VALGRIND WARNINGS{NC}")
         minishell_readed_leaks = minishell_readed_leaks.rstrip(" \n")
         print(f"{minishell_readed_leaks}")
-        leaks_nbr += 1
 
 
 def input(instruction):
