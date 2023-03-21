@@ -121,6 +121,10 @@ def parse_argv(argc, argv):
                 else:
                     program_usage()
             elif ((arg == "-valgrind" or arg == "valgrind") and check_valgrind == 0):
+                if (shutil.which('valgrind') == None):
+                    print(f"{RED}Could not find valgrind.{NC}")
+                    print(f"{RED}Try to run without -valgrind option{NC}")
+                    exit(1)
                 check_valgrind = 1
             elif ((arg == '-i' or arg == '-I') and next_arg is not None):
                 if (next_arg.isdigit()):
