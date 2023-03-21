@@ -66,8 +66,9 @@ int	addressdb_lstprint(t_address *db, int *fd_ptr)
 	int	fd;
 
 	if (!fd_ptr)
-		fd = 1;		
-	fd = *fd_ptr;
+		fd = 1;
+	else
+		fd = *fd_ptr;
 	if (fd == -1)
 		return (0);
 	if (fd == 0)
