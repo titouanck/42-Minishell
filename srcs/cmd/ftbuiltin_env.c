@@ -6,14 +6,36 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 16:25:33 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/01 14:58:07 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 13:17:31 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ftbuiltin_env(t_env *environment)
+void	ftbuiltin_env(t_env *environment, char **args)
 {
+	g_returnval = 0;
+	if (args && args[0] && args[1] && ft_strncmp(args[1], "-", 1) == 0)
+	{
+		if (ft_strncmp(args[1], "--", 2) == 0)
+		{
+			ft_putstr_fd("env: unrecognized option \'", 2);
+			ft_putstr_fd(args[1], 2);
+			ft_putstr_fd("\'\n", 2);
+			g_returnval = 125;
+			return ;
+		}
+		else if (ft_strncmp(args[1], "-", 1) == 0)
+		{
+			if (ft_strlen(args[1]) >= 2)
+				args[1][2] = '\0';
+			ft_putstr_fd("env: invalid option -- \'", 2);
+			ft_putstr_fd(args[1] + 1, 2);
+			ft_putstr_fd("\'\n", 2);
+			g_returnval = 125;
+			return ;
+		}
+	}
 	while (environment)
 	{
 		if (environment->key && environment->exported)
@@ -25,5 +47,4 @@ void	ftbuiltin_env(t_env *environment)
 		}	
 		environment = environment->next;
 	}
-	g_returnval = 0;
 }

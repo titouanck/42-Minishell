@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 14:54:03 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/09 13:55:41 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 14:14:22 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	dynamic_memory_address_db(unsigned char action, void *address)
 	else if (action == ADDRESSDB_CHECK && address)
 		return (addressdb_lstcheck(db, address));
 	else if (action == ADDRESSDB_PRINT)
-		return (addressdb_lstprint(db));
+		return (addressdb_lstprint(db, (int *) address));
 	else if (action == ADDRESSDB_SIZE)
 		return (addressdb_lstsize(db));
 	else if (action == ADDRESSDB_ERASURE)

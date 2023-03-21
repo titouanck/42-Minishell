@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/20 17:38:29 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 12:14:29 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void		ftbuiltin_cd(t_env *environment, char **args);
 void		ftbuiltin_pwd(t_env *environment, char **args);
 void		ftbuiltin_export(t_env *environment, char **args);
 void		ftbuiltin_unset(t_env *environment, char **args);
-void		ftbuiltin_env(t_env *environment);
+void		ftbuiltin_env(t_env *environment, char **args);
 void		ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr);
 void		ftbuiltin_dma_db(void);
 

@@ -7,7 +7,7 @@ SRCS += ft_printf.c
 SRCS += ft_putchar.c
 SRCS += ft_puthexa_upper.c
 SRCS += ft_putstr.c
-SRCS += ft_putadress.c
+SRCS += ft_putaddress.c
 SRCS += ft_puthexa_lower.c
 SRCS += ft_putnbr.c
 SRCS += ft_putunbr.c
@@ -76,6 +76,7 @@ SRCS += ft_swap.c
 SRCS += ft_isnotnull.c
 SRCS += ft_randomstr.c
 SRCS += ft_len.c
+SRCS += ft_putaddress_fd.c
 
 # dynamic_memory_address_db
 

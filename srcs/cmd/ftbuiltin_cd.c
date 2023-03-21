@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 11:34:21 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/20 17:42:22 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 13:14:52 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,33 +80,55 @@ static void	_noarg(t_env *environment)
 		g_returnval = 0;
 }
 
+int	_too_many_args(char **args, int i)
+{
+	if (ft_len(args) > i + 1)
+	{
+		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+		g_returnval = 1;
+		return (1);
+	}
+	return (0);
+}
+
 void	ftbuiltin_cd(t_env *environment, char **args)
 {
 	char	*cwd;
 	char	*key;
 	char	*value;
+	size_t	i;
 	int		r;
 
+	i = 1;
 	key = db_strdup("OLDPWD");
 	value = getcwd(NULL, 0);
-	if (args && args[0] && args[1])
-	if (ft_len(args) > 2)
+	if (args && args[0] && args[i] && ft_strncmp(args[i], "-", 1) == 0)
 	{
-		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+		if (ft_strlen(args[i]) >= 2)
+			args[i][2] = '\0';
+		ft_putstr_fd("minishell: cd: ", 2);
+		ft_putstr_fd(args[i], 2);
+		ft_putstr_fd(": invalid option\n", 2);
+		g_returnval = 2;
 		db_free(key);
 		db_free(value);
-		g_returnval = 1;
 		return ;
 	}
-	if (args && args[0] && !args[1])
-		_noarg(environment);
-	else if (args && args[0] && args[1])
+	if (_too_many_args(args, i))
 	{
-		r = chdir(args[1]);
+		db_free(key);
+		db_free(value);
+		return ;
+	}
+	if (args && args[0] && !args[i])
+		_noarg(environment);
+	else if (args && args[0] && args[i])
+	{
+		r = chdir(args[i]);
 		if (r == -1)
 		{
 			ft_putstr_fd("minishell: cd: ", 2);
-			perror(args[1]);
+			perror(args[i]);
 			g_returnval = 1;
 		}
 		else

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/20 14:03:45 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/01/18 15:56:10 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 14:16:14 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static size_t	conversion(const char *c, size_t *i, va_list *ap)
 	else if (*(c + 1) == 's')
 		return (ft_putstr(va_arg(*ap, const char *)));
 	else if (*(c + 1) == 'p')
-		return (ft_putadress(va_arg(*ap, void *)));
+		return (ft_putaddress(va_arg(*ap, void *)));
 	else if (*(c + 1) == 'd' || *(c + 1) == 'i')
 		return (ft_putnbr(va_arg(*ap, int)));
 	else if (*(c + 1) == 'u')

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:49:18 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/20 17:33:50 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 12:14:47 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	parse_builtin(t_env *environment, char **args, \
 	else if (ft_strcmp(args[0], "unset") == 0)
 		ftbuiltin_unset(environment, args);
 	else if (ft_strcmp(args[0], "env") == 0)
-		ftbuiltin_env(environment);
+		ftbuiltin_env(environment, args);
 	else if (ft_strcmp(args[0], "exit") == 0)
 		ftbuiltin_exit(environment, args, cmds, cmdnbr);
 	else if (ft_strcmp(args[0], "dma_db") == 0)

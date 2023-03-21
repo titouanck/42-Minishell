@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 14:29:05 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/14 16:19:07 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 14:13:48 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,24 @@ int	addressdb_lstcheck(t_address *db_elem, void *address)
 	return (0);
 }
 
-int	addressdb_lstprint(t_address *db)
+int	addressdb_lstprint(t_address *db, int *fd_ptr)
 {
+	int	fd;
+
+	if (!fd_ptr)
+		fd = 1;		
+	fd = *fd_ptr;
+	if (fd == -1)
+		return (0);
+	if (fd == 0)
+		fd = 1;
 	while (db)
 	{
 		if (db->address)
-			ft_printf("%p\n", db->address);
+		{
+			ft_putaddress_fd(db->address, fd);
+			ft_putchar_fd('\n', fd);
+		}
 		db = db->next;
 	}
 	return (1);

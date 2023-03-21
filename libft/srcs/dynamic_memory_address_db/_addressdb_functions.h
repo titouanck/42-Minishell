@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 14:29:05 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/08 17:09:50 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 14:14:12 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int		addressdb_lstdel(t_address *db_elem, void *address, \
 
 int		addressdb_lstcheck(t_address *db_elem, void *address);
 
-int		addressdb_lstprint(t_address *db);
+int		addressdb_lstprint(t_address *db, int *fd_ptr);
 
 void	addressdb_lsterase(t_address **db, void (*del)(void *));
 

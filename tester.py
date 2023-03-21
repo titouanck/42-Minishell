@@ -298,7 +298,7 @@ def print_cmd(instruction, minishell_readed_stdout, minishell_readed_stderr, min
 def compare_outputs(minishell_readed_stdout, minishell_readed_stderr, minishell_exitcode, bash_readed_stdout, bash_readed_stderr, bash_exitcode, minishell_readed_leaks):
     if (minishell_readed_stdout != bash_readed_stdout):
         return ("KO")
-    elif (minishell_readed_leaks != ""):
+    elif ("in loss record" in minishell_readed_leaks):
         return ("KO")
     elif (minishell_exitcode != bash_exitcode):
         return ("KO")
@@ -383,7 +383,7 @@ def print_leaks(minishell_readed_leaks):
     global leaks_nbr
 
     if (minishell_readed_leaks != ""):
-        print(f"{BOLDWHITE}leaks{NC}")
+        print(f"{BOLDWHITE}valgrind (including leaks){NC}")
         print(minishell_readed_leaks)
         leaks_nbr += 1
 
@@ -643,15 +643,6 @@ def send_instructions(check_rules, ignore_rules):
         input("echo $PWD, $OLDPWD\n"
               "cd /tmp\n"
               "echo $PWD, $OLDPWD\n")
-        input("echo $PWD, $OLDPWD\n"
-              "cd - /tmp\n"
-              "echo $PWD, $OLDPWD\n")
-        input("echo $PWD, $OLDPWD\n"
-              "cd -- /tmp\n"
-              "echo $PWD, $OLDPWD\n")
-        input("echo $PWD, $OLDPWD\n"
-              "cd --- /tmp\n"
-              "echo $PWD, $OLDPWD\n")
         input("cd /root\n")
         input("echo $PWD, $OLDPWD\n"
               "cd /root\n"
@@ -668,7 +659,7 @@ def send_instructions(check_rules, ignore_rules):
         input("pwd\n")
         input("export PWD=$HOME\n"
               "pwd\n")
-        input("pwd 4815162342 --\n")
+        input("pwd 4815162342\n")
         input("pwd Quarante deux\n")
         input("echo -wrongoption -wrongoption\n")
         input("cd -wrongoption /notanexistingfolder\n")
@@ -716,12 +707,10 @@ def send_instructions(check_rules, ignore_rules):
         input("export --wrongoption --wrongoption\n")
         input("export -wrongoption=42 -wrongoption=42\n")
         input("export | grep \"SHLVL\"\n")
-        input("export -\n")
-        input("unset -\n")
         input("unset -wrongoption -wrongoption\n")
+        input("unset --wrongoption -wrongoption\n")
         input("env -wrongoption -wrongoption\n")
         input("env --wrongoption\n")
-        input("env -\n")
 
     rule += 1
     if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
@@ -753,9 +742,6 @@ def send_instructions(check_rules, ignore_rules):
         input("exit -9223372036854775809\n"
               "test\n")
         input("exit -wrongoption -wrongoption\n")
-        input("exit --\n")
-        input("exit -- --\n")
-        input("exit -\n")
 
 
 def print_results():

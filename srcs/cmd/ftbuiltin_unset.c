@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 18:15:33 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/16 18:04:49 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/21 13:37:06 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,22 +39,28 @@ void	ftbuiltin_unset(t_env *environment, char **args)
 {
 	size_t	i;
 	char	*arg;
-	char	*errmsg;
 
+	if (args && args[0] && args[1] && ft_strncmp(args[1], "-", 1) == 0)
+	{
+		if (ft_strlen(args[1]) >= 2)
+			args[1][2] = '\0';
+		ft_putstr_fd("minishell: unset: ", 2);
+		ft_putstr_fd(args[1], 2);
+		ft_putstr_fd(": invalid option\n", 2);
+		g_returnval = 2;
+		return ;
+	}
 	g_returnval = 0;
 	i = 1;
 	while (args[i])
 	{
 		arg = args[i];
-		if (*arg == '\0')
-			return ;
-		if (!ft_strinset(arg, VARNAMESET, ft_strlen(arg)))
+		if (!(*arg) || ft_isdigit(*arg) || !ft_strinset(arg, VARNAMESET, ft_strlen(arg)))
 		{
-			// errmsg = db_strrjoin("minishell: unset: `", arg, "': not a valid identifier\n");
-			// ft_putstr_fd(errmsg, 2);
-			// if (errmsg)
-			// 	db_free(errmsg);
-			// g_returnval = 1;
+			ft_putstr_fd("minishell: unset: `", 2);
+			ft_putstr_fd(arg, 2);
+			ft_putstr_fd("\': not a valid identifier\n", 2);
+			g_returnval = 1;
 			return ;
 		}
 		else
