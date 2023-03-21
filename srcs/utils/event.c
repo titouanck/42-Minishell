@@ -16,4 +16,3 @@ int	event(void)
 {
 	return (42);
 }
-

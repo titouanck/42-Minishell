@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_syntaxerror.c                                   :+:      :+:    :+:   */
+/*   minishell_error.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,26 +12,13 @@
 
 #include "minishell.h"
 
-void	ft_syntaxerror(t_env *environment, char *err)
+void	minishell_error(const char *s1, const char *s2)
 {
-	g_returnval = 2;
-	if (err)
-	{
-		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
-		ft_putstr_fd(err, 2);
-		ft_putstr_fd("\'\n", 2);
-	}
-	if (!use_readline())
-	{
-		if (environment)
-		{
-			ft_putstr_fd("minishell: line ", 2);
-			ft_putnbr_fd(environment->line_nbr, 2);
-			ft_putstr_fd(": `", 2);
-			ft_putstr_fd(environment->last_input, 2);
-			ft_putstr_fd("\'\n", 2);
-		}
-		closing_the_program(environment);
-		exit(g_returnval);
-	}
+	if (!s1 && !s2)
+		return ;
+	ft_putstr_fd("minishell: ", 2);
+	if (s1)
+		ft_putstr_fd(s1, 2);
+	if (s2)
+		ft_putstr_fd(s2, 2);
 }

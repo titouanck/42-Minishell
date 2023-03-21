@@ -97,12 +97,10 @@ int	my_atoi(const char *str, unsigned char *code)
 void	ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr)
 {
 	unsigned char	code;
-	size_t			i;
 
 	code = g_returnval;
 	if (args && *args && args[1])
 	{
-		i = 1;
 		if (!my_atoi(args[1], &code))
 		{
 			ft_putstr_fd("minishell: exit: ", 2);

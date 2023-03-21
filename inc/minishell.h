@@ -207,6 +207,7 @@ int		event(void);
 void	exit_erralloc(t_env *environment);
 void	ft_syntaxerror(t_env *environment, char *err);
 int		use_readline(void);
+void	minishell_error(const char *s1, const char *s2);
 
 
 #endif

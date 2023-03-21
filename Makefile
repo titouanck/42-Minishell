@@ -47,6 +47,7 @@ SRCS += ft_syntaxerror.c
 SRCS += exit_erralloc.c
 SRCS += event.c
 SRCS += use_readline.c
+SRCS += minishell_error.c
 
 SRCS_PATH += ./srcs/routine
 SRCS += minishell.c
