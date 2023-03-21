@@ -18,6 +18,7 @@ SRCS += environment.c
 SRCS += get_environnement.c
 SRCS += path.c
 SRCS += replace_key_by_value.c
+SRCS += update_environment.c
 
 SRCS_PATH += ./srcs/open/
 SRCS += closing.c

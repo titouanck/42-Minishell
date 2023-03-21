@@ -12,53 +12,35 @@
 
 #include "minishell.h"
 
-static void	_export_element(t_env *environment, \
-	char *key, char *value)
+int	_error_handling(char **args, char *value)
 {
-	t_env	*elem;
-	char	*tmp;
-	
-	elem = environment;
-	if (!elem)
+	if (args && args[0] && args[1] && ft_strncmp(args[1], "-", 1) == 0)
 	{
-		db_free(key);
+		if (ft_strlen(args[1]) >= 2)
+			args[1][2] = '\0';
+		ft_putstr_fd("minishell: cd: ", 2);
+		ft_putstr_fd(args[1], 2);
+		ft_putstr_fd(": invalid option\n", 2);
+		g_returnval = 2;
 		db_free(value);
-		return ;
+		return (1);
 	}
-	if (!key)
+	else if (ft_len(args) > 2)
 	{
+		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+		g_returnval = 1;
 		db_free(value);
-		return ;
+		return (1);
 	}
-	elem = elem->next;
-	while (elem)
-	{
-		if (ft_strcmp(elem->key, key) == 0)
-		{
-			db_free(key);
-			elem->exported = 1;
-			if (value)
-			{
-				tmp = elem->value;
-				elem->value = value;
-				db_free(tmp);
-			}
-			return ;
-		}
-		elem = elem->next;
-	}
-	if (value)
-		env_lstaddback(environment, key, value, 1);
-	else
-		db_free(key);
+	return (0);
 }
 
-static void	_noarg(t_env *environment)
+static void	_without_arg(t_env *environment)
 {
 	char	*err_str;
 	char	*home;
 	int		r;
-	
+
 	home = get_value_by_key(environment, "HOME");
 	if (!home)
 	{
@@ -80,58 +62,17 @@ static void	_noarg(t_env *environment)
 		g_returnval = 0;
 }
 
-int	_too_many_args(char **args, size_t i)
+static void	_with_arg(char **args)
 {
-	if (ft_len(args) > i + 1)
-	{
-		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
-		g_returnval = 1;
-		return (1);
-	}
-	return (0);
-}
-
-void	ftbuiltin_cd(t_env *environment, char **args)
-{
-	char	*cwd;
-	char	*key;
-	char	*value;
-	size_t	i;
 	int		r;
 
-	i = 1;
-	key = db_strdup("OLDPWD");
-	value = getcwd(NULL, 0);
-	dynamic_memory_address_db('+', value);
-	if (!key || !value)
-		exit_erralloc(environment);
-	if (args && args[0] && args[i] && ft_strncmp(args[i], "-", 1) == 0)
+	if (args && args[0] && args[1])
 	{
-		if (ft_strlen(args[i]) >= 2)
-			args[i][2] = '\0';
-		ft_putstr_fd("minishell: cd: ", 2);
-		ft_putstr_fd(args[i], 2);
-		ft_putstr_fd(": invalid option\n", 2);
-		g_returnval = 2;
-		db_free(key);
-		db_free(value);
-		return ;
-	}
-	if (_too_many_args(args, i))
-	{
-		db_free(key);
-		db_free(value);
-		return ;
-	}
-	if (args && args[0] && !args[i])
-		_noarg(environment);
-	else if (args && args[0] && args[i])
-	{
-		r = chdir(args[i]);
+		r = chdir(args[1]);
 		if (r == -1)
 		{
 			ft_putstr_fd("minishell: cd: ", 2);
-			perror(args[i]);
+			perror(args[1]);
 			g_returnval = 1;
 		}
 		else
@@ -139,19 +80,33 @@ void	ftbuiltin_cd(t_env *environment, char **args)
 	}
 	else
 		g_returnval = 1;
+}
+
+void	ftbuiltin_cd(t_env *environment, char **args)
+{
+	char	*cwd;
+	char	*key;
+	char	*value;
+
+	value = getcwd(NULL, 0);
+	dynamic_memory_address_db('+', value);
+	if (_error_handling(args, value))
+		return ;
+	else if (args && args[0] && !args[1])
+		_without_arg(environment);
+	else
+		_with_arg(args);
 	cwd = getcwd(NULL, 0);
 	if (ft_strcmp(cwd, value) != 0)
-		_export_element(environment, key, value);
-	else
 	{
-		db_free (key);
-		db_free(value);
+		key = db_strdup("OLDPWD");
+		update_environment(environment, environment, key, value);
 	}
+	else
+		db_free(value);
 	db_free(cwd);
 	key = db_strdup("PWD");
 	value = getcwd(NULL, 0);
-	if (!key || !value)
-		exit_erralloc(environment);
 	dynamic_memory_address_db('+', value);
-	_export_element(environment, key, value);
+	update_environment(environment, environment, key, value);
 }

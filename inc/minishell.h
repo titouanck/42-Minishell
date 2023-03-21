@@ -209,5 +209,9 @@ void	ft_syntaxerror(t_env *environment, char *err);
 int		use_readline(void);
 void	minishell_error(const char *s1, const char *s2);
 
+/* env */
+
+int		update_environment(t_env *environment, t_env *env_elem, \
+		char *key, char *value);
 
 #endif
