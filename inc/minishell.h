@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 16:03:02 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 16:50:07 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,5 +233,6 @@ int		action_on_files(t_redirect *redirect, \
 		t_redirectionlst *current, int heredoc);
 void	error_on_open(t_redirect *redirect, char *file);
 int		open_fds(t_env *environment, t_cmd **cmds, size_t cmdnbr);
+void	exit_child(t_env *environment, t_cmd **cmds, size_t cmdnbr);
 
 #endif

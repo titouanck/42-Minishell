@@ -54,6 +54,7 @@ SRCS += get_cmds_parsed.c
 SRCS += action_on_files.c
 SRCS += error_on_open.c
 SRCS += open_fds.c
+SRCS += exit_child.c
 
 SRCS_PATH += ./srcs/utils/
 SRCS += ft_syntaxerror.c

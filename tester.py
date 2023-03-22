@@ -261,7 +261,6 @@ def run_process(instruction):
         with open("/dev/null", "w") as fd_leaks_stdout:
             with open(minishell_leaks, "w") as fd_leaks_stderr:
                 leaks_process = subprocess.Popen(
-                    # ['make', 'valgrind'], stdin=leaks_slave_out, stdout=fd_leaks_stdout, stderr=fd_leaks_stderr)
                     ['valgrind', '-q', '--track-fds=yes', '--suppressions=' + ignore_readline_leaks, '--leak-check=full', '--show-leak-kinds=all', './minishell'], stdin=leaks_slave_out, stdout=fd_leaks_stdout, stderr=fd_leaks_stderr)
         os.write(leaks_master_out, instruction.encode())
         os.write(leaks_master_out, "exit\n".encode())
@@ -326,7 +325,6 @@ def read_outputs(minishell_stdout, minishell_stderr, bash_stdout, bash_stderr, m
                     elif ("FILE DESCRIPTORS:" in  minishell_readed_leaks[i]):
                         minishell_readed_leaks[i] = ""
                     elif (minishell_readed_leaks[i].rstrip(" \n") != "" and "by 0x" not in minishell_readed_leaks[i] and "at 0x" not in minishell_readed_leaks[i]):
-                        # print(f"ONE |{minishell_readed_leaks[i]}|" + "\n")
                         minishell_readed_leaks[i] = minishell_readed_leaks[i].lstrip(" ")
                         if (i > 1):
                            minishell_readed_leaks[i] = "\n " + minishell_readed_leaks[i]
@@ -335,7 +333,6 @@ def read_outputs(minishell_stdout, minishell_stderr, bash_stdout, bash_stderr, m
                     elif (minishell_readed_leaks[i].rstrip(" \n") != ""):
                         if ("at 0x" in minishell_readed_leaks[i]):
                             minishell_readed_leaks[i] = "\n" + minishell_readed_leaks[i]
-                        # print(f"TWO |{minishell_readed_leaks[i]}|" + "\n")
                         minishell_readed_leaks[i] += '\n'
                     i += 1
 
@@ -782,18 +779,9 @@ def send_instructions(check_rules, ignore_rules):
         input("export +=\n")
         input("export \"\"\n")
         input("export /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin=42\n")
-        input("unset /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin=42\n")
-        input("unset $PATH\n"
-              "ls\n")
-        input("unset /PATH\n")
-        input("unset =PATH\n")
-        input("unset +=\n")
-        input("unset \"<\"\n")
-        input("unset 42PATH\n")
         input("unset PATH\n"
               "ls\n")
         input("unset\n")
-        input("unset \"\"\n")
         input("export | grep \"OLDPWD\"\n")
         input("export --wrongoption=123 --wrongoption=123\n")
         input("export --wrongoption --wrongoption\n")

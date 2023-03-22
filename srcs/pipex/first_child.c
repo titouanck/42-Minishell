@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 16:14:37 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 16:50:59 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,7 @@ static void	_actions_child(t_env *environment, t_cmd **cmds, size_t cmdnbr, \
 		execute_cmd(environment, (cmds[cmdnbr])->args);
 	if ((cmds[cmdnbr])->redirect->outfile == NULL)
 		close(pipefd[1]);
-	if ((cmds[cmdnbr])->redirect->outfile)
-		close((cmds[cmdnbr])->redirect->fd_outfile);
-	if ((cmds[cmdnbr])->redirect->infile)
-		close((cmds[cmdnbr])->redirect->fd_infile);
-	environment->log.args = (cmds[cmdnbr])->args;
-	(cmds[cmdnbr])->args = NULL;
-	ft_free_cmds_parsed(cmds);
-	closing_the_program(environment);
-	exit(g_returnval);
+	exit_child(environment, cmds, cmdnbr);
 }
 
 static void	_actions_parent(t_env *environment, t_cmd **cmds, size_t cmdnbr, \

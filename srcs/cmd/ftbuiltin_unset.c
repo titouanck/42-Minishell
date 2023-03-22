@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 18:15:33 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 11:39:13 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 16:59:24 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,10 @@ void	ftbuiltin_unset(t_env *environment, char **args)
 		if (!(*arg) || ft_isdigit(*arg) \
 		|| !ft_strinset(arg, VARNAMESET, ft_strlen(arg)))
 		{
-		// 	ft_putstr_fd("minishell: unset: `", 2);
-		// 	ft_putstr_fd(arg, 2);
-		// 	ft_putstr_fd("\': not a valid identifier\n", 2);
-		// 	g_returnval = 1;
+			ft_putstr_fd("minishell: unset: `", 2);
+			ft_putstr_fd(arg, 2);
+			ft_putstr_fd("\': not a valid identifier\n", 2);
+			g_returnval = 1;
 			return ;
 		}
 		else
