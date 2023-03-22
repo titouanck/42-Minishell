@@ -1,46 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   path.c                                             :+:      :+:    :+:   */
+/*   cmd_signal.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/25 01:02:28 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 12:11:30 by tchevrie         ###   ########.fr       */
+/*   Created: 2023/03/22 12:58:02 by tchevrie          #+#    #+#             */
+/*   Updated: 2023/03/22 13:01:42 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*get_path_ptr(char *envp[])
+static void	_cmd_sigint(int sig)
 {
-	int		i;
-	char	*ptr;
-
-	i = 0;
-	while (1)
-	{
-		ptr = envp[i];
-		if (!ptr)
-			break ;
-		if (strncmp(ptr, "PATH=", 5) == 0)
-			return (ptr);
-		i++;
-	}
-	return (NULL);
+	(void) sig;
+	ft_putchar_fd('\n', 2);
+	return ;
 }
 
-char	**get_path(char *envp[])
+void	cmd_signal_child(void)
 {
-	char	*path_ptr;
-	char	**path;
+	signal(SIGINT, _cmd_sigint);
+	signal(SIGQUIT, SIG_DFL);
+}
 
-	if (!envp)
-		return (NULL);
-	path_ptr = get_path_ptr(envp);
-	if (!path_ptr)
-		return (NULL);
-	path_ptr += 5;
-	path = db_split(path_ptr, ':');
-	return (path);
+static void	_cmd_sigquit(int sig)
+{
+	(void) sig;
+	ft_putstr_fd("Quit (core dumped)\n", 2);
+	g_returnval = 131;
+	return ;
+}
+
+void	cmd_signal_parent(void)
+{
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, _cmd_sigquit);
+	rl_on_new_line();
 }

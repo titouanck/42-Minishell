@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 13:47:57 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 12:08:42 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 12:59:41 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,9 @@ static char	*_find_cmd_pathname(char **path, char *arg)
 
 static void	_try_to_execute(char **args, char **envp, char *filepath)
 {
-	cmd_signal_behavior();
+	cmd_signal_child();
 	execve(filepath, args, envp);
-	default_signal_behavior();
+	default_signal_tty();
 	db_free(filepath);
 	filepath = NULL;
 	if (errno == 13)

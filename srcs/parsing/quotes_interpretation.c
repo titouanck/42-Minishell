@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 12:48:16 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/15 17:47:30 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 12:38:34 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ int	quotes_interpretation(t_env *environment, char **line)
 			&single_quote_open, &double_quote_open, &i);
 		}
 		ptr = *line;
-		(*line) = replace_key_by_value(environment, (*line));
+		(*line) = replace_key_by_value((*line));
 		if (ptr == *line)
 			i++;
 	}

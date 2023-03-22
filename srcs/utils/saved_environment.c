@@ -1,46 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   path.c                                             :+:      :+:    :+:   */
+/*   saved_environment.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/25 01:02:28 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 12:11:30 by tchevrie         ###   ########.fr       */
+/*   Created: 2023/03/22 12:31:52 by tchevrie          #+#    #+#             */
+/*   Updated: 2023/03/22 12:32:51 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*get_path_ptr(char *envp[])
+t_env	*saved_environment(t_env *environment)
 {
-	int		i;
-	char	*ptr;
+	static t_env	*saved_env;
 
-	i = 0;
-	while (1)
-	{
-		ptr = envp[i];
-		if (!ptr)
-			break ;
-		if (strncmp(ptr, "PATH=", 5) == 0)
-			return (ptr);
-		i++;
-	}
-	return (NULL);
-}
-
-char	**get_path(char *envp[])
-{
-	char	*path_ptr;
-	char	**path;
-
-	if (!envp)
-		return (NULL);
-	path_ptr = get_path_ptr(envp);
-	if (!path_ptr)
-		return (NULL);
-	path_ptr += 5;
-	path = db_split(path_ptr, ':');
-	return (path);
+	if (environment)
+		saved_env = environment;
+	return (saved_env);
 }

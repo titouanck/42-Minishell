@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 19:49:23 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 19:49:39 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 12:58:28 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,12 @@ char	*new_prompt(t_env *environment)
 
 	if (use_readline())
 	{
-		default_signal_behavior();
+		default_signal_tty();
 		line = _with_readline(environment);
 	}
 	else
 	{
-		notatty_signal_behavior();
+		default_signal_notty();
 		line = _without_readline();
 	}
 	return (line);

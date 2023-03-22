@@ -12,62 +12,99 @@
 
 #include "minishell.h"
 
-char	*replace_key_by_value(t_env *environment, char *line)
+static int	_first_p(char **sec_p, int *question_mark, char *line, size_t i)
 {
-	char	*first_part;
-	char	*second_part;
-	int		question_mark;
+	(*question_mark) = FALSE;
+	if (line[i + 1] == '\?')
+		(*question_mark) = TRUE;
+	if ((*question_mark))
+		(*sec_p) = line + i + 2;
+	else
+	{
+		(*sec_p) = line + i + 1;
+		if (!ft_isdigit(*(*sec_p)))
+			while (*(*sec_p) && ft_strinset((*sec_p), VARNAMESET, 1))
+				(*sec_p)++;
+		else
+			(*sec_p)++;
+	}
+	return (1);
+}
+
+static char	*_sec_p_qm(char **first_p, char **sec_p, char *line, size_t i)
+{
 	char	*var;
 	char	*tmp;
+	t_env	*environment;
+
+	environment = saved_environment(NULL);
+	var = (*sec_p);
+	(*sec_p) = db_strdup((*sec_p));
+	if (!(*sec_p))
+		return (NULL);
+	*var = '\0';
+	var = line + i + 1;
+	var = ft_itoa(g_returnval);
+	if (!var)
+		var = "";
+	tmp = db_strrjoin((*first_p), var, (*sec_p));
+	db_free(var);
+	db_free(line);
+	db_free((*first_p));
+	db_free((*sec_p));
+	line = tmp;
+	return (line);
+}
+
+static char	*_sec_p_noqm(char **first_p, char **sec_p, char *line, size_t i)
+{
+	char	*var;
+	char	*tmp;
+	t_env	*environment;
+
+	environment = saved_environment(NULL);
+	var = (*sec_p);
+	(*sec_p) = db_strdup((*sec_p));
+	if (!(*sec_p))
+		return (NULL);
+	*var = '\0';
+	var = line + i + 1;
+	var = get_value_by_key(environment, var);
+	if (!var)
+		var = "";
+	tmp = db_strrjoin((*first_p), var, (*sec_p));
+	db_free(line);
+	db_free((*first_p));
+	db_free((*sec_p));
+	line = tmp;
+	return (line);
+}
+
+char	*replace_key_by_value(char *line)
+{
+	char	*first_p;
+	char	*sec_p;
+	int		question_mark;
 	size_t	i;
 
-	i = 0;
-	while (line && line[i])
+	i = -1;
+	while (line && line[++i])
 	{
 		if (line[i] == VARKEY)
 		{
 			line[i] = '\0';
-			first_part = db_strdup(line);
-			if (!first_part)
+			first_p = db_strdup(line);
+			if (!first_p)
 				return (db_free(line), NULL);
-			question_mark = FALSE;
-			if (line[i + 1] == '\?')
-				question_mark = TRUE;
+			_first_p(&sec_p, &question_mark, line, i);
 			if (question_mark)
-				second_part = line + i + 2;
+				line = _sec_p_qm(&first_p, &sec_p, line, i);
 			else
-			{
-				second_part = line + i + 1;
-				if (!ft_isdigit(*second_part))
-					while (*second_part && ft_strinset(second_part, VARNAMESET, 1))
-						second_part++;
-				else
-					second_part++;
-			}
-			var = second_part;
-			second_part = db_strdup(second_part);
-			if (!second_part)
-				return (db_free(line),db_free(first_part), NULL);
-			*var = '\0';
-			var = line + i + 1;
-			if (question_mark)
-				var = ft_itoa(g_returnval);
-			else
-				var = get_value_by_key(environment, var);
-			if (!var)
-				var = "";
-			tmp = db_strrjoin(first_part, var, second_part);
-			if (question_mark)
-				db_free(var);
-			db_free(line);
-			db_free(first_part);
-			db_free(second_part);
-			line = tmp;
+				line = _sec_p_noqm(&first_p, &sec_p, line, i);
 			if (!line)
-				return (NULL);
+				return (db_free(line), db_free(first_p), NULL);
 			i--;
 		}
-		i++;
 	}
 	return (line);
 }

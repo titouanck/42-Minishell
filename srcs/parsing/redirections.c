@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 18:50:22 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 12:58:28 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,7 +218,7 @@ int	open_heredoc(t_env *environment, t_redirect *redirect)
 					while (line[++i])
 						if (line[i] == '$')
 							line[i] = VARKEY;
-					line = replace_key_by_value(environment, line);
+					line = replace_key_by_value(line);
 				}
 				if (fd != -1)
 				{
@@ -241,9 +241,9 @@ int	open_heredoc(t_env *environment, t_redirect *redirect)
 			current = current->next;
 	}
 	if (use_readline())
-		default_signal_behavior();
+		default_signal_tty();
 	else
-		notatty_signal_behavior();
+		default_signal_notty();
 	ft_swap(&returnval, &g_returnval);
 	if (returnval == 130)
 		g_returnval = returnval;

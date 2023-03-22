@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 11:43:54 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 12:59:41 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,8 +117,6 @@ t_cmd		*parse_cmd(t_env *environment, char **line, int last);
 t_cmd		*parse_args(t_env *environment, char **line, int last);
 // redirections.c
 t_redirect	*redirections(t_env *environment, char *line, int last);
-// replace_key_by_value.c
-char		*replace_key_by_value(t_env *environment, char *line);
 // quotes_interpretation.c
 int			quotes_interpretation(t_env *environment, char **line);
 
@@ -129,9 +127,9 @@ t_env		*opening(int argc, char **argv, char *envp[]);
 // closing.c
 void		closing_the_program(t_env *environment);
 // signal.c
-void		default_signal_behavior(void);
+void		default_signal_tty(void);
 void		heredoc_signal_behavior(void);
-void		cmd_signal_behavior(void);
+void		cmd_signal_child(void);
 // get_environment.c
 t_env		*get_environment(char *envp[]);
 
@@ -163,8 +161,8 @@ void	ft_free_cmds_parsed(t_cmd **tab);
 
 					/* Utils */
 void	heredoc_signal_behavior(void);
-void	cmd_signal_behavior_parent(void);
-void	notatty_signal_behavior(void);
+void	cmd_signal_parent(void);
+void	default_signal_notty(void);
 
 void	ft_syntaxerror(t_env *environment, char *err);
 
@@ -193,6 +191,7 @@ void	exit_erralloc(t_env *environment);
 void	ft_syntaxerror(t_env *environment, char *err);
 int		use_readline(void);
 void	minishell_error(const char *s1, const char *s2);
+t_env	*saved_environment(t_env *environment);
 
 	/* env */
 
@@ -200,7 +199,7 @@ void	update_environment(t_env *environment, \
 		char *key, char *value, int append);
 void	update_local_variables(t_env *environment, \
 	char *key, char *value, int append);
-
+char	*replace_key_by_value(char *line);
 	/* cmd */
 
 void		ftbuiltin_echo(char **args);

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 11:34:21 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 11:44:34 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 12:47:13 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	_update_existing_key_env(t_env *env_elem, \
 void	update_environment(t_env *environment, \
 	char *key, char *value, int append)
 {
-	t_env 	*env_elem;
+	t_env	*env_elem;
 
 	env_elem = environment;
 	if (!env_elem || !key)
@@ -84,7 +84,7 @@ static void	_update_existing_key_local(t_env *env_elem, \
 void	update_local_variables(t_env *environment, \
 	char *key, char *value, int append)
 {
-	t_env 	*env_elem;
+	t_env	*env_elem;
 
 	env_elem = environment;
 	if (!env_elem || !key)
@@ -108,5 +108,3 @@ void	update_local_variables(t_env *environment, \
 	else
 		db_free(key);
 }
-
-

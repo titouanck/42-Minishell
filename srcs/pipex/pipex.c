@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 15:07:04 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 18:53:15 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 12:59:41 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	pipex(t_env *environment, char **cmds)
 		return (0);
 	db_freetab(cmds);
 	if (use_readline())
-		cmd_signal_behavior_parent();
+		cmd_signal_parent();
 	cmdnbr = 0;
 	if (cmds_parsed[1])
 	{

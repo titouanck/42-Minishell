@@ -20,10 +20,9 @@ SRCS += path.c
 SRCS += replace_key_by_value.c
 SRCS += update_environment.c
 
-SRCS_PATH += ./srcs/open/
+SRCS_PATH += ./srcs/one-time/
 SRCS += closing.c
 SRCS += opening.c
-SRCS += signal.c
 SRCS += init_logs.c
 
 SRCS_PATH += ./srcs/parsing/
@@ -49,12 +48,18 @@ SRCS += exit_erralloc.c
 SRCS += event.c
 SRCS += use_readline.c
 SRCS += minishell_error.c
+SRCS += saved_environment.c
 
 SRCS_PATH += ./srcs/routine
 SRCS += minishell.c
 SRCS += rm_heredoc_files.c
 SRCS += new_prompt.c
 SRCS += use_argv.c
+
+SRCS_PATH += ./srcs/signals
+SRCS += default_signal.c
+SRCS += cmd_signal.c
+SRCS += heredoc_signal.c
 
 INC = -I inc/ -I libft/inc
 LIBS = -L libft -lft -lreadline
