@@ -24,6 +24,7 @@ SRCS_PATH += ./srcs/one-time/
 SRCS += closing.c
 SRCS += opening.c
 SRCS += init_logs.c
+SRCS += write_to_logfile.c
 
 SRCS_PATH += ./srcs/parsing/
 SRCS += parse_args.c

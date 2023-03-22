@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 12:59:41 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 13:15:26 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,8 +182,9 @@ void	rm_heredoc_files(t_env *environment);
 int		use_argv(t_env *environment, int argc, char **argv);
 char	*new_prompt(t_env *environment);
 
-	/* open */
+	/* one-time */
 void	init_logs(void);
+void	write_to_logfile(int fd, t_log log, char *last_input);
 
 	/* utils*/
 int		event(void);
