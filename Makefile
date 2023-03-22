@@ -32,10 +32,12 @@ SRCS += parse_builtin.c
 SRCS += parse_cmd.c
 SRCS += parsing.c
 SRCS += quotes_interpretation.c
-SRCS += redirections.c
-SRCS += redirections_lst.c
 SRCS += split_cmds.c
 SRCS += parse_heredoc_limiter.c
+
+SRCS_PATH += ./srcs/redirections/
+SRCS += redirections.c
+SRCS += redirections_lst.c
 
 SRCS_PATH += ./srcs/pipex/
 SRCS += first_child.c

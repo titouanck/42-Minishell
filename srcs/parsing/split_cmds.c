@@ -6,35 +6,34 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 17:17:52 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 17:22:30 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 13:55:42 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	_actions_singlequoteopen(char c, \
-	int *single_quote_open)
+static void	_selection_action(char *c, \
+	int *single_open, int *double_open)
 {
-	if (c == '\'')
-		*single_quote_open = FALSE;
-}
-
-static void	_actions_doublequoteopen(char c, \
-	int *double_quote_open)
-{
-	if (c == '\"')
-		*double_quote_open = FALSE;
-}
-
-static void	_actions_default(char *c, \
-	int *single_quote_open, int *double_quote_open)
-{
-	if (*c == '\'')
-		*single_quote_open = TRUE;
-	else if (*c == '\"')
-		*double_quote_open = TRUE;
-	else if (*c == '|')
-		*c = PIPECHAR;
+	if (*single_open)
+	{
+		if (*c == '\'')
+			*single_open = FALSE;
+	}
+	else if (*double_open)
+	{
+		if (*c == '\"')
+			*double_open = FALSE;
+	}
+	else
+	{
+		if (*c == '\'')
+			*single_open = TRUE;
+		else if (*c == '\"')
+			*double_open = TRUE;
+		else if (*c == '|')
+			*c = PIPECHAR;
+	}
 }
 
 static int	_check_doublons(char *line)
@@ -51,31 +50,36 @@ static int	_check_doublons(char *line)
 	return (1);
 }
 
+static char	*_format_line_and_init(char **ptr, \
+	int *single_open, int *double_open)
+{
+	char	*line;
+
+	if (!(*ptr))
+		return (NULL);
+	line = ft_strip(*ptr);
+	*single_open = FALSE;
+	*double_open = FALSE;
+	return (line);
+}
+
 char	**split_cmds(t_env *environment, char **ptr)
 {
 	char	*line;
 	size_t	i;
-	int		single_quote_open;
-	int		double_quote_open;
+	int		single_open;
+	int		double_open;
 	char	**cmds;
 
-	line = ft_strip(*ptr);
+	line = _format_line_and_init(ptr, &single_open, &double_open);
 	if (!line)
 		return (NULL);
-	single_quote_open = FALSE;
-	double_quote_open = FALSE;
 	i = 0;
 	if (line[i] == '|')
 		return (ft_syntaxerror(environment, "|"), NULL);
 	while (line[i])
 	{
-		if (single_quote_open)
-			_actions_singlequoteopen(line[i], &single_quote_open);
-		else if (double_quote_open)
-			_actions_doublequoteopen(line[i], &double_quote_open);
-		else
-			_actions_default(line + i, \
-			&single_quote_open, &double_quote_open);
+		_selection_action(line + i, &single_open, &double_open);
 		i++;
 	}
 	if (i > 0 && line[i - 1] == PIPECHAR)
