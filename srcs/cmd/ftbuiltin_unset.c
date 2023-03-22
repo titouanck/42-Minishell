@@ -12,11 +12,11 @@
 
 #include "minishell.h"
 
-void	ftbuiltin_unset_element(t_env *environment, char *arg)
+static void	ftbuiltin_unset_element(t_env *environment, char *arg)
 {
 	t_env	*elem;
 	t_env	*tmp;
-	
+
 	elem = environment;
 	if (!arg || !elem)
 		return ;
@@ -35,11 +35,8 @@ void	ftbuiltin_unset_element(t_env *environment, char *arg)
 	}
 }
 
-void	ftbuiltin_unset(t_env *environment, char **args)
+static int	_error_handling(char **args)
 {
-	size_t	i;
-	char	*arg;
-
 	if (args && args[0] && args[1] && ft_strncmp(args[1], "-", 1) == 0)
 	{
 		if (ft_strlen(args[1]) >= 2)
@@ -48,14 +45,25 @@ void	ftbuiltin_unset(t_env *environment, char **args)
 		ft_putstr_fd(args[1], 2);
 		ft_putstr_fd(": invalid option\n", 2);
 		g_returnval = 2;
-		return ;
+		return (0);
 	}
+	return (1);
+}
+
+void	ftbuiltin_unset(t_env *environment, char **args)
+{
+	size_t	i;
+	char	*arg;
+
+	if (!_error_handling(args))
+		return ;
 	g_returnval = 0;
 	i = 1;
 	while (args[i])
 	{
 		arg = args[i];
-		if (!(*arg) || ft_isdigit(*arg) || !ft_strinset(arg, VARNAMESET, ft_strlen(arg)))
+		if (!(*arg) || ft_isdigit(*arg) \
+		|| !ft_strinset(arg, VARNAMESET, ft_strlen(arg)))
 		{
 			ft_putstr_fd("minishell: unset: `", 2);
 			ft_putstr_fd(arg, 2);

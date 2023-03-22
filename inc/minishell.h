@@ -152,7 +152,6 @@ t_env		*get_environment(char *envp[]);
 					/* Environment */
 
 // ftbuiltin_unset.c
-void		ftbuiltin_unset_element(t_env *environment, char *arg);
 // change_local_variables.c
 int			change_local_variables(t_env *environment, char *line, size_t size);
 // environment.c
