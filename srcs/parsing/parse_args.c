@@ -27,7 +27,8 @@ static void	_remove_quote_token_tab(char **args)
 		{
 			if (args[i][j] == QUOTES)
 			{
-				ft_memmove(args[i] + j, args[i] + j + 1, ft_strlen(args[i] + j + 1) + 1);
+				ft_memmove(args[i] + j, args[i] + j + 1, \
+				ft_strlen(args[i] + j + 1) + 1);
 				j--;
 			}
 			j++;
@@ -47,8 +48,7 @@ t_cmd	*parse_args(t_env *environment, char **line, int last)
 	cmd->redirect = NULL;
 	if (!quotes_interpretation(environment, line))
 		return (db_free(cmd), NULL);
-	else
-		cmd->redirect = redirections(environment, *line, last);
+	cmd->redirect = redirections(environment, *line, last);
 	if (!(cmd->redirect))
 		return (db_free(cmd), NULL);
 	cmd->args = db_split(*line, SEPARATOR);
