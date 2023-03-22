@@ -44,11 +44,16 @@ SRCS += new_redirection.c
 SRCS += redirection_check_syntax.c
 
 SRCS_PATH += ./srcs/pipex/
+SRCS += ft_free_cmds_parsed.c
 SRCS += first_child.c
 SRCS += io_open_fds.c
 SRCS += last_child.c
 SRCS += middle_child.c
 SRCS += pipex.c
+SRCS += get_cmds_parsed.c
+SRCS += action_on_files.c
+SRCS += error_on_open.c
+SRCS += open_fds.c
 
 SRCS_PATH += ./srcs/utils/
 SRCS += ft_syntaxerror.c
@@ -58,6 +63,7 @@ SRCS += use_readline.c
 SRCS += minishell_error.c
 SRCS += saved_environment.c
 SRCS += remove_quote_token_line.c
+SRCS += free_log_files.c
 
 SRCS_PATH += ./srcs/routine
 SRCS += minishell.c

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 14:27:28 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 16:03:02 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,9 +160,6 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr);
 // io_open_fds.c
 int	io_open_fds(t_env *environment, t_redirect *redirect);
 
-// PAS CLASSE
-void	ft_free_cmds_parsed(t_cmd **tab);
-
 					/* Utils */
 void	heredoc_signal(void);
 void	cmd_signal_parent(void);
@@ -198,6 +195,7 @@ int		use_readline(void);
 void	minishell_error(const char *s1, const char *s2);
 t_env	*saved_environment(t_env *environment);
 void	remove_quote_token_line(char *line);
+void	free_log_files(t_env *environment);
 
 	/* env */
 
@@ -227,5 +225,13 @@ int		open_heredoc(t_env *environment, t_redirect *redirect);
 int		new_redirection(t_env *environment, char *line, \
 		t_redirect *redirect, int redirection_type);
 int		redirection_check_syntax(t_env *environment, char c, t_redirect *redirect);
+
+	/* pipex */
+void	ft_free_cmds_parsed(t_cmd **tab);
+t_cmd	**get_cmds_parsed(t_env *environment, char **cmds);
+int		action_on_files(t_redirect *redirect, \
+		t_redirectionlst *current, int heredoc);
+void	error_on_open(t_redirect *redirect, char *file);
+int		open_fds(t_env *environment, t_cmd **cmds, size_t cmdnbr);
 
 #endif

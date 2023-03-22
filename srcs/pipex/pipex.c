@@ -6,74 +6,17 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 15:07:04 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 14:27:28 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 15:19:56 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_free_cmds_parsed(t_cmd **tab)
+int	_call_childs(t_env *environment, t_cmd **cmds_parsed)
 {
-	size_t	i;
-
-	if (!tab)
-		return ;
-	i = 0;
-	while (tab[i])
-	{
-		if (tab[i]->args)
-			db_freetab(tab[i]->args);
-		if (tab[i]->redirect)
-			ft_free_redirect(tab[i]->redirect);
-		db_free(tab[i]);
-		i++;
-	}
-	db_free(tab);
-}
-
-static t_cmd	**_get_cmds_parsed(t_env *environment, char **cmds)
-{
-	t_cmd	**cmds_parsed;
-	size_t	size;
-	size_t	i;
-
-	size = 0;
-	while (cmds[size])
-		size++;
-	cmds_parsed = db_malloc(sizeof(t_cmd *) * (size + 1));
-	if (!cmds_parsed)
-		exit_erralloc(environment);
-	i = 0;
-	while (i < size)
-	{
-		if (i + 1 < size)
-			cmds_parsed[i] = parse_cmd(environment, cmds + i, FALSE);
-		else
-			cmds_parsed[i] = parse_cmd(environment, cmds + i, TRUE);
-		if (!cmds_parsed[i])
-			return (ft_free_cmds_parsed(cmds_parsed), db_freetab(cmds), NULL);
-		if (!cmds_parsed[i]->args || !(cmds_parsed[i]->args[0]) || !(cmds_parsed[i]->args[0][0]))
-			cmds_parsed[i]->redirect->to_execute = FALSE;
-		cmds_parsed[i]->pid = -1;
-		i++;
-	}
-	cmds_parsed[i] = NULL;
-	return (cmds_parsed);
-}
-
-int	pipex(t_env *environment, char **cmds)
-{
-	int		pipefd[2];
 	size_t	cmdnbr;
-	t_cmd	**cmds_parsed;
+	int		pipefd[2];
 
-	heredoc_signal();
-	cmds_parsed = _get_cmds_parsed(environment, cmds);
-	if (!cmds_parsed)
-		return (0);
-	db_freetab(cmds);
-	if (use_readline())
-		cmd_signal_parent();
 	cmdnbr = 0;
 	if (cmds_parsed[1])
 	{
@@ -85,14 +28,29 @@ int	pipex(t_env *environment, char **cmds)
 	{
 		if (!middle_child(environment, pipefd, cmds_parsed, cmdnbr))
 		{
-			while (1)
-				if (wait(NULL) <= 0)
-					break ;
+			while (wait(NULL) > 0)
+				;
 			return (ft_free_cmds_parsed(cmds_parsed), 0);
 		}	
 		cmdnbr++;
 	}
 	last_child(environment, pipefd, cmds_parsed, cmdnbr);
+	return (1);
+}
+
+int	pipex(t_env *environment, char **cmds)
+{
+	t_cmd	**cmds_parsed;
+
+	heredoc_signal();
+	cmds_parsed = get_cmds_parsed(environment, cmds);
+	if (!cmds_parsed)
+		return (0);
+	db_freetab(cmds);
+	if (use_readline())
+		cmd_signal_parent();
+	if (!_call_childs(environment, cmds_parsed))
+		return (0);
 	while (1)
 		if (wait(NULL) <= 0)
 			break ;

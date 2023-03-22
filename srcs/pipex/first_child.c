@@ -6,11 +6,50 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 18:53:15 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 16:14:37 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	_actions_child(t_env *environment, t_cmd **cmds, size_t cmdnbr, \
+	int pipefd[2])
+{
+	close(pipefd[0]);
+	if ((cmds[cmdnbr])->redirect->outfile)
+	{
+		close(pipefd[1]);
+		dup2((cmds[cmdnbr])->redirect->fd_outfile, STDOUT_FILENO);
+	}
+	else
+		dup2(pipefd[1], STDOUT_FILENO);
+	if ((cmds[cmdnbr])->redirect->infile)
+		dup2((cmds[cmdnbr])->redirect->fd_infile, STDIN_FILENO);
+	if (!parse_builtin(environment, (cmds[cmdnbr])->args, cmds, cmdnbr))
+		execute_cmd(environment, (cmds[cmdnbr])->args);
+	if ((cmds[cmdnbr])->redirect->outfile == NULL)
+		close(pipefd[1]);
+	if ((cmds[cmdnbr])->redirect->outfile)
+		close((cmds[cmdnbr])->redirect->fd_outfile);
+	if ((cmds[cmdnbr])->redirect->infile)
+		close((cmds[cmdnbr])->redirect->fd_infile);
+	environment->log.args = (cmds[cmdnbr])->args;
+	(cmds[cmdnbr])->args = NULL;
+	ft_free_cmds_parsed(cmds);
+	closing_the_program(environment);
+	exit(g_returnval);
+}
+
+static void	_actions_parent(t_env *environment, t_cmd **cmds, size_t cmdnbr, \
+	int pipefd[2])
+{
+	free_log_files(environment);
+	close(pipefd[1]);
+	if ((cmds[cmdnbr])->redirect->outfile)
+		close((cmds[cmdnbr])->redirect->fd_outfile);
+	if ((cmds[cmdnbr])->redirect->infile)
+		close((cmds[cmdnbr])->redirect->fd_infile);
+}
 
 int	first_child(t_env *environment, int pipefd[2], t_cmd **cmds)
 {
@@ -19,78 +58,20 @@ int	first_child(t_env *environment, int pipefd[2], t_cmd **cmds)
 	cmdnbr = 0;
 	if (pipe(pipefd) == -1)
 		return (perror("minishell: pipe"), 0);
-	if(!io_open_fds(environment, (cmds[cmdnbr])->redirect) || cmds[cmdnbr]->redirect->to_execute == FALSE)
+	if (!open_fds(environment, cmds, cmdnbr))
 	{
-		db_free(environment->log.infile);
-		environment->log.infile = NULL;
-		db_free(environment->log.outfile);
-		environment->log.outfile = NULL;
-		if (!(cmds[cmdnbr]->args) || !(cmds[cmdnbr]->args) || ((cmds[cmdnbr]->args[0]) && !((cmds[cmdnbr]->args[0])[0])))
-		{
-			ft_putstr_fd("minishell: : command not found\n", 2);
-			g_returnval = 127;
-		}
 		close(pipefd[1]);
-		if ((cmds[cmdnbr])->redirect->outfile)
-		{
-			close((cmds[cmdnbr])->redirect->fd_outfile);
-			db_free((cmds[cmdnbr])->redirect->outfile);
-			(cmds[cmdnbr])->redirect->outfile = NULL;
-		}
-		if ((cmds[cmdnbr])->redirect->infile)
-		{
-			close((cmds[cmdnbr])->redirect->fd_infile);
-			db_free((cmds[cmdnbr])->redirect->infile);
-			(cmds[cmdnbr])->redirect->infile = NULL;
-		}
 		return (1);
 	}
 	cmds[0]->pid = fork();
 	if (cmds[0]->pid == -1)
 	{
-		db_free(environment->log.infile);
-		environment->log.infile = NULL;
-		db_free(environment->log.outfile);
-		environment->log.outfile = NULL;
+		free_log_files(environment);
 		return (perror("minishell: fork"), close(pipefd[1]), 0);
 	}
 	else if (cmds[0]->pid == 0)
-	{
-		close(pipefd[0]);
-		if ((cmds[cmdnbr])->redirect->outfile)
-		{
-			close(pipefd[1]);
-			dup2((cmds[cmdnbr])->redirect->fd_outfile, STDOUT_FILENO);
-		}
-		else
-			dup2(pipefd[1], STDOUT_FILENO);
-		if ((cmds[cmdnbr])->redirect->infile)
-			dup2((cmds[cmdnbr])->redirect->fd_infile, STDIN_FILENO);
-		if (!parse_builtin(environment, (cmds[cmdnbr])->args, cmds, cmdnbr))
-			execute_cmd(environment, (cmds[cmdnbr])->args);
-		if ((cmds[cmdnbr])->redirect->outfile == NULL)
-			close(pipefd[1]);
-		if ((cmds[cmdnbr])->redirect->outfile)
-			close((cmds[cmdnbr])->redirect->fd_outfile);
-		if ((cmds[cmdnbr])->redirect->infile)
-			close((cmds[cmdnbr])->redirect->fd_infile);
-		environment->log.args = (cmds[cmdnbr])->args;
-		(cmds[cmdnbr])->args = NULL;
-		ft_free_cmds_parsed(cmds);
-		closing_the_program(environment);
-		exit(g_returnval);
-	}
+		_actions_child(environment, cmds, cmdnbr, pipefd);
 	else
-	{
-		db_free(environment->log.infile);
-		environment->log.infile = NULL;
-		db_free(environment->log.outfile);
-		environment->log.outfile = NULL;
-		close(pipefd[1]);
-		if ((cmds[cmdnbr])->redirect->outfile)
-			close((cmds[cmdnbr])->redirect->fd_outfile);
-		if ((cmds[cmdnbr])->redirect->infile)
-			close((cmds[cmdnbr])->redirect->fd_infile);
-	}
+		_actions_parent(environment, cmds, cmdnbr, pipefd);
 	return (1);
 }
