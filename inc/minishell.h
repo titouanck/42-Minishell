@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 13:15:26 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 13:33:25 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ void	exit_erralloc(t_env *environment);
 
 // NEW
 
-	/* routine*/
+	/* routine */
 void	rm_heredoc_files(t_env *environment);
 int		use_argv(t_env *environment, int argc, char **argv);
 char	*new_prompt(t_env *environment);
@@ -186,7 +186,7 @@ char	*new_prompt(t_env *environment);
 void	init_logs(void);
 void	write_to_logfile(int fd, t_log log, char *last_input);
 
-	/* utils*/
+	/* utils */
 int		event(void);
 void	exit_erralloc(t_env *environment);
 void	ft_syntaxerror(t_env *environment, char *err);
@@ -212,5 +212,8 @@ void		ftbuiltin_env(t_env *environment, char **args);
 void		ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr);
 void		ftbuiltin_dma_db(void);
 int			execute_cmd(t_env *environment, char **args);
+
+	/* parsing */
+void	parse_heredoc_limiter(t_env *environment, char *line);
 
 #endif

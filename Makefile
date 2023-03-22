@@ -35,6 +35,7 @@ SRCS += quotes_interpretation.c
 SRCS += redirections.c
 SRCS += redirections_lst.c
 SRCS += split_cmds.c
+SRCS += parse_heredoc_limiter.c
 
 SRCS_PATH += ./srcs/pipex/
 SRCS += first_child.c

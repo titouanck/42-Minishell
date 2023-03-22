@@ -6,103 +6,51 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 12:48:16 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 12:38:34 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 13:42:36 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	_actions_singlequoteopen(char *line, \
-	int *single_quote_open, size_t *i)
+static void	_actions_quote_open(char *line, \
+	int *single_open, int *double_open, size_t *i)
 {
-	if (line[(*i)] == '\'')
+	if (*single_open)
 	{
-		*single_quote_open = FALSE;
-		ft_memmove(line + (*i), line + (*i) + 1, ft_strlen(line + (*i)));
-		(*i)--;
-	}
-}
-
-static void	_actions_doublequoteopen(char *line, \
-	int *double_quote_open, size_t *i)
-{
-	if (line[(*i)] == '\"')
-	{
-		*double_quote_open = FALSE;
-		ft_memmove(line + (*i), line + (*i) + 1, ft_strlen(line + (*i)));
-		(*i)--;
-	}
-	else if (line[(*i)] == '$' && line[(*i) + 1] \
-	&& ft_strinset(line + (*i) + 1, VARNAMESET "?", 1))
-		line[(*i)] = VARKEY;
-}
-
-static void	_heredoc_limiter_between_quotes(t_env *environment, char *line)
-{
-	size_t	i;
-
-	if (line[0] == '<' && line[1] == '<')
-	{
-		environment->limiter_between_quotes = 0;
-		i = 2;
-		while (ft_iswhitespace(line[i]))
-			i++;
-		if (line[i] == '\'' || line[i] == '\"')
+		if (line[(*i)] == '\'')
 		{
-			environment->limiter_between_quotes = 1;
+			*single_open = FALSE;
+			ft_memmove(line + (*i), line + (*i) + 1, ft_strlen(line + (*i)));
+			(*i)--;
 		}
-		if (line[i] == '\'')
+	}
+	else if (*double_open)
+	{
+		if (line[(*i)] == '\"')
 		{
-			while (line[++i] && line[i] != '\'')
-			{
-				if (line[i] == '$')
-					line[i] = NOTAVARKEY;
-			}
-		}	
-		else if (line[i] == '\"')
-		{
-			while (line[++i] && line[i] != '\"')
-			{
-				if (line[i] == '$')
-					line[i] = NOTAVARKEY;
-			}
+			*double_open = FALSE;
+			ft_memmove(line + (*i), line + (*i) + 1, ft_strlen(line + (*i)));
+			(*i)--;
 		}
-		else
-		{
-			while (line[i] && line[i] != '\"' && line[i] != '\'')
-			{
-				if (line[i] == '$')
-					line[i] = NOTAVARKEY;
-				i++;
-			}
-		}	
+		else if (line[(*i)] == '$' && line[(*i) + 1] \
+		&& ft_strinset(line + (*i) + 1, VARNAMESET "?", 1))
+			line[(*i)] = VARKEY;
 	}
 }
 
 static void	_actions_default(char *line, \
-	int *single_quote_open, int *double_quote_open, size_t *i)
+	int *single_open, int *double_open, size_t *i)
 {
+	parse_heredoc_limiter(saved_environment(NULL), line + *i);
 	if (line[(*i)] == '\'')
 	{
-		*single_quote_open = TRUE;
-		// if (*i > 0 && !ft_iswhitespace(line[(*i) - 1]))
-		// {
-		// 	ft_memmove(line + (*i), line + (*i) + 1, ft_strlen(line + (*i)));
-		// 	(*i)--;	
-		// }
-		// else
-			line[*i] = QUOTES;
+		*single_open = TRUE;
+		line[*i] = QUOTES;
 	}
 	else if (line[(*i)] == '\"')
 	{
-		*double_quote_open = TRUE;
-		// if (*i > 0 && !ft_iswhitespace(line[(*i) - 1]))
-		// {
-		// 	ft_memmove(line + (*i), line + (*i) + 1, ft_strlen(line + (*i)));
-		// 	(*i)--;	
-		// }
-		// else
-			line[*i] = QUOTES;
+		*double_open = TRUE;
+		line[*i] = QUOTES;
 	}
 	else if (ft_iswhitespace(line[(*i)]))
 		line[(*i)] = SEPARATOR;
@@ -118,44 +66,48 @@ static void	_actions_default(char *line, \
 		line[(*i)] = RIGHTCHEVRON;
 }
 
-static int	_detect_missing_quote(int single_quote_open, int double_quote_open)
+static int	_detect_missing_quote(t_env *environment, \
+	int single_open, int double_open)
 {
-	if (single_quote_open || double_quote_open)
+	if (single_open || double_open)
 		g_returnval = 2;
-	if (single_quote_open)
+	if (single_open)
 		return (ft_putstr_fd \
-		("minishell: syntax error: ending quote missing (')\n", 2), 0);
-	else if (double_quote_open)
+		("minishell: syntax error: ending quote missing (')\n", 2), \
+		ft_syntaxerror(environment, NULL), 0);
+	else if (double_open)
 		return (ft_putstr_fd \
-		("minishell: syntax error: ending quote missing (\")\n", 2), 0);
+		("minishell: syntax error: ending quote missing (\")\n", 2), \
+		ft_syntaxerror(environment, NULL), 0);
 	else
 		return (1);
 }
 
-int	quotes_interpretation(t_env *environment, char **line)
+static void	_format_line_and_init(t_env *env, char **line, \
+	int *single_open, int *double_open)
+{
+	ft_strip(*line);
+	*single_open = FALSE;
+	*double_open = FALSE;
+	if (env)
+		env->limiter_between_quotes = 0;
+}
+
+int	quotes_interpretation(t_env *env, char **line)
 {
 	char	*ptr;
 	size_t	i;
-	int		single_quote_open;
-	int		double_quote_open;
+	int		single_open;
+	int		double_open;
 
-	ft_strip(*line);
+	_format_line_and_init(env, line, &single_open, &double_open);
 	i = 0;
-	single_quote_open = FALSE;
-	double_quote_open = FALSE;
-	environment->limiter_between_quotes = 0;
 	while ((*line)[i])
 	{
-		if (single_quote_open)
-			_actions_singlequoteopen((*line), &single_quote_open, &i);
-		else if (double_quote_open)
-			_actions_doublequoteopen((*line), &double_quote_open, &i);
+		if (single_open || double_open)
+			_actions_quote_open((*line), &single_open, &double_open, &i);
 		else
-		{
-			_heredoc_limiter_between_quotes(environment, *line + i);
-			_actions_default((*line), \
-			&single_quote_open, &double_quote_open, &i);
-		}
+			_actions_default((*line), &single_open, &double_open, &i);
 		ptr = *line;
 		(*line) = replace_key_by_value((*line));
 		if (ptr == *line)
@@ -165,7 +117,5 @@ int	quotes_interpretation(t_env *environment, char **line)
 	while ((*line)[++i])
 		if ((*line)[i] == NOTAVARKEY)
 			(*line)[i] = '$';
-	if (_detect_missing_quote(single_quote_open, double_quote_open) == 0)
-		return(ft_syntaxerror(environment, NULL), 0);
-	return (1);
+	return (_detect_missing_quote(env, single_open, double_open));
 }
