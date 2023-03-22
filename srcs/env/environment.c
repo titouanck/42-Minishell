@@ -35,15 +35,10 @@ char	**format_environment(t_env *environment)
 	size_t	i;
 	char	**env;
 
-	if (!environment)
-		return (NULL);
 	elem = environment->next;
 	size = 0;
-	while (elem)
-	{
+	while (elem && ++size)
 		elem = elem->next;
-		size++;
-	}
 	env = db_malloc(sizeof(char *) * (size + 1));
 	if (!env)
 		exit_erralloc(environment);
@@ -78,7 +73,7 @@ char	*get_value_by_key(t_env *environment, char *key)
 	return (NULL);
 }
 
-int		env_lstaddback(t_env *env, char *key, char *value, int exported)
+int	env_lstaddback(t_env *env, char *key, char *value, int exported)
 {
 	if (!env)
 		return (0);

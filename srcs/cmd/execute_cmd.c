@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 13:47:57 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 17:25:19 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 12:08:42 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,10 @@ int	execute_cmd(t_env *environment, char **args)
 	g_returnval = 127;
 	if (!args || !args[0])
 		return (ft_putstr_fd("minishell: : command not found\n", 2), 0);
-	envp = format_environment(environment);
+	if (environment)
+		envp = format_environment(environment);
+	else
+		envp = NULL;
 	path = get_path(envp);
 	filepath = _find_cmd_pathname(path, args[0]);
 	if (filepath)
