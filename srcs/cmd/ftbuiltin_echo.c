@@ -12,7 +12,8 @@
 
 #include "minishell.h"
 
-static int	_no_newline_option(char **args, size_t *i_ptr, int *j_ptr, int *newline_ptr)
+static int	_no_newline_option(char **args, size_t *i_ptr, int *j_ptr, \
+	int *newline_ptr)
 {
 	*j_ptr = 2;
 	while (args[*i_ptr][*j_ptr])
