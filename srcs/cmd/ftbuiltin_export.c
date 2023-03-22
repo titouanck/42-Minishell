@@ -28,51 +28,12 @@ static void	_export_noarg(t_env *environment)
 	}
 }
 
-static void	_export_element(t_env *environment, \
-	char *key, char *value, int append)
+static int	_export_key(char *arg, char *key)
 {
-	t_env	*elem;
-	char	*tmp;
-	
-	elem = environment;
-	if (!key || !elem)
-		return ;
-	elem = elem->next;
-	while (elem)
-	{
-		if (ft_strcmp(elem->key, key) == 0)
-		{
-			db_free(key);
-			elem->exported = 1;
-			if (value)
-			{
-				tmp = elem->value;
-				if (append)
-				{
-					elem->value = db_strjoin(elem->value, value);
-					db_free(value);
-				}
-				else
-					elem->value = value;
-				db_free(tmp);
-			}
-			return ;
-		}
-		elem = elem->next;
-	}
-	if (value)
-		env_lstaddback(environment, key, value, 1);
-	else
-		db_free(key);
-}
-
-static int	_export_key(char *arg, char *key, size_t i)
-{
-	(void) i;
-
 	if (!key || ft_isdigit(*key) \
 	|| (!ft_strinset(key, VARNAMESET, ft_strlen(key) - 1)) \
-	|| (*key == '+' || !ft_strinset(key + (ft_strlen(key) - 1), VARNAMESET "+", 1)))
+	|| (*key == '+' \
+	|| !ft_strinset(key + (ft_strlen(key) - 1), VARNAMESET "+", 1)))
 	{
 		ft_putstr_fd("minishell: export: `", 2);
 		ft_putstr_fd(arg, 2);
@@ -83,29 +44,52 @@ static int	_export_key(char *arg, char *key, size_t i)
 	return (1);
 }
 
-static char	*_export_value(t_env *environment, char *arg, char **key, int append)
+static char	*_export_value(t_env *environment, \
+	char *arg, char **key, int append)
 {
 	char	*value;
 
 	value = NULL;
-	if (arg[0] == '\0')
-		_export_element(environment, *key, NULL, append);
-	else
+	if (arg[0])
 	{
 		value = db_substr(arg, 1, ft_strlen(arg + 1));
 		if (!value)
 			exit_erralloc(environment);
-		_export_element(environment, *key, value, append);
+		update_environment(environment, *key, value, append);
 	}
 	return (value);
 }
 
-void	ftbuiltin_export(t_env *environment, char **args)
+static void	_export_arg(t_env *environment, char *arg)
 {
 	char	*key;
-	size_t	j;
 	size_t	i;
-	char	*arg;
+
+	i = 0;
+	while (arg[i] && arg[i] != '=')
+		i++;
+	if (i > 0)
+		key = db_substr(arg, 0, i);
+	else
+		key = NULL;
+	if (!_export_key(arg, key))
+		db_free(key);
+	else
+	{
+		arg = arg + i;
+		if (*key && key[ft_strlen(key) - 1] == '+')
+		{
+			key[ft_strlen(key) - 1] = '\0';
+			_export_value(environment, arg, &key, TRUE);
+		}
+		else
+			_export_value(environment, arg, &key, FALSE);
+	}
+}
+
+void	ftbuiltin_export(t_env *environment, char **args)
+{
+	size_t	i;
 
 	g_returnval = 0;
 	if (!args[1])
@@ -122,32 +106,8 @@ void	ftbuiltin_export(t_env *environment, char **args)
 	}
 	else
 	{
-		j = 1;
-		while (args[j])
-		{
-			arg = args[j];
-			i = 0;
-			while (arg[i] && arg[i] != '=')
-				i++;
-			if (i > 0)
-				key = db_substr(arg, 0, i);
-			else
-				key = NULL;
-			if (!_export_key(arg, key, i))
-				db_free(key);
-			else
-			{
-				arg = arg + i;
-				if (*key && key[ft_strlen(key) - 1] == '+')
-				{
-					key[ft_strlen(key) - 1] = '\0';
-					_export_value(environment, arg, &key, TRUE);
-				}
-				else
-					_export_value(environment, arg, &key, FALSE);
-			}
-			j++;
-		}
+		i = -1;
+		while (args[++i])
+			_export_arg(environment, args[i]);
 	}
 }
-

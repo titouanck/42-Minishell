@@ -100,7 +100,7 @@ void	ftbuiltin_cd(t_env *environment, char **args)
 	if (ft_strcmp(cwd, value) != 0)
 	{
 		key = db_strdup("OLDPWD");
-		update_environment(environment, environment, key, value);
+		update_environment(environment, key, value, FALSE);
 	}
 	else
 		db_free(value);
@@ -108,5 +108,5 @@ void	ftbuiltin_cd(t_env *environment, char **args)
 	key = db_strdup("PWD");
 	value = getcwd(NULL, 0);
 	dynamic_memory_address_db('+', value);
-	update_environment(environment, environment, key, value);
+	update_environment(environment, key, value, FALSE);
 }

@@ -12,31 +12,51 @@
 
 #include "minishell.h"
 
-int	update_environment(t_env *environment, t_env *env_elem, \
-	char *key, char *value)
+void	_update_existing_key(t_env *env_elem, \
+	char *key, char *value, int append)
 {
 	char	*tmp;
-	
+
+	db_free(key);
+	env_elem->exported = 1;
+	if (value)
+	{
+		tmp = env_elem->value;
+		if (append)
+		{
+			env_elem->value = db_strjoin(env_elem->value, value);
+			db_free(value);
+		}
+		else
+			env_elem->value = value;
+		db_free(tmp);
+	}
+}
+
+void	update_environment(t_env *environment, \
+	char *key, char *value, int append)
+{
+	t_env 	*env_elem;
+
+	env_elem = environment;
 	if (!env_elem || !key)
-		return (db_free(key), db_free(value), 0);
+	{
+		db_free(key);
+		db_free(value);
+		return ;
+	}
 	env_elem = env_elem->next;
 	while (env_elem)
 	{
 		if (ft_strcmp(env_elem->key, key) == 0)
 		{
-			db_free(key);
-			env_elem->exported = 1;
-			if (value)
-			{
-				tmp = env_elem->value;
-				env_elem->value = value;
-				db_free(tmp);
-			}
-			return (1);
+			_update_existing_key(env_elem, key, value, append);
+			return ;
 		}
 		env_elem = env_elem->next;
 	}
 	if (value)
-		return (env_lstaddback(environment, key, value, 1), 1);
-	return (db_free(key), 0);
+		env_lstaddback(environment, key, value, 1);
+	else
+		db_free(key);
 }

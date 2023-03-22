@@ -211,7 +211,7 @@ void	minishell_error(const char *s1, const char *s2);
 
 /* env */
 
-int		update_environment(t_env *environment, t_env *env_elem, \
-		char *key, char *value);
+void	update_environment(t_env *environment, \
+		char *key, char *value, int append);
 
 #endif
