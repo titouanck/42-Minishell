@@ -102,20 +102,6 @@ typedef struct s_cmd
 	pid_t		pid;
 }				t_cmd;
 
-			/* Built-in Functions & Commands */
-
-void		ftbuiltin_echo(char **args);
-void		ftbuiltin_cd(t_env *environment, char **args);
-void		ftbuiltin_pwd(char **args);
-void		ftbuiltin_export(t_env *environment, char **args);
-void		ftbuiltin_unset(t_env *environment, char **args);
-void		ftbuiltin_env(t_env *environment, char **args);
-void		ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr);
-void		ftbuiltin_dma_db(void);
-
-// execute_cmd.c
-int		execute_cmd(t_env *environment, char **args);
-
 					/* Parsing */
 
 // parse_builtin.c
@@ -193,24 +179,36 @@ void	exit_erralloc(t_env *environment);
 
 // NEW
 
-/* routine*/
+	/* routine*/
 void	rm_heredoc_files(t_env *environment);
 int		use_argv(t_env *environment, int argc, char **argv);
 char	*new_prompt(t_env *environment);
 
-/* open */
+	/* open */
 void	init_logs(void);
 
-/* utils*/
+	/* utils*/
 int		event(void);
 void	exit_erralloc(t_env *environment);
 void	ft_syntaxerror(t_env *environment, char *err);
 int		use_readline(void);
 void	minishell_error(const char *s1, const char *s2);
 
-/* env */
+	/* env */
 
 void	update_environment(t_env *environment, \
 		char *key, char *value, int append);
+
+	/* cmd */
+
+void		ftbuiltin_echo(char **args);
+void		ftbuiltin_cd(t_env *environment, char **args);
+void		ftbuiltin_pwd(char **args);
+void		ftbuiltin_export(t_env *environment, char **args);
+void		ftbuiltin_unset(t_env *environment, char **args);
+void		ftbuiltin_env(t_env *environment, char **args);
+void		ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr);
+void		ftbuiltin_dma_db(void);
+int			execute_cmd(t_env *environment, char **args);
 
 #endif
