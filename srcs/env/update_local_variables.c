@@ -1,24 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   update_environment.c                               :+:      :+:    :+:   */
+/*   update_local_variables.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/24 11:34:21 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 17:15:13 by tchevrie         ###   ########.fr       */
+/*   Created: 2023/03/22 17:14:57 by tchevrie          #+#    #+#             */
+/*   Updated: 2023/03/22 17:15:19 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	_update_existing_key_env(t_env *env_elem, \
+static void	_update_existing_key_local(t_env *env_elem, \
 	char *key, char *value, int append)
 {
 	char	*tmp;
 
 	db_free(key);
-	env_elem->exported = 1;
 	if (value)
 	{
 		tmp = env_elem->value;
@@ -33,7 +32,7 @@ static void	_update_existing_key_env(t_env *env_elem, \
 	}
 }
 
-void	update_environment(t_env *environment, \
+void	update_local_variables(t_env *environment, \
 	char *key, char *value, int append)
 {
 	t_env	*env_elem;
@@ -50,13 +49,13 @@ void	update_environment(t_env *environment, \
 	{
 		if (ft_strcmp(env_elem->key, key) == 0)
 		{
-			_update_existing_key_env(env_elem, key, value, append);
+			_update_existing_key_local(env_elem, key, value, append);
 			return ;
 		}
 		env_elem = env_elem->next;
 	}
 	if (value)
-		env_lstaddback(environment, key, value, 1);
+		env_lstaddback(environment, key, value, 0);
 	else
 		db_free(key);
 }

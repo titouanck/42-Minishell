@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 15:34:06 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 17:46:38 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ static int	_init(t_env *environment, t_redirect *redirect, int *heredoc)
 
 int	io_open_fds(t_env *environment, t_redirect *redirect)
 {
-	t_redirectionlst	*current;
-	int					heredoc;
+	t_redirlst	*current;
+	int			heredoc;
 
 	if (!_init(environment, redirect, &heredoc))
 		return (0);

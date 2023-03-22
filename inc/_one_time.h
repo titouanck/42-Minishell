@@ -1,36 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   _one_time.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 18:21:57 by tchevrie         ###   ########.fr       */
+/*   Created: 2023/03/22 18:01:06 by tchevrie          #+#    #+#             */
+/*   Updated: 2023/03/22 18:16:57 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef _ONE_TIME_H
+# define _ONE_TIME_H
 
-# include "_cmd.h"
+# include "minishell_types.h"
 
-# include "_env.h"
+void		closing_the_program(t_env *environment);
 
-# include "_one_time.h"
+void		init_logs(void);
 
-# include "_parsing.h"
+t_env		*opening(int argc, char **argv, char *envp[]);
 
-# include "_pipex.h"
-
-# include "_redirections.h"
-
-# include "_routine.h"
-
-# include "_signals.h"
-
-# include "_utils.h"
-
-extern int	g_returnval;
+void		write_to_logfile(int fd, t_log log, char *last_input);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 14:08:42 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 14:59:11 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 17:46:25 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static int	heredoc_file(t_env *environment, t_redirect *redirect)
 	return (fd);
 }
 
-static char	*_read_next_line(t_redirectionlst *current)
+static char	*_read_next_line(t_redirlst *current)
 {
 	char		*line;
 
@@ -66,7 +66,7 @@ static char	*_read_next_line(t_redirectionlst *current)
 }
 
 static int	_actions_on_line(t_env *environment, char *line, \
-	t_redirectionlst *current, int fd)
+	t_redirlst *current, int fd)
 {
 	size_t	i;
 
@@ -93,7 +93,7 @@ static int	_actions_on_line(t_env *environment, char *line, \
 }
 
 static void	_open_them_all(t_env *environment, t_redirect *redirect, \
-	t_redirectionlst *current)
+	t_redirlst *current)
 {
 	char		*line;
 	int			fd;
@@ -123,8 +123,8 @@ static void	_open_them_all(t_env *environment, t_redirect *redirect, \
 
 int	open_heredoc(t_env *environment, t_redirect *redirect)
 {
-	t_redirectionlst	*current;
-	int					returnval;
+	t_redirlst	*current;
+	int			returnval;
 
 	returnval = g_returnval;
 	g_returnval = 0;

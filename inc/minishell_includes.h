@@ -1,36 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   minishell_includes.h                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 18:21:57 by tchevrie         ###   ########.fr       */
+/*   Created: 2023/03/22 17:57:17 by tchevrie          #+#    #+#             */
+/*   Updated: 2023/03/22 18:16:57 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef MINISHELL_INCLUDES_H
+# define MINISHELL_INCLUDES_H
 
-# include "_cmd.h"
+# include "minishell_types.h"
+# include "minishell_defines.h"
 
-# include "_env.h"
+# include "libft.h"
 
-# include "_one_time.h"
+# include <readline/readline.h>
+# include <readline/history.h>
 
-# include "_parsing.h"
+# include <stdio.h>
 
-# include "_pipex.h"
+# include <signal.h>
 
-# include "_redirections.h"
+# include <errno.h>
 
-# include "_routine.h"
-
-# include "_signals.h"
-
-# include "_utils.h"
-
-extern int	g_returnval;
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <sys/stat.h>
 
 #endif

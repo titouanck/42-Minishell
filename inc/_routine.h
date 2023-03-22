@@ -1,36 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   _routine.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 18:21:57 by tchevrie         ###   ########.fr       */
+/*   Created: 2023/03/22 18:01:06 by tchevrie          #+#    #+#             */
+/*   Updated: 2023/03/22 18:18:58 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef _ROUTINE_H
+# define _ROUTINE_H
 
-# include "_cmd.h"
+# include "minishell_types.h"
 
-# include "_env.h"
+char		*new_prompt(t_env *environment);
 
-# include "_one_time.h"
+void		rm_heredoc_files(t_env *environment);
 
-# include "_parsing.h"
-
-# include "_pipex.h"
-
-# include "_redirections.h"
-
-# include "_routine.h"
-
-# include "_signals.h"
-
-# include "_utils.h"
-
-extern int	g_returnval;
+int			use_argv(t_env *environment, int argc, char **argv);
 
 #endif

@@ -1,36 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_free_environment.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 18:21:57 by tchevrie         ###   ########.fr       */
+/*   Created: 2023/03/22 17:08:28 by tchevrie          #+#    #+#             */
+/*   Updated: 2023/03/22 17:08:34 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "minishell.h"
 
-# include "_cmd.h"
+void	ft_free_environment(t_env *environment)
+{
+	t_env	*tmp;
 
-# include "_env.h"
-
-# include "_one_time.h"
-
-# include "_parsing.h"
-
-# include "_pipex.h"
-
-# include "_redirections.h"
-
-# include "_routine.h"
-
-# include "_signals.h"
-
-# include "_utils.h"
-
-extern int	g_returnval;
-
-#endif
+	while (environment)
+	{
+		tmp = environment;
+		environment = environment->next;
+		if (tmp->key)
+			db_free(tmp->key);
+		if (tmp->value)
+			db_free(tmp->value);
+		db_free(tmp);
+	}
+}

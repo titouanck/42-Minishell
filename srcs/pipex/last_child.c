@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 17:02:19 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 17:24:41 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static void	_actions_parent(t_env *environment, t_cmd **cmds, size_t cmdnbr, \
 		g_returnval = WEXITSTATUS(g_returnval);
 }
 
-void	_execution_from_parent(t_env *environment, t_cmd **cmds, \
+static void	_execution_from_parent(t_env *environment, t_cmd **cmds, \
 	size_t cmdnbr, int pipefd[2])
 {
 	if (cmdnbr != 0)

@@ -1,36 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   env_lstaddback.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 18:21:57 by tchevrie         ###   ########.fr       */
+/*   Created: 2023/02/22 11:29:12 by tchevrie          #+#    #+#             */
+/*   Updated: 2023/03/22 17:12:39 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "minishell.h"
 
-# include "_cmd.h"
-
-# include "_env.h"
-
-# include "_one_time.h"
-
-# include "_parsing.h"
-
-# include "_pipex.h"
-
-# include "_redirections.h"
-
-# include "_routine.h"
-
-# include "_signals.h"
-
-# include "_utils.h"
-
-extern int	g_returnval;
-
-#endif
+int	env_lstaddback(t_env *env, char *key, char *value, int exported)
+{
+	if (!env)
+		return (0);
+	while (env->next)
+		env = env->next;
+	env->next = db_malloc(sizeof(t_env));
+	if (!(env->next))
+		exit_erralloc(NULL);
+	env = env->next;
+	env->key = key;
+	env->value = value;
+	env->exported = exported;
+	env->next = NULL;
+	return (1);
+}

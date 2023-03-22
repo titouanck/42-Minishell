@@ -1,36 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   _signals.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 18:21:57 by tchevrie         ###   ########.fr       */
+/*   Created: 2023/03/22 18:01:06 by tchevrie          #+#    #+#             */
+/*   Updated: 2023/03/22 18:20:11 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef _SIGNALS_H
+# define _SIGNALS_H
 
-# include "_cmd.h"
+# include "minishell_types.h"
 
-# include "_env.h"
+void		default_signal_tty(void);
 
-# include "_one_time.h"
+void		default_signal_notty(void);
 
-# include "_parsing.h"
+void		cmd_signal_child(void);
 
-# include "_pipex.h"
+void		cmd_signal_parent(void);
 
-# include "_redirections.h"
-
-# include "_routine.h"
-
-# include "_signals.h"
-
-# include "_utils.h"
-
-extern int	g_returnval;
+void		heredoc_signal(void);
 
 #endif

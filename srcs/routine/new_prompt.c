@@ -6,13 +6,13 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 19:49:23 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 12:58:28 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 17:40:38 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*_with_readline(t_env *environment)
+static char	*_with_readline(t_env *environment)
 {
 	char	*line;
 
@@ -21,7 +21,7 @@ char	*_with_readline(t_env *environment)
 	return (line);
 }
 
-char	*_without_readline(void)
+static char	*_without_readline(void)
 {
 	char	*line;
 

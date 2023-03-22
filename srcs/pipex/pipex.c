@@ -6,13 +6,13 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 15:07:04 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 15:19:56 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 17:25:01 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	_call_childs(t_env *environment, t_cmd **cmds_parsed)
+static int	_call_childs(t_env *environment, t_cmd **cmds_parsed)
 {
 	size_t	cmdnbr;
 	int		pipefd[2];

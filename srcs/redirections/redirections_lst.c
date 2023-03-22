@@ -6,31 +6,16 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 14:26:03 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 17:31:19 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	redirection_lstprint(t_redirectionlst *lst)
+t_redirlst	*redirection_lstdel(t_redirlst *lst_elem, char *str)
 {
-	if (lst && lst->str == NULL)
-		lst = lst->next;
-	while (lst)
-	{
-		ft_printf("[%s, \'%c\']", lst->str, lst->redirection_type);
-		if (lst->next)
-			ft_printf(" → ");
-		else
-			ft_printf("\n");
-		lst = lst->next;
-	}
-}
-
-t_redirectionlst	*redirection_lstdel(t_redirectionlst *lst_elem, char *str)
-{
-	t_redirectionlst	*lst_prev;
-	t_redirectionlst	*lst_next;
+	t_redirlst	*lst_prev;
+	t_redirlst	*lst_next;
 
 	if (!lst_elem)
 		return (NULL);
@@ -50,10 +35,10 @@ t_redirectionlst	*redirection_lstdel(t_redirectionlst *lst_elem, char *str)
 	return (NULL);
 }
 
-void	redirection_lstclear(t_redirectionlst *lst)
+void	redirection_lstclear(t_redirlst *lst)
 {
-	t_redirectionlst	*lst_elem;
-	t_redirectionlst	*next;
+	t_redirlst	*lst_elem;
+	t_redirlst	*next;
 
 	if (!lst)
 		return ;
@@ -67,13 +52,13 @@ void	redirection_lstclear(t_redirectionlst *lst)
 	}
 }
 
-t_redirectionlst	*redirection_lstaddback(t_redirectionlst *lst, char *str, \
+t_redirlst	*redirection_lstaddback(t_redirlst *lst, char *str, \
 	int redirection_type)
 {
-	t_redirectionlst	*new;
-	t_redirectionlst	*current;
+	t_redirlst	*new;
+	t_redirlst	*current;
 
-	new = db_malloc(sizeof(t_redirectionlst));
+	new = db_malloc(sizeof(t_redirlst));
 	if (!new)
 		return (lst);
 	new->str = str;

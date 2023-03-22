@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 15:33:54 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 15:35:56 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 17:30:53 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	check_for_stdout(char *output)
 }
 
 static int	_action_stdout_detected(t_redirect *redirect, \
-	t_redirectionlst *current)
+	t_redirlst *current)
 {
 	if (redirect->fd_outfile != -1)
 		close(redirect->fd_outfile);
@@ -55,7 +55,7 @@ static int	_action_stdout_detected(t_redirect *redirect, \
 }
 
 int	action_on_files(t_redirect *redirect, \
-	t_redirectionlst *current, int heredoc)
+	t_redirlst *current, int heredoc)
 {
 	if (current->str)
 	{

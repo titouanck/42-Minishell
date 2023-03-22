@@ -1,36 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   _utils.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 18:21:57 by tchevrie         ###   ########.fr       */
+/*   Created: 2023/03/22 18:01:06 by tchevrie          #+#    #+#             */
+/*   Updated: 2023/03/22 18:21:02 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef _UTILS_H
+# define _UTILS_H
 
-# include "_cmd.h"
+# include "minishell_types.h"
 
-# include "_env.h"
+int			event(void);
 
-# include "_one_time.h"
+void		exit_erralloc(t_env *environment);
 
-# include "_parsing.h"
+void		free_log_files(t_env *environment);
 
-# include "_pipex.h"
+void		ft_syntaxerror(t_env *environment, char *err);
 
-# include "_redirections.h"
+void		minishell_error(const char *s1, const char *s2);
 
-# include "_routine.h"
+void		remove_quote_token_line(char *line);
 
-# include "_signals.h"
+t_env		*saved_environment(t_env *environment);
 
-# include "_utils.h"
-
-extern int	g_returnval;
+int			use_readline(void);
 
 #endif
