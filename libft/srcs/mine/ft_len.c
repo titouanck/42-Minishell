@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:37:58 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/16 14:38:59 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 13:58:43 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ size_t	ft_len(char **tab)
 	if (!tab)
 		return (0);
 	len = 0;
-	while(tab[len])
+	while (tab[len])
 		len++;
-	return (len);	
+	return (len);
 }
