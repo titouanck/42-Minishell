@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 13:33:25 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 14:27:28 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,11 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZ\
 # define HEREDOC -6
 # define NOTAVARKEY -7
 # define QUOTES -8
+
+# define INFILE_FILE 'r'
+# define INFILE_HEREDOC 'h'
+# define OUTFILE_TRUNC 'w'
+# define OUTFILE_APPEND 'a'
 
 # ifndef TRUE
 #  define TRUE 1
@@ -128,7 +133,7 @@ t_env		*opening(int argc, char **argv, char *envp[]);
 void		closing_the_program(t_env *environment);
 // signal.c
 void		default_signal_tty(void);
-void		heredoc_signal_behavior(void);
+void		heredoc_signal(void);
 void		cmd_signal_child(void);
 // get_environment.c
 t_env		*get_environment(char *envp[]);
@@ -156,17 +161,16 @@ void	last_child(t_env *environment, int pipefd[2], t_cmd **cmds, size_t cmdnbr);
 int	io_open_fds(t_env *environment, t_redirect *redirect);
 
 // PAS CLASSE
-void	ft_free_redirect(t_redirect *redirect);
 void	ft_free_cmds_parsed(t_cmd **tab);
 
 					/* Utils */
-void	heredoc_signal_behavior(void);
+void	heredoc_signal(void);
 void	cmd_signal_parent(void);
 void	default_signal_notty(void);
 
 void	ft_syntaxerror(t_env *environment, char *err);
 
-// void	_remove_quote_token_line(char *line);
+// void	remove_quote_token_line(char *line);
 t_redirectionlst	*redirection_lstaddback(t_redirectionlst *lst, char *str, int redirection_type);
 t_redirectionlst	*redirection_lstdel(t_redirectionlst *lst_elem, char *str);
 void		redirection_lstprint(t_redirectionlst *lst);
@@ -193,6 +197,7 @@ void	ft_syntaxerror(t_env *environment, char *err);
 int		use_readline(void);
 void	minishell_error(const char *s1, const char *s2);
 t_env	*saved_environment(t_env *environment);
+void	remove_quote_token_line(char *line);
 
 	/* env */
 
@@ -215,5 +220,12 @@ int			execute_cmd(t_env *environment, char **args);
 
 	/* parsing */
 void	parse_heredoc_limiter(t_env *environment, char *line);
+
+	/* redirections */
+void	ft_free_redirect(t_redirect *redirect);
+int		open_heredoc(t_env *environment, t_redirect *redirect);
+int		new_redirection(t_env *environment, char *line, \
+		t_redirect *redirect, int redirection_type);
+int		redirection_check_syntax(t_env *environment, char c, t_redirect *redirect);
 
 #endif

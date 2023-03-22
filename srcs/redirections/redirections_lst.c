@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirections_lst.c                                     :+:      :+:    :+:   */
+/*   redirections_lst.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/16 19:37:04 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 14:26:03 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ void	redirection_lstclear(t_redirectionlst *lst)
 	}
 }
 
-
-t_redirectionlst	*redirection_lstaddback(t_redirectionlst *lst, char *str, int redirection_type)
+t_redirectionlst	*redirection_lstaddback(t_redirectionlst *lst, char *str, \
+	int redirection_type)
 {
 	t_redirectionlst	*new;
 	t_redirectionlst	*current;

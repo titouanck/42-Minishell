@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 15:07:04 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 12:59:41 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 14:27:28 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	pipex(t_env *environment, char **cmds)
 	size_t	cmdnbr;
 	t_cmd	**cmds_parsed;
 
-	heredoc_signal_behavior();
+	heredoc_signal();
 	cmds_parsed = _get_cmds_parsed(environment, cmds);
 	if (!cmds_parsed)
 		return (0);

@@ -1,30 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc_signal.c                                   :+:      :+:    :+:   */
+/*   redirection_check_syntax.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/21 16:17:06 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 14:27:28 by tchevrie         ###   ########.fr       */
+/*   Created: 2023/03/22 14:13:30 by tchevrie          #+#    #+#             */
+/*   Updated: 2023/03/22 14:13:45 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	_heredoc_sigint(int sig)
+int	redirection_check_syntax(t_env *environment, char c, t_redirect *redirect)
 {
-	(void) sig;
-	g_returnval = 130;
-	rl_done = 1;
-	rl_redisplay();
-}
-
-void	heredoc_signal(void)
-{
-	if (!use_readline())
-		signal(SIGINT, SIG_DFL);
+	if (c == LEFTCHEVRON)
+		ft_syntaxerror(environment, "<");
+	else if (c == RIGHTCHEVRON)
+		ft_syntaxerror(environment, ">");
+	else if (!c && redirect->last)
+		ft_syntaxerror(environment, "newline");
+	else if (!c && !redirect->last)
+		ft_syntaxerror(environment, "|");
 	else
-		signal(SIGINT, _heredoc_sigint);
-	signal(SIGQUIT, SIG_IGN);
+		return (1);
+	redirection_lstclear(redirect->lst);
+	redirect->lst = NULL;
+	return (0);
 }

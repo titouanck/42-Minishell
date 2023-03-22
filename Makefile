@@ -38,6 +38,10 @@ SRCS += parse_heredoc_limiter.c
 SRCS_PATH += ./srcs/redirections/
 SRCS += redirections.c
 SRCS += redirections_lst.c
+SRCS += ft_free_redirect.c
+SRCS += heredoc.c
+SRCS += new_redirection.c
+SRCS += redirection_check_syntax.c
 
 SRCS_PATH += ./srcs/pipex/
 SRCS += first_child.c
@@ -53,6 +57,7 @@ SRCS += event.c
 SRCS += use_readline.c
 SRCS += minishell_error.c
 SRCS += saved_environment.c
+SRCS += remove_quote_token_line.c
 
 SRCS_PATH += ./srcs/routine
 SRCS += minishell.c

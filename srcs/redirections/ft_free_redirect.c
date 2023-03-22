@@ -1,30 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc_signal.c                                   :+:      :+:    :+:   */
+/*   ft_free_redirect.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/21 16:17:06 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 14:27:28 by tchevrie         ###   ########.fr       */
+/*   Created: 2023/03/22 13:59:35 by tchevrie          #+#    #+#             */
+/*   Updated: 2023/03/22 13:59:48 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	_heredoc_sigint(int sig)
+void	ft_free_redirect(t_redirect *redirect)
 {
-	(void) sig;
-	g_returnval = 130;
-	rl_done = 1;
-	rl_redisplay();
-}
-
-void	heredoc_signal(void)
-{
-	if (!use_readline())
-		signal(SIGINT, SIG_DFL);
-	else
-		signal(SIGINT, _heredoc_sigint);
-	signal(SIGQUIT, SIG_IGN);
+	if (!redirect)
+		return ;
+	if (redirect->lst)
+		redirection_lstclear(redirect->lst);
+	db_free(redirect->infile);
+	db_free(redirect->outfile);
+	db_free(redirect);
 }
