@@ -832,6 +832,9 @@ def send_instructions(check_rules, ignore_rules):
               "test\n")
         input("exit -9223372036854775809\n"
               "test\n")
+        input("ls -wrongoption\n"
+              "exit -9923372036854775809\n"
+              "test\n")
         input("exit -wrongoption -wrongoption\n")
 
 

@@ -12,6 +12,69 @@
 
 #include "minishell.h"
 
+#define POSITIVE_MAX 9223372036854775807ULL
+#define NEGATIVE_MAX 9223372036854775808ULL
+
+static int	_get_positive_exitcode(char *str, unsigned long long *nbr)
+{
+	unsigned long long		remaining;
+	unsigned long long		next;
+
+	next = *str - '0';
+	if (*nbr > 922337203685477580ULL || *nbr * 10 > POSITIVE_MAX)
+		return (0);
+	remaining = POSITIVE_MAX - (*nbr * 10);
+	if (next > remaining)
+		return (0);
+	remaining -= next;
+	*nbr = *nbr * 10 + next;
+	return (1);
+}
+
+static int	_get_negative_exitcode(char *str, unsigned long long *nbr)
+{
+	unsigned long long		remaining;
+	unsigned long long		next;
+
+	next = *str - '0';
+	if (*nbr > 922337203685477580ULL || *nbr * 10 > NEGATIVE_MAX)
+		return (0);
+	remaining = NEGATIVE_MAX - (*nbr * 10);
+	if (next > remaining)
+		return (0);
+	remaining -= next;
+	*nbr = *nbr * 10 + next;
+	return (1);
+}
+
+static int	_adapted_atoi(char *str, unsigned char *code)
+{
+	unsigned long long		nbr;
+	long long				sign;
+
+	if (!str)
+		return (0);
+	nbr = 0;
+	sign = 1;
+	ft_strip(str);
+	if (*str == '+')
+		str += 1;
+	else if (*str == '-' && str++)
+		sign *= -1;
+	while ('0' <= *str && *str <= '9')
+	{
+		if (sign == 1 && !_get_positive_exitcode(str, &nbr))
+			return (0);
+		else if (sign == -1 && !_get_negative_exitcode(str, &nbr))
+			return (0);
+		str += 1;
+	}
+	if (*str)
+		return (0);
+	*code = (unsigned char)((long long)nbr * sign);
+	return (1);
+}
+
 static void	_i_want_to_exit(t_env *environment, t_cmd **cmds, \
 unsigned char code, size_t cmdnbr)
 {
@@ -42,73 +105,26 @@ unsigned char code, size_t cmdnbr)
 	exit(g_returnval);
 }
 
-int	my_atoi(const char *str, unsigned char *code)
-{
-	unsigned long long		nbr;
-	unsigned long long		positive_remaining;
-	unsigned long long		negative_remaining;
-	unsigned long long		next;
-	long long				sign;
-	size_t					i;
-
-	nbr = 0;
-	sign = 1;
-	i = 0;
-	while (str[i] == ' ' || ('\t' <= str[i] && str[i] <= '\r'))
-		i++;
-	if (str[i] == '+')
-		i++;
-	else if (str[i] == '-')
-	{
-		sign *= -1;
-		i++;
-	}
-	while ('0' <= str[i] && str[i] <= '9')
-	{
-		next = str[i] - '0';
-		if (sign == 1)
-		{
-			positive_remaining = 9223372036854775807ULL - (nbr * 10);
-			if (next > positive_remaining)
-				return (0);
-			positive_remaining -= next;
-		}
-		else
-		{
-			negative_remaining = 9223372036854775808ULL - (nbr * 10);
-			if (next > negative_remaining)
-				return (0);
-			negative_remaining -= next;
-		}
-		nbr = nbr * 10 + next;
-		i++;
-	}
-	while (str[i])
-	{
-		if (!ft_iswhitespace(str[i]))
-			return (0);
-		i++;
-	}
-	*code = (unsigned char) ((long long)nbr * sign);
-	positive_remaining = 42ULL - nbr;
-	return (1);
-}
-
-void	ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr)
+void	ftbuiltin_exit(t_env *environment, \
+	char **args, t_cmd **cmds, size_t cmdnbr)
 {
 	unsigned char	code;
+	char			*tmp_str;
 
 	code = g_returnval;
 	if (args && *args && args[1])
 	{
-		if (!my_atoi(args[1], &code))
+		tmp_str = db_strdup(args[1]);
+		if (!_adapted_atoi(tmp_str, &code))
 		{
+			db_free(tmp_str);
 			ft_putstr_fd("minishell: exit: ", 2);
 			ft_putstr_fd(args[1], 2);
 			ft_putstr_fd(": numeric argument required\n", 2);
 			_i_want_to_exit(environment, cmds, 2, cmdnbr);
 			return ;
 		}
+		db_free(tmp_str);
 		if (args[2])
 		{
 			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
@@ -116,5 +132,5 @@ void	ftbuiltin_exit(t_env *environment, char **args, t_cmd **cmds, size_t cmdnbr
 			return ;
 		}
 	}
-	_i_want_to_exit(environment, cmds, code, cmdnbr);	
+	_i_want_to_exit(environment, cmds, code, cmdnbr);
 }
