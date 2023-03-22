@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:17:29 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 19:52:12 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 11:43:54 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,6 +198,8 @@ void	minishell_error(const char *s1, const char *s2);
 
 void	update_environment(t_env *environment, \
 		char *key, char *value, int append);
+void	update_local_variables(t_env *environment, \
+	char *key, char *value, int append);
 
 	/* cmd */
 

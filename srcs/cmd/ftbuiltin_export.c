@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 16:26:08 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 17:31:02 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 11:48:58 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ static char	*_export_value(t_env *environment, \
 			exit_erralloc(environment);
 		update_environment(environment, *key, value, append);
 	}
+	else
+		update_environment(environment, *key, NULL, append);
 	return (value);
 }
 

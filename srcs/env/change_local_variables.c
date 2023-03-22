@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 17:21:30 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/22 12:06:15 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ static int	_parse_key(char **line, char **key)
 		return (0);
 	append = 0;
 	*key = db_strndup(key_start, key_end - key_start);
-	if (!(*key))
-		exit_erralloc(NULL);
 	if ((*line)[i] == '+' && (*line)[i + 1] == '=')
 	{
 		*line = key_end + 2;
@@ -43,27 +41,26 @@ static int	_parse_key(char **line, char **key)
 	return (append);
 }
 
-static void	_actions_singlequoteopen(char c, \
-	int *single_quote_open)
-{
-	if (c == '\'')
-		*single_quote_open = FALSE;
-}
-
-static void	_actions_doublequoteopen(char c, \
-	int *double_quote_open)
-{
-	if (c == '\"')
-		*double_quote_open = FALSE;
-}
-
-static void	_actions_default(char c, \
+static void	_select_action(char c, \
 	int *single_quote_open, int *double_quote_open)
 {
-	if (c == '\'')
-		*single_quote_open = TRUE;
-	else if (c == '\"')
-		*double_quote_open = TRUE;
+	if (*single_quote_open)
+	{
+		if (c == '\'')
+			*single_quote_open = FALSE;
+	}
+	else if (*double_quote_open)
+	{
+		if (c == '\"')
+		*double_quote_open = FALSE;
+	}
+	else
+	{
+		if (c == '\'')
+			*single_quote_open = TRUE;
+		else if (c == '\"')
+			*double_quote_open = TRUE;
+	}
 }
 
 static int	_parse_value(t_env *environment, char **line, char **value)
@@ -77,15 +74,10 @@ static int	_parse_value(t_env *environment, char **line, char **value)
 	double_quote_open = FALSE;
 	value_start = (*line);
 	value_end = value_start;
-	while (*value_end && (single_quote_open || double_quote_open || !ft_iswhitespace(*value_end)))
+	while (*value_end && (single_quote_open || double_quote_open \
+	|| !ft_iswhitespace(*value_end)))
 	{
-		if (single_quote_open)
-			_actions_singlequoteopen(*value_end, &single_quote_open);
-		else if (double_quote_open)
-			_actions_doublequoteopen(*value_end, &double_quote_open);
-		else
-			_actions_default(*value_end, \
-			&single_quote_open, &double_quote_open);
+		_select_action(*value_end, &single_quote_open, &double_quote_open);
 		value_end++;
 	}
 	if (value_start == value_end)
@@ -99,36 +91,18 @@ static int	_parse_value(t_env *environment, char **line, char **value)
 	return (1);
 }
 
-
-static void	_export_element(t_env *environment, \
-	char *key, char *value, int append)
+static char	*_check_str(char **line)
 {
-	t_env	*elem;
-	char	*tmp;
-	
-	elem = environment;
-	if (!key || !elem)
-		return ;
-	elem = elem->next;
-	while (elem)
-	{
-		if (ft_strcmp(elem->key, key) == 0)
-		{
-			db_free(key);
-			tmp = elem->value;
-			if (value && append)
-			{
-				elem->value = db_strjoin(elem->value, value);
-				db_free(value);
-			}
-			else if (!append)
-				elem->value = value;
-			db_free(tmp);
-			return ;
-		}
-		elem = elem->next;
-	}
-	env_lstaddback(environment, key, value, 0);
+	char	*ptr;
+
+	ptr = (*line);
+	if (!(*line))
+		return (NULL);
+	while (ft_iswhitespace(*(*line)))
+		(*line)++;
+	if (!(*(*line)))
+		return (NULL);
+	return (ptr);
 }
 
 int	change_local_variables(t_env *environment, char *line, size_t size)
@@ -138,31 +112,23 @@ int	change_local_variables(t_env *environment, char *line, size_t size)
 	int		append;
 	char	*value;
 
-	ptr = line;
-	if (!line)
-		return (0);
-	while (ft_iswhitespace(*line))
-		line++;
-	if (!(*line))
+	ptr = _check_str(&line);
+	if (!ptr)
 		return (0);
 	append = _parse_key(&line, &key);
 	value = NULL;
 	if (!key)
 		return (0);
-	else
-		if(!_parse_value(environment, &line, &value))	
-			return (db_free(key), -1);
+	else if (!_parse_value(environment, &line, &value))
+		return (db_free(key), -1);
 	if (!value)
 		value = db_strdup("");
 	if (!value)
 		exit_erralloc(environment);
 	ft_memmove(ptr, line, ft_strlen(line) + 1);
 	if (size > 1)
-	{
-		db_free(key);
-		db_free(value);
-	}
+		return (db_free(key), db_free(value), 1);
 	else
-		_export_element(environment, key, value, append);
+		update_local_variables(environment, key, value, append);
 	return (1);
 }

@@ -669,10 +669,10 @@ def send_instructions(check_rules, ignore_rules):
     rule += 1
     if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
         print(f"\n{BLUE}{rule}. Handle environment variables and $?{NC}\n")
-        # input("unset NONEXISTINGVARIABLE\n"
-            #   "echo $NONEXISTINGVARIABLE\n")
-        # input("unset NONEXISTINGVARIABLE\n"
-            #   "echo $NONEXISTINGVARIABLE$NONEXISTINGVARIABLE\n")
+        input("unset NONEXISTINGVARIABLE\n"
+              "echo $NONEXISTINGVARIABLE\n")
+        input("unset NONEXISTINGVARIABLE\n"
+              "echo $NONEXISTINGVARIABLE$NONEXISTINGVARIABLE\n")
         input("echo $LS_COLORS$LS_COLORS\n")
         input("echo $\"\"LS_COLORS\n")
         input("echo $\" \"LS_COLORS\n")
@@ -782,25 +782,25 @@ def send_instructions(check_rules, ignore_rules):
         input("export +=\n")
         input("export \"\"\n")
         input("export /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin=42\n")
-        # input("unset /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin=42\n")
-        # input("unset $PATH\n"
-        #       "ls\n")
-        # input("unset /PATH\n")
-        # input("unset =PATH\n")
-        # input("unset +=\n")
-        # input("unset \"<\"\n")
-        # input("unset 42PATH\n")
-        # input("unset PATH\n"
-        #       "ls\n")
-        # input("unset\n")
-        # input("unset \"\"\n")
+        input("unset /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin=42\n")
+        input("unset $PATH\n"
+              "ls\n")
+        input("unset /PATH\n")
+        input("unset =PATH\n")
+        input("unset +=\n")
+        input("unset \"<\"\n")
+        input("unset 42PATH\n")
+        input("unset PATH\n"
+              "ls\n")
+        input("unset\n")
+        input("unset \"\"\n")
         input("export | grep \"OLDPWD\"\n")
         input("export --wrongoption=123 --wrongoption=123\n")
         input("export --wrongoption --wrongoption\n")
         input("export -wrongoption=42 -wrongoption=42\n")
         input("export | grep \"SHLVL\"\n")
-        # input("unset -wrongoption -wrongoption\n")
-        # input("unset --wrongoption -wrongoption\n")
+        input("unset -wrongoption -wrongoption\n")
+        input("unset --wrongoption -wrongoption\n")
         input("env -wrongoption -wrongoption\n")
         input("env --wrongoption\n")
 
