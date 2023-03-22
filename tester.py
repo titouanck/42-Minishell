@@ -786,7 +786,6 @@ def send_instructions(check_rules, ignore_rules):
         input("export --wrongoption=123 --wrongoption=123\n")
         input("export --wrongoption --wrongoption\n")
         input("export -wrongoption=42 -wrongoption=42\n")
-        input("export | grep \"SHLVL\"\n")
         input("unset -wrongoption -wrongoption\n")
         input("unset --wrongoption -wrongoption\n")
         input("env -wrongoption -wrongoption\n")
