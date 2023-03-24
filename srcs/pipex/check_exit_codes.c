@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 12:03:11 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/24 12:27:39 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/24 16:13:48 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,6 @@ static void	_action_on_status(t_cmd **cmds, int status, int init)
 	{
 		if (_action_on_sigquit(cmds))
 			ft_putstr_fd("Quit (core dumped)\n", 2);
-		else
-			ft_putchar_fd('\n', 2);
 		sig_quit = 1;
 	}
 	if (status == 2)
