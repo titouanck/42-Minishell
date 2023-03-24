@@ -759,6 +759,7 @@ def send_instructions(check_rules, ignore_rules):
     if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
         print(
             f"\n{BLUE}{rule}. Your shell must implement export, unset and env :{NC}\n")
+        input("export\n")
         input("export 4815162342=4815162342\n"
               "env | grep 4815162342\n")
         input("export LOST4815162342=4815162342\n"
