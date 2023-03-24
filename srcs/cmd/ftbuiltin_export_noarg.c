@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 17:14:21 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/24 17:34:52 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/24 17:42:42 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	export_noarg(t_env *environment)
 		cur = environment->next;
 		while (cur)
 		{
-			if (environment->printed == cur->printed && cur->exported 
+			if (environment->printed == cur->printed && cur->exported \
 			&& (closest == NULL || ft_strcmp(cur->key, closest->key) < 0))
 				closest = cur;
 			cur = cur->next;
