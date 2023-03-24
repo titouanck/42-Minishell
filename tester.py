@@ -603,6 +603,10 @@ def send_instructions(check_rules, ignore_rules):
         input(">>\n")
         input(">\n")
         input("<\n")
+        input("< $notanexistingvariable\n")
+        input("> $notanexistingvariable\n")
+        input("ls >> $notanexistingvariable\n")
+
 
     rule += 1
     if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):

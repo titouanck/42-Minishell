@@ -46,7 +46,7 @@ static char	*_sec_p_qm(char **first_p, char **sec_p, char *line, size_t i)
 	var = line + i + 1;
 	var = ft_itoa(g_returnval);
 	if (!var)
-		var = "";
+		exit_erralloc(NULL);
 	tmp = db_strrjoin((*first_p), var, (*sec_p));
 	db_free(var);
 	db_free(line);
@@ -56,9 +56,24 @@ static char	*_sec_p_qm(char **first_p, char **sec_p, char *line, size_t i)
 	return (line);
 }
 
+static char	*_no_new_var(char *var)
+{
+	char	*new_var;
+	char	*cpy;
+
+	cpy = ft_strdup(var);
+	new_var = ft_strjoin(" ", cpy);
+	free(cpy);
+	if (!new_var)
+		exit_erralloc(NULL);
+	new_var[0] = EMPTYVARIABLE;
+	return (new_var);
+}
+
 static char	*_sec_p_noqm(char **first_p, char **sec_p, char *line, size_t i)
 {
 	char	*var;
+	char	*new_var;
 	char	*tmp;
 	t_env	*environment;
 
@@ -69,15 +84,18 @@ static char	*_sec_p_noqm(char **first_p, char **sec_p, char *line, size_t i)
 		return (NULL);
 	*var = '\0';
 	var = line + i + 1;
-	var = get_value_by_key(environment, var);
-	if (!var)
-		var = "";
-	tmp = db_strrjoin((*first_p), var, (*sec_p));
+	new_var = get_value_by_key(environment, var);
+	if (!new_var)
+	{
+		new_var = _no_new_var(var);
+		tmp = db_strrjoin((*first_p), new_var, (*sec_p));
+		free(new_var);
+	}
+	else
+		tmp = db_strrjoin((*first_p), new_var, (*sec_p));
 	db_free(line);
-	db_free((*first_p));
-	db_free((*sec_p));
 	line = tmp;
-	return (line);
+	return (db_free((*first_p)), db_free((*sec_p)), line);
 }
 
 char	*replace_key_by_value(char *line)
