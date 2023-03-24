@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:58:02 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 13:01:42 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/24 12:01:42 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ void	cmd_signal_child(void)
 static void	_cmd_sigquit(int sig)
 {
 	(void) sig;
-	ft_putstr_fd("Quit (core dumped)\n", 2);
-	g_returnval = 131;
 	return ;
 }
 
