@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 16:26:08 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/24 14:04:57 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/24 14:13:32 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ static void	_export_noarg(t_env *environment)
 	t_env	*best;
 	t_env	*cur;
 
-	if (!environment)
-		return ;
 	while (1)
 	{
 		best = NULL;
@@ -39,6 +37,7 @@ static void	_export_noarg(t_env *environment)
 		write(1, best->value, ft_strlen(best->value));
 		write(1, "\"\n", 2);
 	}
+	environment->printed += 1;
 }
 
 static int	_export_key(char *arg, char *key)
@@ -107,7 +106,7 @@ void	ftbuiltin_export(t_env *environment, char **args)
 	size_t	i;
 
 	g_returnval = 0;
-	if (!args[1])
+	if (!args[1] && environment)
 		_export_noarg(environment);
 	else if (args && args[0] && args[1] && ft_strncmp(args[1], "-", 1) == 0)
 	{
