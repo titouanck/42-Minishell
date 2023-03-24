@@ -8,6 +8,7 @@ SRCS += ftbuiltin_dma_db.c
 SRCS += ftbuiltin_echo.c
 SRCS += ftbuiltin_env.c
 SRCS += ftbuiltin_exit.c
+SRCS += ftbuiltin_export_noarg.c
 SRCS += ftbuiltin_export.c
 SRCS += ftbuiltin_pwd.c
 SRCS += ftbuiltin_unset.c

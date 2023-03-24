@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 16:25:33 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 13:17:31 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/24 17:05:44 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	ftbuiltin_env(t_env *environment, char **args)
 		return ;
 	while (environment)
 	{
-		if (environment->key && environment->exported)
+		if (environment->key && environment->exported == 1)
 		{
 			write(1, environment->key, ft_strlen(environment->key));
 			write(1, "=", 1);

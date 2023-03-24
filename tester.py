@@ -791,6 +791,24 @@ def send_instructions(check_rules, ignore_rules):
         input("unset --wrongoption -wrongoption\n")
         input("env -wrongoption -wrongoption\n")
         input("env --wrongoption\n")
+        input("unset SHLVL LS_COLORS _\n"
+              "export notanexistingvariable\n"
+              "export\n")
+        input("unset SHLVL LS_COLORS _\n"
+              "export notanexistingvariable\n"
+              "env | grep notanexistingvariable\n")
+        input("unset SHLVL LS_COLORS _\n"
+              "echo $notanexistingvariable\n"
+              "export notanexistingvariable=42\n"
+              "export\n")
+        input("unset SHLVL LS_COLORS _\n"
+              "echo $notanexistingvariable\n"
+              "export notanexistingvariable=42\n"
+              "env | grep notanexistingvarialbe\n")
+        input("unset SHLVL LS_COLORS _\n"
+              "echo $notanexistingvariable\n"
+              "export notanexistingvariable=42\n"
+              "echo $notanexistingvariable\n")
 
     rule += 1
     if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
