@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/24 19:23:46 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/27 14:54:27 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,16 @@ static int	_left_chevron(t_redirect *redirect, char *line, size_t i, size_t *j)
 	{
 		line[i + (*j)] = SEPARATOR;
 		(*j)++;
-		if (!new_redirection(environment, line + i + (*j), \
-		redirect, INFILE_HEREDOC))
-			return (0);
+		return (new_redirection(environment, line + i + (*j), \
+		redirect, INFILE_HEREDOC));
 	}
 	else if (line[i + (*j)])
 	{
-		if (!new_redirection(environment, line + i + (*j), \
-		redirect, INFILE_FILE))
-			return (0);
+		return (new_redirection(environment, line + i + (*j), \
+		redirect, INFILE_FILE));
 	}
-	else if (!redirection_check_syntax(environment, line + i + (*j), redirect))
-		return (0);
+	else 
+		return (redirection_check_syntax(environment, line + i + (*j), redirect));
 	return (1);
 }
 
@@ -49,18 +47,16 @@ static int	_right_chevron(t_redirect *redirect, char *line, size_t i, size_t j)
 	{
 		line[i + j] = SEPARATOR;
 		j++;
-		if (!new_redirection(environment, line + i + j, \
-		redirect, OUTFILE_APPEND))
-			return (0);
+		return (new_redirection(environment, line + i + j, \
+		redirect, OUTFILE_APPEND));
 	}
 	else if (line[i + j])
 	{
-		if (!new_redirection(environment, line + i + j, \
-		redirect, OUTFILE_TRUNC))
-			return (0);
+		return (new_redirection(environment, line + i + j, \
+		redirect, OUTFILE_TRUNC));
 	}
-	else if (!redirection_check_syntax(environment, line + i + j, redirect))
-		return (0);
+	else
+		return (redirection_check_syntax(environment, line + i + j, redirect));
 	return (1);
 }
 
@@ -69,6 +65,7 @@ static int	detect_redirections(char *line, \
 {
 	size_t	i;
 	size_t	j;
+	int		r;
 
 	i = 0;
 	while (line[i])
@@ -76,13 +73,15 @@ static int	detect_redirections(char *line, \
 		j = 0;
 		if (line[i + j] == LEFTCHEVRON)
 		{
-			if (!_left_chevron(redirect, line, i, &j))
-				return (0);
+			r = _left_chevron(redirect, line, i, &j);
+			if (r != 1)
+				return (r);
 		}
 		else if (line[i + j] == RIGHTCHEVRON)
 		{
-			if (!_right_chevron(redirect, line, i, j))
-				return (0);
+			r = _right_chevron(redirect, line, i, j);
+			if (r != 1)
+				return (r);
 		}
 		i++;
 	}

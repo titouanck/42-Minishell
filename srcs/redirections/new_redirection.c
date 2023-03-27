@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 14:11:19 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/24 18:48:40 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/27 14:57:57 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,15 @@ int	new_redirection(t_env *environment, char *line, \
 	char	*start;
 	char	*end;
 	char	*new;
+	int		r;
 
 	i = 0;
 	while (line[i] == SEPARATOR)
 		i++;
-	if (!redirection_check_syntax(environment, line + i, redirect))
-		return (0);
+	r = redirection_check_syntax(environment, line + i, redirect);
+	ft_printf("new_redirection(): %d\n", r);
+	if (r != 1)
+		return (r);
 	start = line + i;
 	while (line[i] > 0 || line[i] == QUOTES)
 		i++;

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 17:31:19 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/27 14:35:06 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,31 @@ void	redirection_lstclear(t_redirlst *lst)
 		db_free(lst_elem);
 		lst_elem = next;
 	}
+}
+
+void	redirection_rmlast(t_redirect *redirect)
+{
+	t_redirlst	*lst_elem;
+	t_redirlst	*lst_prev;
+	
+	if (!redirect || !redirect->lst)
+		return ;
+	if (!redirect->lst->next)
+	{
+		db_free(redirect->lst->str);
+		db_free(redirect->lst);
+		redirect->lst = NULL;
+		return ;
+	}	
+	lst_elem = redirect->lst;
+	while (lst_elem->next)
+	{
+		lst_prev = lst_elem;
+		lst_elem = lst_elem->next;
+	}
+	db_free(lst_elem->str);
+	db_free(lst_elem);
+	lst_prev->next = NULL;
 }
 
 t_redirlst	*redirection_lstaddback(t_redirlst *lst, char *str, \

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:53:47 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 13:01:32 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/27 14:56:07 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,7 @@ static void	_default_sigint(int sig)
 	g_returnval = 130;
 	if (use_readline())
 	{
-		rl_on_new_line();
 		rl_replace_line("", 0);
-		rl_redisplay();
 		rl_done = 1;
 	}
 }

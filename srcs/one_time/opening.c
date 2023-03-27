@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 14:02:06 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/24 16:10:26 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/27 14:10:32 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	init_environment(t_env *environment)
 	environment->log.infile = NULL;
 	environment->log.outfile = NULL;
 	environment->heredoc_files = NULL;
-	environment->prompt = db_strdup("\001"GREEN">>"ENDCL \
+	environment->prompt = db_strdup("\001"GREEN"\002>>\001"ENDCL \
 	"\002 \001\033[34;1m\002minishell: \001\033[0m\002");
 	if (!environment->prompt)
 		exit_erralloc(environment);
