@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 18:01:06 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 18:16:57 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/24 17:18:27 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ void		ftbuiltin_env(t_env *environment, char **args);
 
 void		ftbuiltin_exit(t_env *environment, char **args, \
 			t_cmd **cmds, size_t cmdnbr);
+
+void		export_noarg(t_env *environment);
 
 void		ftbuiltin_export(t_env *environment, char **args);
 

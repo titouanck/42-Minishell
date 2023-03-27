@@ -6,37 +6,11 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 16:33:35 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 17:24:41 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/24 12:03:23 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	check_for_sigint(t_cmd **cmds)
-{
-	int		status;
-	size_t	i;
-
-	if (!cmds || !(*cmds))
-		return (0);
-	status = 0;
-	i = 0;
-	while (cmds[i])
-	{
-		waitpid(cmds[i]->pid, &status, 0);
-		if (status == 2)
-		{
-			write(1, "\n", 1);
-			rl_on_new_line();
-			rl_replace_line("", 0);
-			rl_done = 1;
-			if (!use_readline())
-				return (status);
-		}
-		i++;
-	}
-	return (status);
-}
 
 static void	_actions_child(t_env *environment, t_cmd **cmds, size_t cmdnbr, \
 	int pipefd[2])
@@ -68,7 +42,7 @@ static void	_actions_parent(t_env *environment, t_cmd **cmds, size_t cmdnbr, \
 		close((cmds[cmdnbr])->redirect->fd_outfile);
 	if ((cmds[cmdnbr])->redirect->infile)
 		close((cmds[cmdnbr])->redirect->fd_infile);
-	g_returnval = check_for_sigint(cmds);
+	g_returnval = check_exit_codes(cmds);
 	if (g_returnval == 2)
 	{
 		g_returnval = 130;

@@ -8,6 +8,7 @@ SRCS += ftbuiltin_dma_db.c
 SRCS += ftbuiltin_echo.c
 SRCS += ftbuiltin_env.c
 SRCS += ftbuiltin_exit.c
+SRCS += ftbuiltin_export_noarg.c
 SRCS += ftbuiltin_export.c
 SRCS += ftbuiltin_pwd.c
 SRCS += ftbuiltin_unset.c
@@ -41,6 +42,7 @@ SRCS += split_cmds.c
 
 SRCS_PATH += ./srcs/pipex/
 SRCS += action_on_files.c
+SRCS += check_exit_codes.c
 SRCS += error_on_open.c
 SRCS += exit_child.c
 SRCS += first_child.c
@@ -143,7 +145,7 @@ help:
 	@	echo -ne "\r\033[2K" $(LIGHTPURPLE)"libft\n"${NC}" Rebuilds libft.\n"
 endif
 
-${OBJS}: ${OBJS_PATH}/%.o: %.c Makefile inc/minishell.h libft/srcs/*/*.c
+${OBJS}: ${OBJS_PATH}/%.o: %.c Makefile inc/minishell.h
 	@	$(MAKE) --no-print-directory -s -C libft
 	@	mkdir -p ${OBJS_PATH}
 	@	$(COLORCOMPIL)
@@ -164,7 +166,6 @@ fclean:	clean;
 	@	+$(MAKE) --no-print-directory -s -C libft fclean
 	@	rm -f ${NAME} assets/minishell.log
 	@	rm -rf /tmp/.minishell-logs assets
-# @	git clean -f
 	@	rm -f /tmp/minishell-heredoc_*
 
 re:	fclean ${NAME}

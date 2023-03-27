@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 18:01:06 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 18:22:25 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/24 18:52:02 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ int			open_heredoc(t_env *environment, t_redirect *redirect);
 int			new_redirection(t_env *environment, char *line, \
 			t_redirect *redirect, int redirection_type);
 
-int			redirection_check_syntax(t_env *environment, char c, \
-			t_redirect *redirect);
+int			redirection_check_syntax(t_env *environment, \
+			char *c, t_redirect *redirect);
 
 t_redirlst	*redirection_lstaddback(t_redirlst *lst, char *str, \
 			int redirection_type);

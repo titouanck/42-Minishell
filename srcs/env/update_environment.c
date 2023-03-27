@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 11:34:21 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 17:15:13 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/24 17:30:28 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ static void	_update_existing_key_env(t_env *env_elem, \
 	char	*tmp;
 
 	db_free(key);
-	env_elem->exported = 1;
 	if (value)
 	{
+		env_elem->exported = 1;
 		tmp = env_elem->value;
 		if (append)
 		{
@@ -58,5 +58,5 @@ void	update_environment(t_env *environment, \
 	if (value)
 		env_lstaddback(environment, key, value, 1);
 	else
-		db_free(key);
+		env_lstaddback(environment, key, value, 2);
 }

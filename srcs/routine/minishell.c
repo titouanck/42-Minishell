@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 19:18:27 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/21 20:01:15 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/24 16:16:47 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 static void	change_prompt_color(t_env *environment)
 {
 	if (g_returnval == 0)
-		environment->prompt[6] = '2';
+		environment->prompt[4] = '2';
 	else
-		environment->prompt[6] = '1';
+		environment->prompt[4] = '1';
 }
 
 int	main(int argc, char **argv, char *envp[])

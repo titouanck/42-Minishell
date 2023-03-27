@@ -6,27 +6,11 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 16:26:08 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 11:48:58 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/24 17:32:43 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	_export_noarg(t_env *environment)
-{
-	while (environment)
-	{
-		if (environment->key)
-		{
-			write(1, "export ", 7);
-			write(1, environment->key, ft_strlen(environment->key));
-			write(1, "=\"", 2);
-			write(1, environment->value, ft_strlen(environment->value));
-			write(1, "\"\n", 2);
-		}
-		environment = environment->next;
-	}
-}
 
 static int	_export_key(char *arg, char *key)
 {
@@ -94,8 +78,8 @@ void	ftbuiltin_export(t_env *environment, char **args)
 	size_t	i;
 
 	g_returnval = 0;
-	if (!args[1])
-		_export_noarg(environment);
+	if (!args[1] && environment)
+		export_noarg(environment);
 	else if (args && args[0] && args[1] && ft_strncmp(args[1], "-", 1) == 0)
 	{
 		if (ft_strlen(args[1]) >= 2)
@@ -108,7 +92,7 @@ void	ftbuiltin_export(t_env *environment, char **args)
 	}
 	else
 	{
-		i = -1;
+		i = 0;
 		while (args[++i])
 			_export_arg(environment, args[i]);
 	}

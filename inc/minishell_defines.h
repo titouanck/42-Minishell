@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 17:59:22 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 17:59:58 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/24 17:52:14 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZ\
 # define HEREDOC -6
 # define NOTAVARKEY -7
 # define QUOTES -8
+# define EMPTYVARIABLE -9
 
 # define INFILE_FILE 'r'
 # define INFILE_HEREDOC 'h'

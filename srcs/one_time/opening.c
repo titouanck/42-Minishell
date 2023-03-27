@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 14:02:06 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 12:49:38 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/24 16:10:26 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ int	g_returnval;
 
 static void	init_environment(t_env *environment)
 {
-	char	*tab[3];
-
 	environment->line = NULL;
 	environment->last_input = NULL;
 	environment->line_nbr = 0;
@@ -25,14 +23,10 @@ static void	init_environment(t_env *environment)
 	environment->log.infile = NULL;
 	environment->log.outfile = NULL;
 	environment->heredoc_files = NULL;
-	environment->prompt = db_strdup("\r\r\001"GREEN"●"ENDCL \
-	"\002 \001\033[34;1m\002minishell \001→\002 \001\033[0m\002");
+	environment->prompt = db_strdup("\001"GREEN">>"ENDCL \
+	"\002 \001\033[34;1m\002minishell: \001\033[0m\002");
 	if (!environment->prompt)
 		exit_erralloc(environment);
-	tab[0] = "export";
-	tab[1] = "_=minishell/env";
-	tab[2] = NULL;
-	ftbuiltin_export(environment, tab);
 	saved_environment(environment);
 }
 

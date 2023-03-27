@@ -23,6 +23,7 @@ static t_env	*env_initialisation(void)
 	environment->value = NULL;
 	environment->exported = 1;
 	environment->next = NULL;
+	environment->printed = 0;
 	return (environment);
 }
 
@@ -36,6 +37,7 @@ static t_env	*env_nextelement(char *envp[], size_t i, size_t j)
 	element->key = db_substr(envp[i], 0, j);
 	element->value = db_substr(envp[i], j + 1, ft_strlen(envp[i] + j + 1));
 	element->exported = 1;
+	element->printed = 0;
 	element->next = NULL;
 	return (element);
 }
@@ -54,6 +56,7 @@ static void	increment_shlvl(t_env *environment)
 			db_free(environment->value);
 			shlvl += 1;
 			environment->value = ft_itoa(shlvl);
+			dynamic_memory_address_db('+', environment->value);
 			break ;
 		}
 		environment = environment->next;

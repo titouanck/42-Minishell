@@ -603,6 +603,10 @@ def send_instructions(check_rules, ignore_rules):
         input(">>\n")
         input(">\n")
         input("<\n")
+        input("< $notanexistingvariable\n")
+        input("> $notanexistingvariable\n")
+        input("ls >> $notanexistingvariable\n")
+
 
     rule += 1
     if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
@@ -759,6 +763,7 @@ def send_instructions(check_rules, ignore_rules):
     if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
         print(
             f"\n{BLUE}{rule}. Your shell must implement export, unset and env :{NC}\n")
+        input("export\n")
         input("export 4815162342=4815162342\n"
               "env | grep 4815162342\n")
         input("export LOST4815162342=4815162342\n"
@@ -790,6 +795,24 @@ def send_instructions(check_rules, ignore_rules):
         input("unset --wrongoption -wrongoption\n")
         input("env -wrongoption -wrongoption\n")
         input("env --wrongoption\n")
+        input("unset SHLVL LS_COLORS _\n"
+              "export notanexistingvariable\n"
+              "export\n")
+        input("unset SHLVL LS_COLORS _\n"
+              "export notanexistingvariable\n"
+              "env | grep notanexistingvariable\n")
+        input("unset SHLVL LS_COLORS _\n"
+              "echo $notanexistingvariable\n"
+              "export notanexistingvariable=42\n"
+              "export\n")
+        input("unset SHLVL LS_COLORS _\n"
+              "echo $notanexistingvariable\n"
+              "export notanexistingvariable=42\n"
+              "env | grep notanexistingvarialbe\n")
+        input("unset SHLVL LS_COLORS _\n"
+              "echo $notanexistingvariable\n"
+              "export notanexistingvariable=42\n"
+              "echo $notanexistingvariable\n")
 
     rule += 1
     if (rule not in ignore_rules and (check_rules == [] or rule in check_rules)):
