@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/27 14:54:27 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/27 15:41:58 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,9 @@ static int	_left_chevron(t_redirect *redirect, char *line, size_t i, size_t *j)
 		return (new_redirection(environment, line + i + (*j), \
 		redirect, INFILE_FILE));
 	}
-	else 
-		return (redirection_check_syntax(environment, line + i + (*j), redirect));
+	else
+		return (redirection_check_syntax(environment, \
+		line + i + (*j), redirect));
 	return (1);
 }
 
@@ -56,7 +57,8 @@ static int	_right_chevron(t_redirect *redirect, char *line, size_t i, size_t j)
 		redirect, OUTFILE_TRUNC));
 	}
 	else
-		return (redirection_check_syntax(environment, line + i + j, redirect));
+		return (redirection_check_syntax(environment, \
+		line + i + j, redirect));
 	return (1);
 }
 

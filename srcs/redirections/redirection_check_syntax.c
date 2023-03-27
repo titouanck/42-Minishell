@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 14:13:30 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/27 15:03:11 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/27 15:41:43 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ static int	_ambiguous(t_env *env, char *str, t_redirect *redirect)
 			i++;
 		tmp = ft_strdup(str);
 		ft_memmove(str, str + i, ft_strlen(str + i) + 1);
-		ft_printf("str: (%s), i: %d\n", str, i);
-		if (ft_strlen(str) > 0 && *str != LEFTCHEVRON && *str != RIGHTCHEVRON)
+		if (ft_strlen(str) > 0 && *str != SEPARATOR \
+		&& *str != LEFTCHEVRON && *str != RIGHTCHEVRON)
 			return (free(tmp), redirection_check_syntax(env, str, redirect));
 		g_returnval = 1;
 		tmp[i] = '\0';
@@ -36,8 +36,6 @@ static int	_ambiguous(t_env *env, char *str, t_redirect *redirect)
 		ft_putstr_fd(": ", 2);
 		ft_putstr_fd("ambiguous redirect\n", 2);
 		redirect->to_execute = FALSE;
-		ft_printf("_ambiguous(): %d\n", -1);
-		// redirection_rmlast(redirect);
 		return (free(tmp), -1);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:24:56 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/27 14:35:06 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/27 15:41:14 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	redirection_rmlast(t_redirect *redirect)
 {
 	t_redirlst	*lst_elem;
 	t_redirlst	*lst_prev;
-	
+
 	if (!redirect || !redirect->lst)
 		return ;
 	if (!redirect->lst->next)
