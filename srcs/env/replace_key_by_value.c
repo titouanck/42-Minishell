@@ -35,9 +35,7 @@ static char	*_sec_p_qm(char **first_p, char **sec_p, char *line, size_t i)
 {
 	char	*var;
 	char	*tmp;
-	t_env	*environment;
 
-	environment = saved_environment(NULL);
 	var = (*sec_p);
 	(*sec_p) = db_strdup((*sec_p));
 	if (!(*sec_p))
