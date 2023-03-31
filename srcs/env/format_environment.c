@@ -6,11 +6,18 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 17:09:38 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/31 02:07:31 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/31 02:53:58 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	_format_element(t_env *environment, t_env *elem, char **env, size_t i)
+{
+	env[i] = db_strrjoin(elem->key, "=", elem->value);
+	if (!env[i])
+		exit_erralloc(environment);
+}
 
 char	**format_environment(t_env *environment)
 {
@@ -32,14 +39,10 @@ char	**format_environment(t_env *environment)
 	{
 		if (elem->exported == 1)
 		{
-			env[i] = db_strrjoin(elem->key, "=", elem->value);
-			if (!env[i])
-				exit_erralloc(environment);
-			elem = elem->next;
+			_format_element(environment, elem, env, i);
 			i++;
 		}
-		else
-			elem = elem->next;
+		elem = elem->next;
 	}
 	env[i] = NULL;
 	return (env);
