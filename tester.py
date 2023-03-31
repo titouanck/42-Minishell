@@ -777,6 +777,16 @@ def send_instructions(check_rules, ignore_rules):
               "export School-=42\n")
         input("export a + = 42\n")
         input("export a += 42\n")
+        input("export ANOTHERVARIABLE\n"
+              "export | grep ANOTHERVARIABLE\n")
+        input("export ANOTHERVARIABLE\n"
+              "./minishell\n"
+              "export | grep ANOTHERVARIABLE\n"
+              "exit\n")
+        input("export NICOLAS=42\n"
+              "./minishell\n"
+              "export | grep NICOLAS\n"
+              "exit\n")
         input("export | grep USER\n")
         input("export Nothing= \n"
               "export | grep Nothing\n"
