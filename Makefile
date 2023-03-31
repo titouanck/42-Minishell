@@ -1,87 +1,10 @@
+include srcs/make/srcs.mk
+include srcs/make/colors.mk
+
 TERM_WIDTH := $(shell tput cols)
 SHELL = /bin/bash
 
-SRCS_PATH += ./srcs/cmd/
-SRCS += execute_cmd.c
-SRCS += ftbuiltin_cd.c
-SRCS += ftbuiltin_dma_db.c
-SRCS += ftbuiltin_echo.c
-SRCS += ftbuiltin_env.c
-SRCS += ftbuiltin_exit.c
-SRCS += ftbuiltin_export_noarg.c
-SRCS += ftbuiltin_export.c
-SRCS += ftbuiltin_pwd.c
-SRCS += ftbuiltin_unset.c
-
-SRCS_PATH += ./srcs/env/
-SRCS += change_local_variables.c
-SRCS += env_lstaddback.c
-SRCS += format_environment.c
-SRCS += ft_free_environment.c
-SRCS += get_environnement.c
-SRCS += get_value_by_key.c
-SRCS += path.c
-SRCS += replace_key_by_value.c
-SRCS += update_environment.c
-SRCS += update_local_variables.c
-
-SRCS_PATH += ./srcs/one_time/
-SRCS += closing.c
-SRCS += init_logs.c
-SRCS += opening.c
-SRCS += write_to_logfile.c
-
-SRCS_PATH += ./srcs/parsing/
-SRCS += parse_args.c
-SRCS += parse_builtin.c
-SRCS += parse_cmd.c
-SRCS += parse_heredoc_limiter.c
-SRCS += parsing.c
-SRCS += quotes_interpretation.c
-SRCS += split_cmds.c
-
-SRCS_PATH += ./srcs/pipex/
-SRCS += action_on_files.c
-SRCS += check_exit_codes.c
-SRCS += error_on_open.c
-SRCS += exit_child.c
-SRCS += first_child.c
-SRCS += ft_free_cmds_parsed.c
-SRCS += get_cmds_parsed.c
-SRCS += io_open_fds.c
-SRCS += last_child.c
-SRCS += middle_child.c
-SRCS += open_fds.c
-SRCS += pipex.c
-
-SRCS_PATH += ./srcs/redirections/
-SRCS += ft_free_redirect.c
-SRCS += heredoc.c
-SRCS += new_redirection.c
-SRCS += redirection_check_syntax.c
-SRCS += redirections_lst.c
-SRCS += redirections.c
-
-SRCS_PATH += ./srcs/routine
-SRCS += minishell.c
-SRCS += new_prompt.c
-SRCS += rm_heredoc_files.c
-SRCS += use_argv.c
-
-SRCS_PATH += ./srcs/signals
-SRCS += default_signal.c
-SRCS += cmd_signal.c
-SRCS += heredoc_signal.c
-
-SRCS_PATH += ./srcs/utils/
-SRCS += event.c
-SRCS += exit_erralloc.c
-SRCS += free_log_files.c
-SRCS += ft_syntaxerror.c
-SRCS += minishell_error.c
-SRCS += remove_quote_token_line.c
-SRCS += saved_environment.c
-SRCS += use_readline.c
+vpath %.c ${SRCS_PATH}
 
 INC = -I inc/ -I libft/inc
 LIBS = -L libft -lft -lreadline
@@ -90,31 +13,9 @@ OBJS = ${patsubst %.c, ${OBJS_PATH}/%.o, ${SRCS}}
 OBJS_PATH = ./objs/
 
 CC = cc
-
-vpath %.c ${SRCS_PATH}
-
 CFLAGS += -g 
 CFLAGS += -Wall -Wextra -Werror 
-
 NAME = minishell
-
-NC='\033[0m'
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-ORANGE='\033[0;33m'
-BLUE='\033[0;34m'
-PURPLE='\033[0;35m'
-CYAN='\033[0;36m'
-LIGHTGRAY='\033[0;37m'
-
-DARKGRAY='\033[1;30m'
-LIGHTRED='\033[1;31m'
-LIGHTGREEN='\033[1;32m'
-LIGHTBLUE='\033[1;34m'
-LIGHTPURPLE='\033[1;35m'
-LIGHTCYAN='\033[1;36m'
-YELLOW='\033[1;33m'
-WHITE='\033[1;37m'
 
 default:	help
 	@	${MAKE} --no-print-directory ${NAME}
@@ -207,34 +108,6 @@ log:
 libft:
 	@	+$(MAKE) --no-print-directory -s -C libft re
 
-ifndef COLORCOMPIL
-ifeq ($(shell test $(TERM_WIDTH) -gt 69; echo $$?), 0)
-COLORCOMPIL = \
-	if [ "$(shell test $P -lt 33; echo $$?)" = "0" ]; then \
-    	echo -ne "\r\033[2K" $(LIGHTRED) "[$(P)%] "$(DARKGRAY) "Compiling MiniShell" $(WHITE) "$<"; \
-	else \
-		if [ "$(shell test $P -lt 66; echo $$?)" = "0" ]; then \
-    		echo -ne "\r\033[2K" $(YELLOW) "[$(P)%]" $(DARKGRAY) "Compiling MiniShell" $(WHITE) "$<"; \
-		else \
-       		echo -ne "\r\033[2K" $(LIGHTGREEN) "[$(P)%]" $(DARKGRAY) "Compiling MiniShell" $(WHITE) "$<"; \
-		fi \
-	fi
-else
-COLORCOMPIL = \
-	if [ "$(shell test $P -lt 33; echo $$?)" = "0" ]; then \
-    	echo -ne "\r\033[2K" $(LIGHTRED) "[$(P)%] "$(DARKGRAY) "Compiling MiniShell"; \
-	else \
-		if [ "$(shell test $P -lt 66; echo $$?)" = "0" ]; then \
-    		echo -ne "\r\033[2K" $(YELLOW) "[$(P)%]" $(DARKGRAY) "Compiling MiniShell"; \
-		else \
-       		echo -ne "\r\033[2K" $(LIGHTGREEN) "[$(P)%]" $(DARKGRAY) "Compiling MiniShell"; \
-		fi \
-	fi
-endif
-T := $(words $(SRCS))
-N := x
-C = $(words $N)$(eval N := x $N)
-P = `expr $C '*' 100 / $T / 5`
-endif
+include srcs/make/colorcompil.mk
 
-.PHONY: libft
+.PHONY: default all clean fclean re run valgrind log libft 
