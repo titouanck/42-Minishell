@@ -1,7 +1,0 @@
-minishell
-assets/
-objs/
-libft/objs
-libft/libft.a
-libft/xlibft
-.vscode/

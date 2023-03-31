@@ -6,7 +6,7 @@
 /*   By: tchevrie <tchevrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 17:09:38 by tchevrie          #+#    #+#             */
-/*   Updated: 2023/03/22 17:09:56 by tchevrie         ###   ########.fr       */
+/*   Updated: 2023/03/31 02:07:31 by tchevrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,16 @@ char	**format_environment(t_env *environment)
 	elem = environment->next;
 	while (i < size && elem)
 	{
-		env[i] = db_strrjoin(elem->key, "=", elem->value);
-		if (!env[i])
-			exit_erralloc(environment);
-		elem = elem->next;
-		i++;
+		if (elem->exported == 1)
+		{
+			env[i] = db_strrjoin(elem->key, "=", elem->value);
+			if (!env[i])
+				exit_erralloc(environment);
+			elem = elem->next;
+			i++;
+		}
+		else
+			elem = elem->next;
 	}
 	env[i] = NULL;
 	return (env);
